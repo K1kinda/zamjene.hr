@@ -1,0 +1,24 @@
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
+        <script src="{{ url_for('static', filename='app.js')}}"></script>
+        <title>{% block title %}Zamjene{% endblock %}</title>
+    </head>
+    <body>
+        <div class="sidebar-container">
+            <div class="sidebar-buttons">
+                <button class="sidebar-button">Početna</button>
+                <button class="sidebar-button">Moje zamjene</button>
+                <button class="sidebar-button">Oglasna ploča</button>
+                <button class="sidebar-button">Moj raspored predmeta</button>
+                <button class="sidebar-button">Moj raspored učionica</button>
+            </div>
+        </div>
+        <div class="main-container">
+            <p>dwa</p>
+        </div>
+    </body>
+</html>
