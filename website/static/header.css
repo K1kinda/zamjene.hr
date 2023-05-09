@@ -1,0 +1,38 @@
+header {
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.search-bar-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 40%;
+}
+
+.search-bar {
+  display: flex;
+  flex: 0.7;
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.15);
+  height: 40px;
+  padding-left: 45px;
+}
+
+input:focus {
+  outline:none;
+}
+
+.search-bar::placeholder {
+  font-size: 15px;
+}
+
+.search-icon {
+  position: absolute;
+  left: 10px;
+  opacity: 0.4;
+  width: 25px;
+}

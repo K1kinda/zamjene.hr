@@ -1,24 +1,46 @@
+<!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="{{ url_for('static', filename='style.css')}}">
-        <script src="{{ url_for('static', filename='app.js')}}"></script>
-        <title>{% block title %}Zamjene{% endblock %}</title>
-    </head>
-    <body>
-        <div class="sidebar-container">
-            <div class="sidebar-buttons">
-                <button class="sidebar-button">Početna</button>
-                <button class="sidebar-button">Moje zamjene</button>
-                <button class="sidebar-button">Oglasna ploča</button>
-                <button class="sidebar-button">Moj raspored predmeta</button>
-                <button class="sidebar-button">Moj raspored učionica</button>
-            </div>
-        </div>
-        <div class="main-container">
-            <p>dwa</p>
-        </div>
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles/general.css">
+  <link rel="stylesheet" href="styles/header.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/sidebar.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <title>zamjene.hr</title>
+</head>
+
+<body>
+
+  <aside class="sidebar">
+    <div class="logo-container">
+      <span class="logo-text">zamjene.hr</span>
+    </div>
+    <section class="sidebar-buttons">
+      <button class="pocetna-button">Početna</button>
+      <button class="zamjene-button">Moje zamjene</button>
+      <button class="oglasna-button">Oglasna ploča</button>
+      <button class="raspored-p-button">Moj raspored predmeta</button>
+      <button class="raspored-u-button">Moj raspored učionica</button>
+    </section>
+    <section class="login-container">
+      <button class="log-in-button">Prijavi se</button>
+    </section>
+  </aside>
+
+  <header>
+    <nav class="search-bar-container">
+      <img class="search-icon" src="icons/search.svg">
+      <input class="search-bar" type="text" placeholder="Pretraži">
+    </nav>
+  </header>
+
+  <main class="page-center">
+    Text
+  </main>
+
+</body>
 </html>
