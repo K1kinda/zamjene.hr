@@ -1,16 +1,13 @@
 main {
   display: flex;
   padding-top: 60px;
-  overflow: hidden;
 }
-
-
 
 .news-board, .changes-box {
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-height: 90vh; 
+  max-height: 89vh; 
   min-width: 420px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
   border-radius: 20px;
@@ -44,6 +41,8 @@ main {
   margin-bottom: 10px;
   cursor: pointer;
   text-shadow: 3px 1px 10px rgba(0,0,0,0.2);
+  color: rgb(27, 23, 23);
+  cursor: default;
 }
 
 .post-title:hover {
@@ -73,9 +72,13 @@ main {
   margin-bottom: 10px;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  color: rgb(27, 23, 23);
+  cursor: default;
 }
 
 .changes {
   font-size: 25px;
   font-weight: normal;
+  color: rgb(27, 23, 23);
+  cursor: default;
 }
