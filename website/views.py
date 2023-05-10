@@ -6,6 +6,6 @@ views = Blueprint('views', __name__)
 def home():
     user_agent = request.headers.get('User-Agent')
     if 'Mobile' in user_agent:
-        return render_template("home.html")
+        return render_template("home_mobile.html")
     elif 'Windows' in user_agent:
-        return render_template("home_copy.html")
+        return render_template("home.html")
