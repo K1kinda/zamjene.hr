@@ -4,5 +4,8 @@ views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    return render_template("home.html")
-  
+    user_agent = request.headers.get('User-Agent')
+    if 'Mobile' in user_agent:
+        return render_template("home.html")
+    elif 'Windows' in user_agent:
+        return render_template("home_copy.html")
