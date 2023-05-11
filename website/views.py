@@ -9,3 +9,5 @@ def home():
         return render_template("home_mobile.html")
     elif 'Windows' in user_agent:
         return render_template("home.html")
+    else:
+        return render_template("home.html")
