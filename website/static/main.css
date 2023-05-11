@@ -72,6 +72,7 @@ main {
   margin-bottom: 10px;
   border-bottom-style: solid;
   border-bottom-width: 1px;
+  border-color: rgba(0,0,0,0.3);
   color: rgb(27, 23, 23);
   cursor: default;
 }
