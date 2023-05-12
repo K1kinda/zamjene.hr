@@ -11,3 +11,13 @@ def home():
         return render_template("templates-pc/home.html")
     else:
         return render_template("templates-pc/home.html")
+    
+@views.route('/login')
+def login():
+    user_agent = request.headers.get('User-Agent')
+    if 'Mobile' in user_agent:
+        return render_template("templates-mobile/login_mobile.html")
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/login.html")
+    else:
+        return render_template("templates-pc/login.html")

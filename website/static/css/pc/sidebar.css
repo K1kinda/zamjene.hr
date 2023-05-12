@@ -40,7 +40,13 @@
   scale: 1.1;
 }
 
+.sidebar-buttons {
+  display: flex;
+  align-items: center;
+}
+
 button {
+  width: 86%;
   border: none;
   border-radius: 7px;
   padding: 5px 10px 5px 10px;
@@ -72,7 +78,7 @@ button:active {
   top: 65px;
 }
 
-.login-container {
+.login-signup-container {
   position: absolute;
   bottom: 0;
   display: flex;

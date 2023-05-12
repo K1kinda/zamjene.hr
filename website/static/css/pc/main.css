@@ -83,3 +83,61 @@ main {
   color: rgb(27, 23, 23);
   cursor: default;
 }
+
+.login-window {
+  position: absolute;
+  top: 30%;
+  right: 34%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
+  padding: 10px 20px 10px 20px;
+  border-radius: 7px;
+  width: 20%;
+  min-width: 300px;
+}
+
+.user-icon-login {
+  padding: 3px;
+  width: 20%;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  background-color: white;
+  border-radius: 50%;
+  margin-bottom: 20px;
+}
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 90%;
+}
+
+.input-box {
+  margin: 10px 0 10px 0;
+  border: none;
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  height: 40px;
+  border-radius: 7px;
+  padding: 0 10px 0 10px;
+  font-family: Montserrat;
+  width: 100%;
+}
+
+.noaccounttext {
+  margin-bottom: 0px;
+  font-family: Montserrat;
+  font-size: 15px;
+  margin-top: 100px;
+}
+
+.signup-loginbox {
+  background-color: transparent;
+  box-shadow: none;
+  color: rgb(27, 23, 23);
+  font-size: 15px;
+  padding: 0;
+}

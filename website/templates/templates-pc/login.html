@@ -43,49 +43,16 @@
     </nav>
   </header>
 
-  <main class="page-center">
-    <section class="news-board">
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/image.jpg')}}">
-        </div>
-      </div>
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/profile-picture.jpg')}}">
-        </div>
-      </div>
-    </section>
-
-    <section class="changes-box">
-      <div class="today">
-        Zamjene danas
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="tomorrow">
-        Zamjene sutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="after-tomorrow">
-        Zamjene prekosutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="next-week">
-        Idući tjedan
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-    </section>
-  </main>
+  <section class="login-window">
+    <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+    <form class="login-container" action="/loginsend" method="POST">
+      <input class="input-box" type="text" placeholder="E-Mail" id="email">
+      <input class="input-box" type="password" placeholder="Lozinka" id="password">
+      <button style="width:106%;" type="submit">Prijavi se</button>
+    </form>
+    <p class="noaccounttext">Ako nemaš račun:</p>
+    <button class="signup-loginbox">Napravi račun</button>
+  </section>
 
   <script>
     function changeUrl(url){
