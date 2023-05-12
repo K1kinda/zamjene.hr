@@ -9,6 +9,7 @@ header {
   padding-bottom: 4px;
   box-shadow: 0px 0px 5px rgba(0,0,0,0.15);
   background-color: rgb(253, 239, 239);
+  border-radius: 7px;
 }
 
 .logo {
@@ -23,7 +24,7 @@ header {
   font-size: 7vw;
 }
 
-.menu {
+.menu1 {
   display: flex;
   align-items: center;
   margin-right: 10px;
@@ -32,4 +33,44 @@ header {
 
 .menu-icon {
   width: 50px;
+}
+
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
+  padding: 5px 10px 5px 10px;
+  position: absolute;
+  top: 4%;
+  right: 2%;
+  box-shadow: 0px 0px 5px rgba(0,0,0,0.15);
+  background-color: rgb(253, 239, 239);
+  border-radius: 7px;
+  max-height: 0px;
+  max-width: 0px;
+  overflow: hidden;
+  transition: max-height 0.5s;
+  z-index: -1;
+}
+
+.dropdown-menu.open-menu {
+  max-height: 400px;
+  top: 6.5%;
+  max-width: 400px;
+  z-index: 100;
+}
+
+.dropdown-box {
+  display: flex;
+  justify-content: center;
+  background-color: rgb(110, 110, 202);
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 2px 5px 2px 5px;
+  border-radius: 7px;
+}
+
+.dropdown-text {
+  font-family: Montserrat;
+  color: white;
+  font-weight: 600;
 }

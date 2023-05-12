@@ -18,10 +18,28 @@
     <div class="logo">
       <span class="logo-text">zamjene.hr</span>
     </div>
-    <div class="menu">
-      <img class="menu-icon" src="{{ url_for('static', filename='pictures/menu.svg')}}">
+    <div class="menu1">
+      <img class="menu-icon" onclick="toggleMenu()" src="{{ url_for('static', filename='pictures/menu.svg')}}">
     </div>
   </header>
+
+  <div class="dropdown-menu" id="subMenu">
+      <div class="dropdown-box">
+        <p class="dropdown-text">Početna</p>
+      </div>
+      <div class="dropdown-box">
+        <p class="dropdown-text">Moje zamjene</p>
+      </div>
+      <div class="dropdown-box">
+        <p class="dropdown-text">Oglasna ploča</p>
+      </div>
+      <div class="dropdown-box">
+        <p class="dropdown-text">Moj raspored sati</p>
+      </div>
+      <div class="dropdown-box">
+        <p class="dropdown-text">Moj raspored učionica</p>
+      </div>
+  </div>
   
   <main class="page-center">
     <div class="changes-box">
@@ -66,5 +84,14 @@
         </div>
       </div>
   </main>
+
+  <script>
+    let subMenu = document.getElementById("subMenu");
+    
+    function toggleMenu(){
+      subMenu.classList.toggle("open-menu")
+    }
+  </script>
+
 </body>
 </html>
