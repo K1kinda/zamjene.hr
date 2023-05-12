@@ -18,8 +18,9 @@
     <div class="logo">
       <span class="logo-text">zamjene.hr</span>
     </div>
-    <div class="menu"   onclick="toggleMenu()">
-      <img class="menu-icon" src="{{ url_for('static', filename='pictures/menu.svg')}}">
+    <div class="menu">
+      <div class="shape"></div>
+      <img class="menu-icon" onclick="toggleMenu()" src="{{ url_for('static', filename='pictures/menu.svg')}}">
     </div>
   </header>
 
