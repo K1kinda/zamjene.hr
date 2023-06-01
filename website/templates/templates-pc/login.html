@@ -13,7 +13,7 @@
   <title>zamjene.hr</title>
 </head>
 
-<body>
+<body class="body-login">
 
   <aside class="sidebar">
     <div class="logo-container">
@@ -28,7 +28,7 @@
     </section>
     <section class="login-signup-container">
       <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-      <button class="sign-up-button">Napravi račun</button>
+      <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
       <!--div class="name-container">
         <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
         <p class="name">Mato Osman</p>
@@ -51,7 +51,7 @@
       <button style="width:106%;" type="submit">Prijavi se</button>
     </form>
     <p class="noaccounttext">Ako nemaš račun:</p>
-    <button class="signup-loginbox">Napravi račun</button>
+    <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
   </section>
 
   <script>

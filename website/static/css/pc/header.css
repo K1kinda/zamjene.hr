@@ -11,6 +11,7 @@ header {
   align-items: center;
   width: 30%;
   min-width: 300px;
+  margin-top: 30px;
 }
 
 .search-bar {
@@ -22,6 +23,7 @@ header {
   height: 40px;
   padding-left: 45px;
   font-family: Montserrat;
+  z-index: 100;
 }
 
 input:focus {
@@ -38,4 +40,5 @@ input:focus {
   opacity: 0.4;
   width: 25px;
   top: 8px;
+  z-index: 101;
 }

@@ -13,7 +13,7 @@
   <title>zamjene.hr</title>
 </head>
 
-<body>
+<body class="body-register">
 
   <aside class="sidebar">
     <div class="logo-container">
@@ -43,49 +43,25 @@
     </nav>
   </header>
 
-  <main class="page-center">
-    <section class="news-board">
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/image.jpg')}}">
-        </div>
+  <section class="register-window">
+    <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+    <form class="register-container" action="/registersend" method="POST">
+      <input class="input-box" type="text" placeholder="ID" id="">
+      <div class="name-box">
+        <input class="name-register" type="text" placeholder="Ime" id="">
+        <input class="surname-register" type="text" placeholder="Prezime" id="">
       </div>
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/profile-picture.jpg')}}">
-        </div>
+      <input class="input-box" type="text" placeholder="E-Mail" id="email">
+      <input class="input-box" type="password" placeholder="Lozinka" id="password">
+      <div class="name-box">
+        <input class="name-register" type="text" placeholder="ID Škole" id="">
+        <input class="surname-register" type="text" placeholder="ID Učionice" id="">
       </div>
-    </section>
-
-    <section class="changes-box">
-      <div class="today">
-        Zamjene danas
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="tomorrow">
-        Zamjene sutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="after-tomorrow">
-        Zamjene prekosutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="next-week">
-        Idući tjedan
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-    </section>
-  </main>
+      <button style="width:106%;" type="submit">Napravi račun</button>
+    </form>
+    <p class="noaccounttext">Ako imaš račun:</p>
+    <button class="signup-loginbox" onclick="changeUrl('/login')">Prijavi se</button>
+  </section>
 
   <script>
     function changeUrl(url){
