@@ -46,16 +46,15 @@
   <section class="register-window">
     <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
     <form class="register-container" action="/registersend" method="POST">
-      <input class="input-box" type="text" placeholder="ID" id="">
       <div class="name-box">
-        <input class="name-register" type="text" placeholder="Ime" id="">
-        <input class="surname-register" type="text" placeholder="Prezime" id="">
+        <input class="name-register" type="text" placeholder="Ime" required="true" name="name">
+        <input class="surname-register" type="text" placeholder="Prezime" required="true" name="surname">
       </div>
-      <input class="input-box" type="text" placeholder="E-Mail" id="email">
-      <input class="input-box" type="password" placeholder="Lozinka" id="password">
+      <input class="input-box" type="text" placeholder="E-Mail" required="true" name="email">
+      <input class="input-box" type="password" placeholder="Lozinka" required="true" name="password">
       <div class="name-box">
-        <input class="name-register" type="text" placeholder="ID Škole" id="">
-        <input class="surname-register" type="text" placeholder="ID Učionice" id="">
+        <input class="name-register" type="text" placeholder="ID Škole" name="schoolID">
+        <input class="surname-register" type="text" placeholder="ID Učionice" name="classID">
       </div>
       <button style="width:106%;" type="submit">Napravi račun</button>
     </form>
