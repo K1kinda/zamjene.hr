@@ -27,13 +27,8 @@
       <button class="raspored-u-button">Moj raspored učionica</button>
     </section>
     <section class="login-signup-container">
-      {% if isLoggedIn %}
         <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
         <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-      {% else %}
-        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
-      {% endif %}
       <!--div class="name-container">
         <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
         <p class="name">Mato Osman</p>
@@ -51,43 +46,32 @@
   <main class="page-center">
     <section class="news-board">
       <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/image.jpg')}}">
-        </div>
+        <div class="post-title">{{ user.name }} {{ user.lastname }}</div>
       </div>
       <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/profile-picture.jpg')}}">
-        </div>
+        {% if user.email %}
+        <div class="post-title">Email: {{ user.email }}</div>
+        {% else %}
+        <div class="post-title">Email: nema</div>
+        {% endif %}
+        {% if user.password %}
+        <div class="post-title">Lozinka: {{ user.password }}</div>
+        {% else %}
+        <div class="post-title">Lozinka: nema</div>
+        {% endif %}
+        {% if user.school_id %}
+        <div class="post-title">ID škole: {{ user.school_id }}</div>
+        {% else %}
+        <div class="post-title">ID škole: nema</div>
+        {% endif %}
+        {% if user.classroom_id %}
+        <div class="post-title">ID razreda: {{ user.classroom_id }}</div>
+        {% else %}
+        <div class="post-title">ID razreda: nema</div>
+        {% endif %}
       </div>
-    </section>
-
-    <section class="changes-box">
-      <div class="today">
-        Zamjene danas
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="tomorrow">
-        Zamjene sutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="after-tomorrow">
-        Zamjene prekosutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="next-week">
-        Idući tjedan
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
+      <div>
+        <button>UREDI</button>
       </div>
     </section>
   </main>

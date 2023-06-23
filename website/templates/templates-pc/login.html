@@ -46,8 +46,8 @@
   <section class="login-window">
     <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
     <form class="login-container" action="/loginsend" method="POST">
-      <input class="input-box" type="text" placeholder="E-Mail" id="email">
-      <input class="input-box" type="password" placeholder="Lozinka" id="password">
+      <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
+      <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password">
       <button style="width:106%;" type="submit">Prijavi se</button>
     </form>
     <p class="noaccounttext">Ako nemaš račun:</p>
