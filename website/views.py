@@ -1,16 +1,18 @@
-from flask import Blueprint, render_template, Flask, request, redirect, url_for
+from flask import Blueprint, render_template, Flask, request, redirect, make_response
 from .models import User
 from . import db
 import time
 
 views = Blueprint('views', __name__)
 
-isLoggedIn=False
-loggedUser = ""
-
 @views.route('/')
 def home():
     user_agent = request.headers.get('User-Agent')
+    isLoggedIn = request.cookies.get('isLoggedIn')
+    if isLoggedIn=="True":
+        isLoggedIn=True
+    else:
+        isLoggedIn=False
     if 'Mobile' in user_agent:
         return render_template("templates-mobile/home_mobile.html", isLoggedIn=isLoggedIn)
     elif 'Windows' in user_agent:
@@ -40,7 +42,6 @@ def register():
     
 @views.route('/registersend', methods=['GET', 'POST'])
 def registersend():
-    global isLoggedIn, loggedUser
     if request.method=="POST":
         name = request.form['name']
         surname = request.form['surname']
@@ -94,14 +95,14 @@ def registersend():
 
             #login novog usera
             user = User.query.filter_by(email=email).first()
-            isLoggedIn = True
-            loggedUser = user
-            return redirect("/")
+            response = make_response(redirect("/"))
+            response.set_cookie('isLoggedIn', value="True")
+            response.set_cookie('loggedUser', value=str(user.id))
+            return response
 
     
 @views.route('/loginsend', methods=['GET', 'POST'])
 def loginsend():
-    global isLoggedIn, loggedUser
     if request.method=="POST":
         email = request.form['email']
         password = request.form['password']
@@ -109,25 +110,26 @@ def loginsend():
         user = User.query.filter_by(email=email).first()
         if user:
             if user.password==password:
-                isLoggedIn = True
-                loggedUser = user
-                return redirect("/")
+                response = make_response(redirect("/"))
+                response.set_cookie('isLoggedIn', value="True")
+                response.set_cookie('loggedUser', value=str(user.id))
+                return response
             else:
-                isLoggedIn = False
+                response.set_cookie('isLoggedIn', value="False")
                 return redirect("/login")
         else:
-            isLoggedIn = False
+            response.set_cookie('isLoggedIn', value="False")
             return redirect("/login")
         
 @views.route('/logout')
 def logout():
-    global isLoggedIn
-    isLoggedIn = False
-    return redirect("/")
+    response = make_response(redirect("/"))
+    response.set_cookie('isLoggedIn', value="False")
+    return response
 
 @views.route('/viewprofile')
 def viewprofile():
-    global loggedUser
+    loggedUser = User.query.get(int(request.cookies.get('loggedUser')))
     return render_template("templates-pc/profile.html", user=loggedUser)
     
     
