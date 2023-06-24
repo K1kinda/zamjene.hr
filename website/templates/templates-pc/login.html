@@ -44,6 +44,9 @@
   </header>
 
   <section class="login-window">
+    {% if error %}
+    {{ error }}
+    {% endif %}
     <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
     <form class="login-container" action="/loginsend" method="POST">
       <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
