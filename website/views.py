@@ -164,7 +164,7 @@ def loginadminsend():
     if request.method=="POST":
         password = request.form['password']
 
-        if password=="markoiloveyou":
+        if password=="lozinka":
             response = make_response(redirect("/adminmenu"))
             response.set_cookie('isLoggedIn', value="True")
             response.set_cookie('Admin', value="True")
