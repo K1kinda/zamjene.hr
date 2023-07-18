@@ -31,6 +31,28 @@ def login():
     else:
         return render_template("templates-pc/login.html", error=error)
     
+@views.route('/loginadmin')
+def loginAdmin():
+    error=request.args.get("error")
+    user_agent = request.headers.get('User-Agent')
+    if 'Mobile' in user_agent:
+        return render_template("templates-pc/login-admin.html", error=error)
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/login-admin.html", error=error)
+    else:
+        return render_template("templates-pc/login-admin.html", error=error)
+    
+@views.route('/loginskola')
+def loginSkola():
+    error=request.args.get("error")
+    user_agent = request.headers.get('User-Agent')
+    if 'Mobile' in user_agent:
+        return render_template("templates-pc/login-skola.html", error=error)
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/login-skola.html", error=error)
+    else:
+        return render_template("templates-pc/login-skola.html", error=error)
+    
 @views.route('/register')
 def register():
     error=request.args.get("error")
@@ -135,6 +157,54 @@ def loginsend():
             response = make_response(redirect(url_for("views.login", error=error)))
             response.set_cookie('isLoggedIn', value="False")
             return response
+        
+@views.route('/loginadminsend', methods=['GET', 'POST'])
+def loginadminsend():
+    error=""
+    if request.method=="POST":
+        password = request.form['password']
+
+        if password=="markoiloveyou":
+            response = make_response(redirect("/adminmenu"))
+            response.set_cookie('isLoggedIn', value="True")
+            response.set_cookie('Admin', value="True")
+            return response
+        else:
+            error="Kriva lozinka."
+            response = make_response(redirect(url_for("views.loginadmin", error=error)))
+            response.set_cookie('isLoggedIn', value="False")
+            return response
+        
+@views.route('/adminmenu', methods=['GET', 'POST'])
+def adminmenu():
+    isLoggedIn = request.cookies.get('isLoggedIn')
+    Admin = request.cookies.get('Admin')
+    if isLoggedIn and Admin:
+        return render_template("templates-pc/admin-menu.html")
+    else:
+        return redirect("/")
+    
+@views.route('/loginskolasend', methods=['GET', 'POST'])
+def loginskolasend():
+    error=""
+    if request.method=="POST":
+        #dodat da se ulogira pomocu ovog u pravi racun skole...
+        id = request.form['id']
+        password = request.form['password']
+        response = make_response(redirect("/skolamenu"))
+        response.set_cookie('isLoggedIn', value="True")
+        response.set_cookie('Skola', value="True")
+        return response
+        
+@views.route('/skolamenu', methods=['GET', 'POST'])
+def skolamenu():
+    isLoggedIn = request.cookies.get('isLoggedIn')
+    Skola = request.cookies.get('Skola')
+    if isLoggedIn and Skola:
+        return render_template("templates-pc/skola-menu.html")
+    else:
+        return redirect("/")
+    
         
 @views.route('/logout')
 def logout():

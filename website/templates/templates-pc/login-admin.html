@@ -29,7 +29,6 @@
     <section class="login-signup-container">
       <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
       <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
-      <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
       <!--div class="name-container">
         <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
         <p class="name">Mato Osman</p>
@@ -49,13 +48,11 @@
     {{ error }}
     {% endif %}
     <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
-    <form class="login-container" action="/loginsend" method="POST">
-      <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
-      <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password">
+    <p>ADMIN LOGIN</p>
+    <form class="login-container" action="/loginadminsend" method="POST">
+      <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd">
       <button style="width:106%;" type="submit">Prijavi se</button>
     </form>
-    <p class="noaccounttext">Ako nemaš račun:</p>
-    <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
   </section>
 
   <script>
