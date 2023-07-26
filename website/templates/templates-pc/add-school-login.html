@@ -13,7 +13,8 @@
   <title>zamjene.hr</title>
 </head>
 
-<body>
+
+<body class="body-login">
 
   <aside class="sidebar">
     <div class="logo-container">
@@ -50,38 +51,17 @@
     </nav>
   </header>
 
-  <main class="page-center">
-    <section class="news-board">
-      <div class="post-box">
-        <div class="post-title">{{ user.name }} {{ user.lastname }}</div>
-      </div>
-      <div class="post-box">
-        {% if user.email %}
-        <div class="post-title">Email: {{ user.email }}</div>
-        {% else %}
-        <div class="post-title">Email: nema</div>
-        {% endif %}
-        {% if user.password %}
-        <div class="post-title">Lozinka: {{ user.password }}</div>
-        {% else %}
-        <div class="post-title">Lozinka: nema</div>
-        {% endif %}
-        {% if user.school_id %}
-        <div class="post-title">ID škole: {{ user.school_id }}</div>
-        {% else %}
-        <div class="post-title">ID škole: nema</div>
-        {% endif %}
-        {% if user.classroom_id %}
-        <div class="post-title">ID razreda: {{ user.classroom_id }}</div>
-        {% else %}
-        <div class="post-title">ID razreda: nema</div>
-        {% endif %}
-      </div>
-      <div>
-        <button>UREDI</button>
-      </div>
-    </section>
-  </main>
+  <section class="login-window">
+    {% if error %}
+    {{ error }}
+    {% endif %}
+    <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+    <p>DODAVANJE ŠKOLE</p>
+    <form class="login-container" action="/addschool" method="POST">
+      <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd">
+      <button style="width:106%;" type="submit">Prijavi se</button>
+    </form>
+  </section>
 
   <script>
     function changeUrl(url){

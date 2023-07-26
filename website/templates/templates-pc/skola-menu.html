@@ -13,8 +13,43 @@
   <title>zamjene.hr</title>
 </head>
 
-<body>
-  <p>ŠKOLA MENU</p>
 
+<body>
+  <aside class="sidebar">
+    <div class="logo-container">
+      <span class="logo-text">zamjene.hr</span>
+    </div>
+    <section class="sidebar-buttons">
+      <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
+      <button class="zamjene-button">Moje zamjene</button>
+      <button class="oglasna-button">Oglasna ploča</button>
+      <button class="raspored-p-button">Moj raspored predmeta</button>
+      <button class="raspored-u-button">Moj raspored učionica</button>
+    </section>
+    <section class="login-signup-container">
+      {% if isLoggedIn %}
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% else %}
+        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
+        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
+        <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
+      {% endif %}
+      <!--div class="name-container">
+        <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
+        <p class="name">Mato Osman</p>
+      </div-->
+    </section>
+  </aside>
+  <p>ŠKOLA MENU</p>
+  <p>IME ŠKOLE: {{ skola.name }}</p>
+  <p>ID ŠKOLE: {{ skola.id }}</p>
+  <p>LOZINKA ŠKOLE: {{ skola.login_password }}</p>
 </body>
+<script>
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script>
 </html>

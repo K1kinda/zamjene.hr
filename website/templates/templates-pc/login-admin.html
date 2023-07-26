@@ -13,6 +13,7 @@
   <title>zamjene.hr</title>
 </head>
 
+
 <body class="body-login">
 
   <aside class="sidebar">
@@ -27,8 +28,15 @@
       <button class="raspored-u-button">Moj raspored učionica</button>
     </section>
     <section class="login-signup-container">
-      <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-      <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
+      {% if isLoggedIn %}
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% else %}
+        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
+        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
+        <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
+      {% endif %}
       <!--div class="name-container">
         <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
         <p class="name">Mato Osman</p>
