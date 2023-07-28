@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for
-from .models import User, School
+from .models import User, School, Classroom, Zamjene
 from . import db
 import time
 
@@ -232,8 +232,15 @@ def skolamenu():
     Skola = request.cookies.get('Skola')
     loggedskolaID = int(request.cookies.get('loggedSchool'))
     loggedskola = School.query.filter_by(id=loggedskolaID).first()
+    if request.method == 'POST':
+        classroom_name = request.form.get('classroom_name')
+
+        db.session.add(Classroom(name=classroom_name, school_id=loggedskolaID))
+        db.session.commit()
+
     if isLoggedIn and Skola:
-        return render_template("templates-pc/skola-menu.html", skola=loggedskola, isLoggedIn=isLoggedIn)
+        classrooms = Classroom.query.filter_by(school_id=loggedskolaID).all()
+        return render_template("templates-pc/skola-menu.html", skola=loggedskola, isLoggedIn=isLoggedIn, classrooms=classrooms)
     else:
         return redirect("/")
     
@@ -320,3 +327,71 @@ def addschoolfunction():
             response.set_cookie('isLoggedIn', value="True")
             response.set_cookie('loggedSchool', value=str(school.id))
             return response
+
+@views.route('/prikazizamjene', methods=['GET', 'POST'])
+def prikazizamjene():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isLoggedIn')
+
+    schoolID = request.form['school_id']
+    classroomID = request.form['classroom_id']
+    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
+
+    zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+
+    return render_template("templates-pc/prikaz-zamjena.html", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+
+@views.route('/dodajzamjenu', methods=['GET', 'POST'])
+def dodajzamjenu():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isLoggedIn')
+    
+    if request.method=="POST":
+        schoolID = request.form['school_id']
+        classroomID = request.form['classroom_id']
+        classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
+
+        zamjena = request.form['zamjena']
+
+        nova_zamjena = Zamjene(zamjena=zamjena, classroom_id=classroomID)
+        db.session.add(nova_zamjena)
+        db.session.commit()
+
+        zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+
+        return render_template("templates-pc/prikaz-zamjena.html", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+        
+
+@views.route('/delete_zamjene/<int:zamjene_id>', methods=['POST'])
+def delete_zamjene(zamjene_id):
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isLoggedIn')
+
+    zamjene = Zamjene.query.get(zamjene_id)
+
+    db.session.delete(zamjene)
+    db.session.commit()
+
+    schoolID = request.form['school_id']
+    classroomID = request.form['classroom_id']
+    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
+    zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+    
+    return render_template("templates-pc/prikaz-zamjena.html", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+
+@views.route('/obrisirazred', methods=['POST'])
+def obriširazred():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isLoggedIn')
+
+    schoolID = request.form['school_id']
+    classroomID = request.form['classroom_id']
+
+    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
+
+    db.session.delete(classroom)
+    db.session.commit()
+
+    zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+    
+    return redirect("/skolamenu")

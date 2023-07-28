@@ -42,39 +42,25 @@
       </div-->
     </section>
   </aside>
-  <p>ŠKOLA MENU</p>
-  <p>IME ŠKOLE: {{ skola.name }}</p>
-  <p>ID ŠKOLE: {{ skola.id }}</p>
-  <p>LOZINKA ŠKOLE: {{ skola.login_password }}</p>
-  <form method="post">
-    <label for="classroom_name">Classroom Name:</label>
-    <input type="text" name="classroom_name" required>
-    <input type="submit" onclick="changeUrl('/skolamenu')" value="Add Classroom">
-  </form>
   <section>
-    <p>Razredi:</p>
-    {% for classroom in classrooms %}
-    <li>{{ classroom.name }} (ID: {{ classroom.id }})
-      <section>
-        <form action="/dodajraspored" method="post">
-          <input type="hidden" name="school_id" value="{{ skola.id }}">
-          <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-          <button type="submit">Raspored</button>
-        </form>
-        <form action="/prikazizamjene" method="post">
-            <input type="hidden" name="school_id" value="{{ skola.id }}">
-            <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-            <button type="submit">Zamjene</button>
-        </form>
-        <form action="/obrisirazred" method="post">
-          <button type="submit">Obriši razred</button>>
-          <input type="hidden" name="school_id" value="{{ skola.id }}">
-          <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-        </form>
-      </section>
-    </li>
+    <p>Zamjene za: {{ razred.name }}</p>
+    {% for zamjena in sve_zamjene %}
+      <p>{{ zamjena.zamjena }}</p>
+      <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
+        <input type="submit" value="Delete">
+        <input type="hidden" name="school_id" value="{{ skolaid }}">
+        <input type="hidden" name="classroom_id" value="{{ classroomid }}">
+      </form>
     {% endfor %}
   </section>
+  <form action="/dodajzamjenu" method="post">
+    <p>Dodaj novu zamjenu</p>
+    <input type="text" id="zamjena" name="zamjena" required>
+    <input type="hidden" name="school_id" value="{{ skolaid }}">
+    <input type="hidden" name="classroom_id" value="{{ classroomid }}">
+    <input type="submit" value="Dodaj zamjenu">
+  </form>
+
 </body>
 <script>
   function changeUrl(url){

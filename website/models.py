@@ -30,7 +30,7 @@ class Classroom(db.Model):
 class Zamjene(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     classroom_id = db.Column(db.Integer, db.ForeignKey('classroom.id'), nullable=False)
-    # Other fields for zamjene
+    zamjena = db.Column(db.String(100), nullable=False)
 
 
 class RasporedSati(db.Model):
