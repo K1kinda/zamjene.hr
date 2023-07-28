@@ -47,5 +47,6 @@ class RasporedUcionica(db.Model):
 
 class Obavjesti(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    classroom_id = db.Column(db.Integer, db.ForeignKey('classroom.id'), nullable=False)
-    # Other fields for obavjesti
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    content = db.Column(db.String(100), nullable=False)

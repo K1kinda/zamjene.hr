@@ -46,10 +46,28 @@
   <p>IME ŠKOLE: {{ skola.name }}</p>
   <p>ID ŠKOLE: {{ skola.id }}</p>
   <p>LOZINKA ŠKOLE: {{ skola.login_password }}</p>
+
+  <form method="post" action="/addad">
+    <label >Novi oglas:</label>
+    <input type="text" name="name" title="Naslov oglasa" required>
+    <input type="text" name="content" title="Opis oglasa" required>
+    <input type="submit" value="Dodaj novi ogras">
+  </form>
+
+  {% for obavijest in obavijesti %}
+    <li>{{ obavijest.name }} || {{ obavijest.content }}
+        <form action="/obrisiobavijest" method="post">
+          <button type="submit">Obriši obavijest</button>
+          <input type="hidden" name="school_id" value="{{ skola.id }}">
+          <input type="hidden" name="obavijest_id" value="{{ obavijest.id }}"> 
+        </form>
+    </li>
+  {% endfor %}
+
   <form method="post">
     <label for="classroom_name">Classroom Name:</label>
     <input type="text" name="classroom_name" required>
-    <input type="submit" onclick="changeUrl('/skolamenu')" value="Add Classroom">
+    <input type="submit" onclick="changeUrl('/skolamenu')" value="Dodaj novi razred">
   </form>
   <section>
     <p>Razredi:</p>
@@ -67,7 +85,7 @@
             <button type="submit">Zamjene</button>
         </form>
         <form action="/obrisirazred" method="post">
-          <button type="submit">Obriši razred</button>>
+          <button type="submit">Obriši razred</button>
           <input type="hidden" name="school_id" value="{{ skola.id }}">
           <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
         </form>
@@ -80,7 +98,7 @@
   function changeUrl(url){
     window.location.href=url;
   }
-</script>
+</script> 
 </html>
 
 

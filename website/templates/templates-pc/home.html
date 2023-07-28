@@ -52,7 +52,7 @@
 
   <main class="page-center">
     <section class="news-board">
-      <div class="post-box">
+      <!--div class="post-box">
         <div class="post-title">Naslov objave</div>
         <div class="post-image-container">
           <img class="post-image" src="{{ url_for('static', filename='pictures/image.jpg')}}">
@@ -63,7 +63,12 @@
         <div class="post-image-container">
           <img class="post-image" src="{{ url_for('static', filename='pictures/profile-picture.jpg')}}">
         </div>
-      </div>
+      </div-->
+      {% for obavijest in sve_obavijesti %}
+        <div class="post-title">{{ obavijest.name }}</div> <br>
+        <div class="post-desc">{{ obavijest.content }}</div>
+        <br>
+      {% endfor %}
     </section>
 
     <section class="changes-box">

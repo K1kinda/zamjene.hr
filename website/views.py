@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for
-from .models import User, School, Classroom, Zamjene
+from .models import User, School, Classroom, Zamjene, Obavjesti
 from . import db
 import time
 
@@ -9,16 +9,27 @@ views = Blueprint('views', __name__)
 def home():
     user_agent = request.headers.get('User-Agent')
     isLoggedIn = request.cookies.get('isLoggedIn')
+
     if isLoggedIn=="True":
         isLoggedIn=True
     else:
         isLoggedIn=False
-    if 'Mobile' in user_agent:
-        return render_template("templates-mobile/home_mobile.html", isLoggedIn=isLoggedIn)
-    elif 'Windows' in user_agent:
-        return render_template("templates-pc/home.html", isLoggedIn=isLoggedIn)
+
+    skola = request.cookies.get('Skola')
+    if skola=="True":
+        loggedskolaID = int(request.cookies.get('loggedSchool'))
+        sve_obavijesti = Obavjesti.query.filter_by(school_id=loggedskolaID).all()
+        sve_obavijesti = sve_obavijesti[::-1]
     else:
-        return render_template("templates-pc/home.html", isLoggedIn=isLoggedIn)
+        sve_obavijesti=[]
+
+    if 'Mobile' in user_agent:
+        return render_template("templates-mobile/home_mobile.html", isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti)
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/home.html", isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti)
+    else:
+        return render_template("templates-pc/home.html", isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti)
+    
     
 @views.route('/login')
 def login():
@@ -232,6 +243,10 @@ def skolamenu():
     Skola = request.cookies.get('Skola')
     loggedskolaID = int(request.cookies.get('loggedSchool'))
     loggedskola = School.query.filter_by(id=loggedskolaID).first()
+
+    obavijesti = Obavjesti.query.filter_by(school_id=loggedskolaID).all()
+    obavijesti = obavijesti[::-1]
+
     if request.method == 'POST':
         classroom_name = request.form.get('classroom_name')
 
@@ -240,7 +255,7 @@ def skolamenu():
 
     if isLoggedIn and Skola:
         classrooms = Classroom.query.filter_by(school_id=loggedskolaID).all()
-        return render_template("templates-pc/skola-menu.html", skola=loggedskola, isLoggedIn=isLoggedIn, classrooms=classrooms)
+        return render_template("templates-pc/skola-menu.html", skola=loggedskola, isLoggedIn=isLoggedIn, classrooms=classrooms, obavijesti=obavijesti)
     else:
         return redirect("/")
     
@@ -345,12 +360,12 @@ def prikazizamjene():
 def dodajzamjenu():
     error=request.args.get("error")
     isLoggedIn = request.cookies.get('isLoggedIn')
-    
-    if request.method=="POST":
-        schoolID = request.form['school_id']
-        classroomID = request.form['classroom_id']
-        classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
 
+    schoolID = request.form['school_id']
+    classroomID = request.form['classroom_id']
+    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
+
+    if request.method=="POST":
         zamjena = request.form['zamjena']
 
         nova_zamjena = Zamjene(zamjena=zamjena, classroom_id=classroomID)
@@ -358,8 +373,8 @@ def dodajzamjenu():
         db.session.commit()
 
         zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
-
-        return render_template("templates-pc/prikaz-zamjena.html", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+ 
+    return render_template("templates-pc/prikaz-zamjena.html", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
         
 
 @views.route('/delete_zamjene/<int:zamjene_id>', methods=['POST'])
@@ -381,9 +396,6 @@ def delete_zamjene(zamjene_id):
 
 @views.route('/obrisirazred', methods=['POST'])
 def obriširazred():
-    error=request.args.get("error")
-    isLoggedIn = request.cookies.get('isLoggedIn')
-
     schoolID = request.form['school_id']
     classroomID = request.form['classroom_id']
 
@@ -392,6 +404,29 @@ def obriširazred():
     db.session.delete(classroom)
     db.session.commit()
 
-    zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+    return redirect("/skolamenu")
+
+@views.route('/addad', methods=['POST','GET'])
+def addad():
+    schoolID = int(request.cookies.get('loggedSchool'))
+    msg = request.form['content']
+    name = request.form['name']
+
+    obavijest = Obavjesti(school_id=schoolID, name=name, content=msg)
+
+    db.session.add(obavijest)
+    db.session.commit()
     
+    return redirect("/skolamenu")
+
+@views.route('/obrisiobavijest', methods=['POST'])
+def obrisiobavijest():
+    school_id = request.form.get('school_id') 
+    obavijest_id = request.form.get('obavijest_id')  
+
+    obavijest = Obavjesti.query.filter_by(school_id=school_id, id=obavijest_id).first()
+
+    db.session.delete(obavijest)
+    db.session.commit()
+
     return redirect("/skolamenu")
