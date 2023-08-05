@@ -434,7 +434,7 @@ def obrisiobavijest():
 
     return redirect("/skolamenu")
 
-@views.route('/dodajraspored', methods=['GET', 'POST'])
+@views.route('/dodajraspored/', methods=['GET', 'POST'])
 def dodajraspored():
     error=request.args.get("error")
     isLoggedIn = request.cookies.get('isLoggedIn')
