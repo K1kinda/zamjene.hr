@@ -1,13 +1,16 @@
-from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for
-from .models import User, School, Classroom, Zamjene, Obavjesti
+from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify
+from .models import User, School, Classroom, Zamjene, Obavjesti, RasporedSati, RasporedUcionica
 from . import db
 import time
+import pandas as pd
+import os
+from werkzeug.utils import secure_filename
 
 views = Blueprint('views', __name__)
 
 @views.route('/')
 def home():
-    user_agent = request.headers.get('User-Agent')
+    user_agent = request.headers.get('User-Agent') 
     isLoggedIn = request.cookies.get('isLoggedIn')
 
     if isLoggedIn=="True":
@@ -430,3 +433,54 @@ def obrisiobavijest():
     db.session.commit()
 
     return redirect("/skolamenu")
+
+@views.route('/dodajraspored', methods=['GET', 'POST'])
+def dodajraspored():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isLoggedIn')
+    if request.method=='GET':
+        classroom_id = request.args.get('classroom_id')
+        raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
+        if raspored_sati:
+            raspored_string = raspored_sati.raspored_string
+        else:
+            raspored_string = ","*45
+        data = raspored_string.split(',')
+        return render_template('templates-pc/dodaj-raspored.html', data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+    elif request.method == 'POST':
+        data = []
+        for i in range(9):
+            for j in range(5):
+                input_name = "predmet_" + str(i) + "_" + str(j)
+                predmet_value = request.form.get(input_name)
+                data.append(predmet_value)
+
+        classroom_id = request.form['classroom_id']
+        raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
+
+        if raspored_sati:
+            existing_raspored_string = raspored_sati.raspored_string
+        else:
+            existing_raspored_string = ","*45
+        existing_raspored_data = existing_raspored_string.split(',')
+
+        new_data = []
+        for i in range(len(data)):
+            if data[i]!="" and data[i]!=existing_raspored_data[i]:
+                new_data.append(data[i])
+            else:
+                new_data.append(existing_raspored_data[i])
+
+        items_string = ','.join(new_data)
+        new_raspored_sati = RasporedSati(classroom_id=classroom_id, raspored_string=items_string)
+
+        existing_raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
+        if existing_raspored_sati:
+            db.session.delete(existing_raspored_sati)
+
+        db.session.add(new_raspored_sati)
+        db.session.commit()
+
+        return render_template('templates-pc/dodaj-raspored.html', data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+
+

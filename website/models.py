@@ -36,13 +36,12 @@ class Zamjene(db.Model):
 class RasporedSati(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     classroom_id = db.Column(db.Integer, db.ForeignKey('classroom.id'), nullable=False)
-    # Other fields for rasporedsati
+    raspored_string = db.Column(db.String(1000), nullable=False)
 
 
 class RasporedUcionica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    classroom_id = db.Column(db.Integer, db.ForeignKey('classroom.id'), nullable=False)
-    # Other fields for rasporeducionica
+    raspored_string = db.Column(db.String(1000), nullable=False)
 
 
 class Obavjesti(db.Model):

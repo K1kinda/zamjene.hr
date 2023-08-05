@@ -12,7 +12,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <title>zamjene.hr</title>
 </head>
-
+ 
 
 <body>
   <aside class="sidebar">
@@ -42,64 +42,34 @@
       </div-->
     </section>
   </aside>
-  <p>ŠKOLA MENU</p>
-  <p>IME ŠKOLE: {{ skola.name }}</p>
-  <p>ID ŠKOLE: {{ skola.id }}</p>
-  <p>LOZINKA ŠKOLE: {{ skola.login_password }}</p>
-
-  <form method="post" action="/addad">
-    <label >Novi oglas:</label>
-    <input type="text" name="name" title="Naslov oglasa" required>
-    <input type="text" name="content" title="Opis oglasa" required>
-    <input type="submit" value="Dodaj novi ogras">
+  <form action="/dodajraspored" method="post">
+    <input type="hidden" name="classroom_id" value="{{ classroom_id }}">
+    <table>
+      <tr>
+        <th></th>
+        <th>Pon</th>
+        <th>Uto</th>
+        <th>Sri</th>
+        <th>Cet</th>
+        <th>Pet</th>
+      </tr>
+      {% for i in range(9) %}
+      <tr>
+        <th>{{ i+1 }}.sat</th>
+        {% for j in range(5) %}
+          <th><input type="text" placeholder="{{ data[j + i*5] }}" name="predmet_{{ i }}_{{ j }}"></th>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
+    <button type="submit">Dodaj raspored</button>
   </form>
-
-  {% for obavijest in obavijesti %}
-    <li>{{ obavijest.name }} || {{ obavijest.content }}
-        <form action="/obrisiobavijest" method="post">
-          <button type="submit">Obriši obavijest</button>
-          <input type="hidden" name="school_id" value="{{ skola.id }}">
-          <input type="hidden" name="obavijest_id" value="{{ obavijest.id }}"> 
-        </form>
-    </li>
-  {% endfor %}
-
-  <form method="post">
-    <label for="classroom_name">Classroom Name:</label>
-    <input type="text" name="classroom_name" required>
-    <input type="submit" onclick="changeUrl('/skolamenu')" value="Dodaj novi razred">
-  </form>
-
-
-  <section>
-    <p>Razredi:</p>
-    {% for classroom in classrooms %}
-    <li>{{ classroom.name }} (ID: {{ classroom.id }})
-      <section>
-        <form action="/dodajraspored" method="get">
-          <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-          <button type="submit">Raspored</button>
-        </form>
-        <form action="/prikazizamjene" method="post">
-            <input type="hidden" name="school_id" value="{{ skola.id }}">
-            <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-            <button type="submit">Zamjene</button>
-        </form>
-        <form action="/obrisirazred" method="post">
-          <button type="submit">Obriši razred</button>
-          <input type="hidden" name="school_id" value="{{ skola.id }}">
-          <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-        </form>
-      </section>
-    </li>
-    {% endfor %}
-  </section>
 </body>
 <script>
   function changeUrl(url){
     window.location.href=url;
   }
-</script> 
+</script>
 </html>
 
 
