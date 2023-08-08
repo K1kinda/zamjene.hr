@@ -39,6 +39,7 @@
   </aside>
   <p>Ako želiš obrisati polje samo na njegovo mjesto upiši slovo "X".</p>
   <form action="/update_table" method="post">
+    <input type="hidden" name="school_id" value="{{ school_id }}">
     <table>
       <tr>
         {% for x in range(5) %}

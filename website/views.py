@@ -491,7 +491,8 @@ def update_table():
     error=request.args.get("error")
     isLoggedIn = request.cookies.get('isLoggedIn')
     if request.method=='GET':
-        raspored = RasporedUcionica.query.filter_by().first()
+        school_id = request.args.get('school_id')
+        raspored = RasporedUcionica.query.filter_by(school_id=school_id).first()
         if raspored:
             raspored_string = raspored.raspored_string
         else:
@@ -499,7 +500,7 @@ def update_table():
         data = raspored_string.split(',')
 
 
-        return render_template('templates-pc/rasporeducionica.html', data=data, isLoggedIn=isLoggedIn, error=error)
+        return render_template('templates-pc/rasporeducionica.html', data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error)
     
     elif request.method == 'POST':
         data = []
@@ -509,7 +510,8 @@ def update_table():
                 razred_value = request.form.get(input_name)
                 if razred_value!=None:
                     data.append(razred_value)
-        raspored = RasporedUcionica.query.filter_by().first()
+        school_id = request.form['school_id']
+        raspored = RasporedUcionica.query.filter_by(school_id=school_id).first()
 
         if raspored:
             existing_raspored_string = raspored.raspored_string
@@ -527,13 +529,13 @@ def update_table():
                 new_data.append(existing_raspored_data[i])
 
         items_string = ','.join(new_data)
-        new_raspored = RasporedUcionica(raspored_string=items_string)
+        new_raspored = RasporedUcionica(raspored_string=items_string, school_id=school_id)
 
-        existing_raspored = RasporedUcionica.query.filter_by().first()
+        existing_raspored = RasporedUcionica.query.filter_by(school_id=school_id).first()
         if existing_raspored:
             db.session.delete(existing_raspored)
 
         db.session.add(new_raspored)
         db.session.commit()
 
-        return render_template('templates-pc/rasporeducionica.html', data=new_data, isLoggedIn=isLoggedIn, error=error)
+        return render_template('templates-pc/rasporeducionica.html', school_id=school_id, data=new_data, isLoggedIn=isLoggedIn, error=error)
