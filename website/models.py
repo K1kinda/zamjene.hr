@@ -41,7 +41,7 @@ class RasporedSati(db.Model):
 
 class RasporedUcionica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    raspored_string = db.Column(db.String(1000), nullable=False)
+    raspored_string = db.Column(db.String(10000), nullable=False)
 
 
 class Obavjesti(db.Model):
