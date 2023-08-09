@@ -21,45 +21,84 @@
     </div>
     <section class="sidebar-buttons">
       <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      <button class="zamjene-button">Moje zamjene</button>
       <button class="oglasna-button">Oglasna ploča</button>
-      <button class="raspored-p-button">Moj raspored predmeta</button>
-      <button class="raspored-u-button">Moj raspored učionica</button>
+      <button class="raspored-u-button">Raspored učionica</button>
+      {% if skola!="True" %}
+        <button class="zamjene-button">Moje zamjene</button>
+        <button class="raspored-p-button">Raspored predmeta</button>
+      {% endif %}
     </section>
     <section class="login-signup-container">
       {% if isLoggedIn %}
-        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
-        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        {% if skola %}
+          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        {% else %}
+          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        {% endif %}
       {% else %}
         <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
         <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
         <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
         <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-      {% endif %}
+      {% endif %} 
       <!--div class="name-container">
         <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
         <p class="name">Mato Osman</p>
       </div-->
     </section>
   </aside>
+  <form action="/dodajzamjenu" method="post">
+    <p>Dodaj novu zamjenu</p>
+    <p>Od:
+      <select id="from" name="from">
+        <option value="1. sata">1. sata</option>
+        <option value="2. sata">2. sata</option>
+        <option value="3. sata">3. sata</option>
+        <option value="4. sata">4. sata</option>
+        <option value="5. sata">5. sata</option>
+        <option value="6. sata">6. sata</option>
+        <option value="7. sata">7. sata</option>
+        <option value="8. sata">8. sata</option>
+        <option value="9. sata">9. sata</option>
+      </select>
+    </p>
+    <p>Do:
+      <select id="to" name="to">
+        <option value="1. sata">1. sata</option>
+        <option value="2. sata">2. sata</option>
+        <option value="3. sata">3. sata</option>
+        <option value="4. sata">4. sata</option>
+        <option value="5. sata">5. sata</option>
+        <option value="6. sata">6. sata</option>
+        <option value="7. sata">7. sata</option>
+        <option value="8. sata">8. sata</option>
+        <option value="9. sata">9. sata</option>
+      </select>   
+    </p>
+    
+    <input type="date" id="date" name="date"><br><br>
+    <input type="text" id="zamjena" name="zamjena" placeholder="Novi predmet" required><br><br>
+    <input type="hidden" name="school_id" value="{{ razred.id }}">
+    <input type="hidden" name="classroom_id" value="{{ classroomid }}">
+    <input type="submit" value="Dodaj zamjenu">
+  </form>
   <section>
     <p>Zamjene za: {{ razred.name }}</p>
     {% for zamjena in sve_zamjene %}
-      <p>{{ zamjena.zamjena }}</p>
+      <p>Od {{ zamjena.od }} <br>
+        Do {{ zamjena.do }} <br>
+        Datum zamjene: {{ zamjena.datum }} <br>
+        Novi predmet: {{ zamjena.zamjena }}
+    </p>
       <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
         <input type="submit" value="Delete">
-        <input type="hidden" name="school_id" value="{{ skolaid }}">
+        <input type="hidden" name="school_id" value="{{ razred.id }}">
         <input type="hidden" name="classroom_id" value="{{ classroomid }}">
       </form>
     {% endfor %}
   </section>
-  <form action="/dodajzamjenu" method="post">
-    <p>Dodaj novu zamjenu</p>
-    <input type="text" id="zamjena" name="zamjena" required>
-    <input type="hidden" name="school_id" value="{{ skolaid }}">
-    <input type="hidden" name="classroom_id" value="{{ classroomid }}">
-    <input type="submit" value="Dodaj zamjenu">
-  </form>
 
 </body>
 <script>

@@ -19,22 +19,29 @@
     <span class="logo-text">zamjene.hr</span>
   </div>
   <section class="sidebar-buttons">
-    <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-    <button class="zamjene-button">Moje zamjene</button>
-    <button class="oglasna-button">Oglasna ploča</button>
-    <button class="raspored-p-button">Moj raspored predmeta</button>
-    <button class="raspored-u-button">Moj raspored učionica</button>
-  </section>
+      <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
+      <button class="oglasna-button">Oglasna ploča</button>
+      <button class="raspored-u-button">Raspored učionica</button>
+      {% if skola!="True" %}
+        <button class="zamjene-button">Moje zamjene</button>
+        <button class="raspored-p-button">Raspored predmeta</button>
+      {% endif %}
+    </section>
   <section class="login-signup-container">
     {% if isLoggedIn %}
-      <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
-      <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% if skola %}
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% else %}
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% endif %}
     {% else %}
       <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
       <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
       <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
       <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-    {% endif %}
+    {% endif %} 
     <!--div class="name-container">
       <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
       <p class="name">Mato Osman</p>
