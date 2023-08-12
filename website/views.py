@@ -307,9 +307,10 @@ def addschool():
     if request.method=="GET":
         error=request.args.get("error")
         user_agent = request.headers.get('User-Agent')
+        isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
         skola = request.cookies.get('isSkolaLoggedIn')
         if 'Mobile' in user_agent:
-            return render_template("templates-pc/add-school-login.html", skola=skola, error=error, isLoggedIn=isLoggedIn)
+            return render_template("templates-pc/add-school-login.html", admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
         elif 'Windows' in user_agent:
             return render_template("templates-pc/add-school-login.html", skola=skola, error=error, isLoggedIn=isLoggedIn)
         else:
