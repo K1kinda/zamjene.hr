@@ -312,9 +312,9 @@ def addschool():
         if 'Mobile' in user_agent:
             return render_template("templates-pc/add-school-login.html", admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
         elif 'Windows' in user_agent:
-            return render_template("templates-pc/add-school-login.html", skola=skola, error=error, isLoggedIn=isLoggedIn)
+            return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
         else:
-            return render_template("templates-pc/add-school-login.html", skola=skola, error=error, isLoggedIn=isLoggedIn)
+            return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
     elif request.method=="POST":
         password = request.form['password']
 
