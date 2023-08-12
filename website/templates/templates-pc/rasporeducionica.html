@@ -20,11 +20,13 @@
     </div>
     <section class="sidebar-buttons">
       <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      <button class="oglasna-button">Oglasna ploča</button>
-      <button class="raspored-u-button">Raspored učionica</button>
-      {% if skola!="True" %}
-        <button class="zamjene-button">Moje zamjene</button>
-        <button class="raspored-p-button">Raspored predmeta</button>
+      {% if admin!="True" %}
+        <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+        <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+        {% if skola!="True" %}
+          <button class="zamjene-button">Moje zamjene</button>
+          <button class="raspored-p-button">Raspored predmeta</button>
+        {% endif %}
       {% endif %}
     </section>
     <section class="login-signup-container">

@@ -33,8 +33,8 @@
     <section class="login-signup-container">
       {% if isLoggedIn %}
         {% if skola %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
         {% elif admin %}
           <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
           <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
@@ -55,44 +55,65 @@
     </section>
   </aside>
 
-  <header>
+  <!--header>
     <nav class="search-bar-container">
       <img class="search-icon" src="{{ url_for('static', filename='pictures/search.svg')}}">
       <input class="search-bar" type="text" placeholder="Pretraži">
     </nav>
-  </header>
+  </header-->
 
   <main class="page-center">
-    <section class="news-board">
-      <div class="post-box">
-        <div class="post-title">{{ user.name }} {{ user.lastname }}</div>
-      </div>
-      <div class="post-box">
-        {% if user.email %}
-        <div class="post-title">Email: {{ user.email }}</div>
-        {% else %}
-        <div class="post-title">Email: nema</div>
-        {% endif %}
-        {% if user.password %}
-        <div class="post-title">Lozinka: {{ user.password }}</div>
-        {% else %}
-        <div class="post-title">Lozinka: nema</div>
-        {% endif %}
-        {% if user.school_id %}
-        <div class="post-title">ID škole: {{ user.school_id }}</div>
-        {% else %}
-        <div class="post-title">ID škole: nema</div>
-        {% endif %}
-        {% if user.classroom_id %}
-        <div class="post-title">ID razreda: {{ user.classroom_id }}</div>
-        {% else %}
-        <div class="post-title">ID razreda: nema</div>
-        {% endif %}
-      </div>
-      <div>
-        <button>UREDI</button>
-      </div>
-    </section>
+    <table>
+      <tr>
+        {% for x in range(5) %}
+          <th></th>
+        {% endfor %}
+        <th>Pon</th>
+        {% for x in range(10) %}
+          <th></th>
+        {% endfor %}
+        <th>Uto</th>
+        {% for x in range(10) %}
+          <th></th>
+        {% endfor %}
+        <th>Sri</th>
+        {% for x in range(10) %}
+          <th></th>
+        {% endfor %}
+        <th>Cet</th>
+        {% for x in range(10) %}
+          <th></th>
+        {% endfor %}
+        <th>Pet</th>
+        {% for x in range(5) %}
+          <th></th>
+        {% endfor %}
+      </tr>
+      <tr>
+        <th></th>
+        {% for q in range (5) %}
+          {% for w in range (1, 10) %}
+            <th>{{ w }}</th>
+          {% endfor %}
+          <th></th>
+          <th></th>
+        {% endfor %}
+      </tr>
+      {% for i in range(25) %}
+      <tr>
+        <th>{{ i+1 }}</th>
+        {% for j in range(45) %}
+          <td>
+            <input id="{{ i }}_{{ j }}" type="text" placeholder="{{ data[j + i*45] }}" name="razred_{{ i }}_{{ j }}" disabled>
+          </td>
+          {% if (j+1)%9==0 %}
+            <th></th>
+            <th></th>
+          {% endif %}
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </table>
   </main>
 
   <script>
@@ -100,6 +121,11 @@
       window.location.href=url;
     }
   </script>
-
+  <style>
+    input[type="text"] {
+      width: 20px;
+      font-weight: bold;
+    }
+  </style>
 </body>
 </html>

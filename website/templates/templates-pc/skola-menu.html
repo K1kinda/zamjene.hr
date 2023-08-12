@@ -21,11 +21,13 @@
     </div>
     <section class="sidebar-buttons">
       <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      <button class="oglasna-button">Oglasna ploča</button>
-      <button class="raspored-u-button">Raspored učionica</button>
-      {% if Skola!="True" %}
-        <button class="zamjene-button">Moje zamjene</button>
-        <button class="raspored-p-button">Raspored predmeta</button>
+      {% if admin!="True" %}
+        <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+        <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+        {% if skola!="True" %}
+          <button class="zamjene-button">Moje zamjene</button>
+          <button class="raspored-p-button">Raspored predmeta</button>
+        {% endif %}
       {% endif %}
     </section>
     <section class="login-signup-container">
@@ -79,10 +81,10 @@
   {% endfor %}
   <p style="overflow: hidden;">____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________</p><br><br>
 
-  <form method="post">
+  <form method="post" action="/dodajrazred"> 
     <label for="classroom_name">Dodaj novi razred:</label><br><br>
     <input type="text" name="classroom_name" placeholder="Ime razreda" required><br><br>
-    <input type="submit" onclick="changeUrl('/skolamenu')" value="Dodaj novi razred"><br><br>
+    <input type="submit" value="Dodaj novi razred"><br><br>
   </form>
   <p style="overflow: hidden;">____________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________</p>
 

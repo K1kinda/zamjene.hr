@@ -113,14 +113,14 @@ def addschoolmenu():
         return redirect("/")
 
 #prikaz menu za administraciju skole
-@views.route('/skolamenu', methods=['GET'])
+@views.route('/skolamenu', methods=['GET', 'POST'])
 def skolamenu():
     isUserLoggedIn = request.cookies.get('isUserLoggedIn')
     isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
-
+    
     obavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
     obavijesti = obavijesti[::-1]
     if isUserLoggedIn and isSkolaLoggedIn:
@@ -260,7 +260,7 @@ def loginskolasend():
             response = make_response(redirect("/skolamenu"))
             response.set_cookie('isUserLoggedIn', value="True")
             response.set_cookie('isSkolaLoggedIn', value="True")
-            response.set_cookie('loggedInSchoolID', value=str(school.id))
+            response.set_cookie('loggedInSchoolID', value=str(id))
             return response
         else:
             error="Kriva lozinka."
@@ -283,13 +283,13 @@ def logout():
     return response
 
 #logika za dodavanje novog razreda
-@views.route('/dodajrazred')
+@views.route('/dodajrazred', methods=['GET', 'POST'])
 def dodajrazred():
-    classroom_name = request.form.get('classroom_name')
-    loggedInSkolaID = request.cookies.get('loggedInSkolaID')
-    db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID))
-    db.session.commit()
-    return redirect(url_for("views.skolamenu"))
+        classroom_name = request.form.get('classroom_name')
+        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID))
+        db.session.commit()
+        return redirect(url_for("views.skolamenu"))
 
 #logika za prikaz profila
 @views.route('/viewprofile')
@@ -571,3 +571,43 @@ def update_table():
         db.session.commit()
 
         return render_template('templates-pc/rasporeducionica.html', skola=skola, school_id=school_id, data=new_data, isLoggedIn=isLoggedIn, error=error)
+
+
+@views.route('/oglasnaploca/', methods=['GET'])
+def oglasnaploca():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    skola = request.cookies.get('isSkolaLoggedIn')
+    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    if skola!="True":
+        loggedInUserID = int(request.cookies.get('loggedInUser'))
+        loggedInUser = User.query.filter_by(id=loggedInUserID).first()
+        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInUser.school_id).all()
+    elif skola:
+        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
+
+    sveObavijesti = sveObavijesti[::-1]
+    return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
+
+@views.route('/rasporeducionica/', methods=['GET'])
+def rasporeducionica():
+    error=request.args.get("error")
+    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+
+    if isSkolaLoggedIn!="True":
+        loggedInUserID = int(request.cookies.get('loggedInUser'))
+        loggedInUser = User.query.filter_by(id=loggedInUserID).first()
+        raspored = RasporedUcionica.query.filter_by(school_id=loggedInUser.school_id).first()
+    elif isSkolaLoggedIn:
+        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        raspored = RasporedUcionica.query.filter_by(school_id=loggedInSkolaID).first()
+
+    if raspored:
+        raspored_string = raspored.raspored_string
+    else:
+        raspored_string = ","*1125
+    data = raspored_string.split(',')
+    return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error)
