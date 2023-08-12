@@ -31,7 +31,10 @@
     <section class="login-signup-container">
       {% if isLoggedIn %}
         {% if skola %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        {% elif admin %}
+          <button class="log-in-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
           <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
         {% else %}
           <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>

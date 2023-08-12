@@ -32,6 +32,9 @@
       {% if skola %}
         <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
         <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% elif admin %}
+        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
       {% else %}
         <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
         <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
