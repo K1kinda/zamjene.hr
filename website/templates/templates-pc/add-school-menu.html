@@ -32,11 +32,11 @@
     {% endif %}
   </section>
   <section class="login-signup-container">
-    {% if isLoggedIn %}
-      {% if skola %}
-        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-      {% elif admin %}
+    {% if isLoggedIn=="True" %}
+      {% if skola=="True" %}
+      <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+      <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+      {% elif admin=="True" %}
         <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
         <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
       {% else %}
@@ -62,7 +62,6 @@
   {% endif %}
   <p>DODAJ ŠKOLU</p>
   <form class="login-container" action="/addschoolfunction" method="POST">
-    <input class="input-box" type="text" placeholder="ID" name="id" id="id" required="true">
     <input class="input-box" type="text" placeholder="Ime" name="name" id="name" required="true">
     <input class="input-box" type="text" placeholder="Lozinka" name="password" id="password" required="true">
     <button style="width:106%;" type="submit">Prijavi se</button>

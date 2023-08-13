@@ -9,6 +9,8 @@ import pandas as pd
 import os
 from werkzeug.utils import secure_filename
 from datetime import datetime
+import random
+import string
 
 views = Blueprint('views', __name__)
 
@@ -244,8 +246,7 @@ def loginadminsend():
         return response
     else:
         error="Kriva lozinka."
-        response = make_response(redirect(url_for("views.loginadmin", error=error)))
-        return response
+        return redirect(url_for("views.loginadmin", error=error))
 
 #logika za ulogiravanje administracije skola
 @views.route('/loginskolasend', methods=['GET', 'POST'])
@@ -305,16 +306,19 @@ def viewprofile():
 def addschool():
     isLoggedIn = request.cookies.get('isUserLoggedIn')
     if request.method=="GET":
-        error=request.args.get("error")
-        user_agent = request.headers.get('User-Agent')
         isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-        skola = request.cookies.get('isSkolaLoggedIn')
-        if 'Mobile' in user_agent:
-            return render_template("templates-pc/add-school-login.html", admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
-        elif 'Windows' in user_agent:
-            return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
+        if isAdminLoggedIn:
+            return redirect("/add-school-menu")
         else:
-            return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
+            error=request.args.get("error")
+            user_agent = request.headers.get('User-Agent')
+            skola = request.cookies.get('isSkolaLoggedIn')
+            if 'Mobile' in user_agent:
+                return render_template("templates-pc/add-school-login.html", admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
+            elif 'Windows' in user_agent:
+                return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
+            else:
+                return render_template("templates-pc/add-school-login.html",admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
     elif request.method=="POST":
         password = request.form['password']
 
@@ -326,7 +330,7 @@ def addschool():
         else:
             error="Kriva lozinka."
             response = make_response(redirect(url_for("views.addschool", error=error)))
-            response.set_cookie('isUserLoggedIn', value="True")
+            response.set_cookie('isUserLoggedIn', value="False")
             response.set_cookie('isAdminLoggedIn', value="False")
             return response
 
@@ -335,7 +339,8 @@ def addschoolfunction():
     if request.method=="POST":
         name = request.form['name']
         password = request.form['password']
-        id = request.form['id']
+        characters = string.digits
+        id = int(''.join(random.choice(characters) for _ in range(8)))
 
         has_letter = any(char.isalpha() for char in password)
         has_number = any(char.isdigit() for char in password)
@@ -363,7 +368,8 @@ def addschoolfunction():
             #login novog usera
             school = School.query.filter_by(id=id).first()
             response = make_response(redirect("/skolamenu"))
-            response.set_cookie('isUserLoggedIn', value="True")
+            response.set_cookie('isSkolaLoggedIn', value="True")
+            response.set_cookie('isAdminLoggedIn', value="False")
             response.set_cookie('loggedInSchoolID', value=str(school.id))
             return response
 

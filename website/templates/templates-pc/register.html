@@ -33,11 +33,11 @@
       {% endif %}
     </section>
     <section class="login-signup-container">
-      {% if isLoggedIn %}
-        {% if skola %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% elif admin %}
+      {% if isLoggedIn=="True" %}
+        {% if skola=="True" %}
+        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+        {% elif admin=="True" %}
           <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
           <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
         {% else %}
