@@ -13,8 +13,7 @@
   <title>zamjene.hr</title>
 </head>
 
-
-<body class="body-login">
+<body>
 
   <aside class="sidebar">
     <div class="logo-container">
@@ -58,24 +57,77 @@
     </section>
   </aside>
 
-  <header>
+  <!--header>
     <nav class="search-bar-container">
       <img class="search-icon" src="{{ url_for('static', filename='pictures/search.svg')}}">
       <input class="search-bar" type="text" placeholder="Pretraži">
     </nav>
-  </header>
+  </header-->
 
-  <section class="login-window">
-    {% if error %}
-    {{ error }}
+  <main class="page-center">
+    {% if isLoggedIn!="True" or admin=="True" %}
+      POČETNA STRANICA
+    {% else %}
+        <section class="changes-box">
+          <div class="today">
+            Zamjene danas
+            {% if zamjeneDanas %}
+              {% for zamjena in zamjeneDanas %}
+                <p>Od {{ zamjena.od }} <br>
+                  Do {{ zamjena.do }} <br>
+                  Datum zamjene: {{ zamjena.datum }} <br>
+                  Novi predmet: {{ zamjena.zamjena }}
+                </p>
+              {% endfor %}
+            {% else %}
+                <p>Nema zamjena</p>
+            {% endif %}
+          </div>
+          <div class="tomorrow">
+            Zamjene sutra
+            {% if zamjeneSutra %}
+              {% for zamjena in zamjeneSutra %}
+                <p>Od {{ zamjena.od }} <br>
+                  Do {{ zamjena.do }} <br>
+                  Datum zamjene: {{ zamjena.datum }} <br>
+                  Novi predmet: {{ zamjena.zamjena }}
+                </p>
+              {% endfor %}
+            {% else %}
+              <p>Nema zamjena</p>
+            {% endif %}
+          </div>
+          <div class="after-tomorrow">
+            Zamjene prekosutra
+            {% if zamjenePrekosutra %}
+              {% for zamjena in zamjenePrekosutra %}
+                <p>Od {{ zamjena.od }} <br>
+                  Do {{ zamjena.do }} <br>
+                  Datum zamjene: {{ zamjena.datum }} <br>
+                  Novi predmet: {{ zamjena.zamjena }}
+                </p>
+              {% endfor %}
+            {% else %}
+                <p>Nema zamjena</p>
+            {% endif %}
+          </div>
+          <div class="next-week">
+            Idući tjedan
+            {% if zamjeneSljedeciTjedan %}
+              {% for zamjena in zamjeneSljedeciTjedan %}
+                <p>Od {{ zamjena.od }} <br>
+                  Do {{ zamjena.do }} <br>
+                  Datum zamjene: {{ zamjena.datum }} <br>
+                  Novi predmet: {{ zamjena.zamjena }}
+                </p>
+              {% endfor %}
+            {% else %}
+                <p>Nema zamjena</p>
+            {% endif %}
+          </div>
+        </section>
     {% endif %}
-    <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
-    <p>ADMIN LOGIN</p>
-    <form class="login-container" action="/loginadminsend" method="POST">
-      <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd">
-      <button style="width:106%;" type="submit">Prijavi se</button>
-    </form>
-  </section>
+  </main>
 
   <script>
     function changeUrl(url){

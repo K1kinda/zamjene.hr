@@ -25,7 +25,7 @@
           <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
           <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
           {% if skola!="True" %}
-            <button class="zamjene-button">Moje zamjene</button>
+            <button class="zamjene-button" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
             <button class="raspored-p-button">Raspored predmeta</button>
           {% endif %}
         {% endif %}

@@ -8,7 +8,7 @@ import time
 import pandas as pd
 import os
 from werkzeug.utils import secure_filename
-from datetime import datetime
+from datetime import datetime, date, timedelta
 import random
 import string
 
@@ -25,18 +25,40 @@ def home():
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
 
     sveObavijesti=[]
+    zamjeneDanas=[]
+    zamjeneSutra=[]
+    zamjenePrekosutra=[]
+    zamjeneSljedeciTjedan=[]
 
     if isSkolaLoggedIn=="True":
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
         sveObavijesti = sveObavijesti[::-1]
+    if isUserLoggedIn=="True":
+        loggedInUserID = request.cookies.get('loggedInUser')
+        loggedInUser = User.query.filter_by(id=loggedInUserID).first()
+
+        today = date.today()
+        tomarrow = today + timedelta(days=1)
+        dayAfterTomarrow = tomarrow + timedelta(days=1)
+
+        zamjeneDanas = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==today).all()
+        zamjeneSutra = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==tomarrow).all()
+        zamjenePrekosutra = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==dayAfterTomarrow).all()
+
+        daysUntilNextMonday = (-1 - today.weekday()) % 7
+        nextMonday = today + timedelta(days=daysUntilNextMonday + 1)
+        nextWeekStart = nextMonday
+        nextWeekEnd = nextMonday + timedelta(days=6)
+
+        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
 
     if 'Mobile' in userDevice:
-        return render_template("templates-mobile/home_mobile.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+        return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
     elif 'Windows' in userDevice:
-        return render_template("templates-pc/home.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+        return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
     else:
-        return render_template("templates-pc/home.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+        return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
 
 #prikaz login page stranice
 @views.route('/login')
@@ -617,3 +639,30 @@ def rasporeducionica():
         raspored_string = ","*1125
     data = raspored_string.split(',')
     return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error)
+
+@views.route('/prikazzamjenaucenik/', methods=['GET'])
+def prikazzamjenaucenik():
+    error=request.args.get("error")
+    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+
+    loggedInUserID = request.cookies.get('loggedInUser')
+    loggedInUser = User.query.filter_by(id=loggedInUserID).first()
+
+    today = date.today()
+    tomarrow = today + timedelta(days=1)
+    dayAfterTomarrow = tomarrow + timedelta(days=1)
+
+    zamjeneDanas = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==today).all()
+    zamjeneSutra = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==tomarrow).all()
+    zamjenePrekosutra = Zamjene.query.filter(Zamjene.classroom_id==loggedInUser.classroom_id, Zamjene.datum==dayAfterTomarrow).all()
+
+    daysUntilNextMonday = (-1 - today.weekday()) % 7
+    nextMonday = today + timedelta(days=daysUntilNextMonday + 1)
+    nextWeekStart = nextMonday
+    nextWeekEnd = nextMonday + timedelta(days=6)
+
+    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
+
+    return render_template('templates-pc/prikazzamjenaucenik.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
