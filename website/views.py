@@ -34,7 +34,7 @@ def home():
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
         sveObavijesti = sveObavijesti[::-1]
-    if isUserLoggedIn=="True":
+    elif isUserLoggedIn=="True":
         loggedInUserID = request.cookies.get('loggedInUser')
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
 
@@ -52,6 +52,8 @@ def home():
         nextWeekEnd = nextMonday + timedelta(days=6)
 
         zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
+
+        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInUser.school_id).all()
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)

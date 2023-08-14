@@ -65,12 +65,17 @@
   </header-->
 
   <main class="page-center">
-    <section class="news-board">
-      {% for obavijest in sve_obavijesti %}
-        <div class="post-title">{{ obavijest.name }}</div> <br>
-        <div class="post-desc">{{ obavijest.content }}</div>
-        <br>
-      {% endfor %}
+    <section class="news-board"> 
+      {% if sve_obavijesti %}
+        {% for obavijest in sve_obavijesti %}
+          <div class="post-title">{{ obavijest.name }}</div> <br>
+          <div class="post-desc">{{ obavijest.content }}</div>
+          <br>
+        {% endfor %}
+      {% else %}
+        {{ sve_obavijesti }}
+        <p class="post-title">Nema obavijesti</p>
+      {% endif %}
     </section>
   </main>
 
