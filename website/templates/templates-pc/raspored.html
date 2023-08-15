@@ -56,31 +56,26 @@
       </div-->
     </section>
   </aside>
-  <p>Ako želiš obrisati predmet samo na njegovo mjesto upiši slovo "X".</p>
-  <form action="/dodajraspored" method="post">
-    <input type="hidden" name="classroom_id" value="{{ classroom_id }}">
-    <table>
-      <tr>
-        <th></th>
-        <th>Pon</th>
-        <th>Uto</th>
-        <th>Sri</th>
-        <th>Cet</th>
-        <th>Pet</th>
-      </tr>
-      {% for i in range(9) %}
-      <tr>
-        <th>{{ i+1 }}.sat</th>
-        {% for j in range(5) %}
-        <th>
-          <input id="{{ i }}_{{ j }}" type="text" placeholder="{{ data[j + i*5] }}" name="predmet_{{ i }}_{{ j }}">
-        </th>
-        {% endfor %}
-      </tr>
+  <table>
+    <tr>
+      <th></th>
+      <th>Pon</th>
+      <th>Uto</th>
+      <th>Sri</th>
+      <th>Cet</th>
+      <th>Pet</th>
+    </tr>
+    {% for i in range(9) %}
+    <tr>
+      <th>{{ i+1 }}.sat</th>
+      {% for j in range(5) %}
+      <th>
+        <input id="{{ i }}_{{ j }}" type="text" placeholder="{{ data[j + i*5] }}" name="predmet_{{ i }}_{{ j }}" disabled>
+      </th>
       {% endfor %}
-    </table>
-    <button type="submit">Spremi raspored</button>
-  </form>
+    </tr>
+    {% endfor %}
+  </table>
 </body>
 <script>
   function changeUrl(url){

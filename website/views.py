@@ -668,3 +668,20 @@ def prikazzamjenaucenik():
     zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
 
     return render_template('templates-pc/prikazzamjenaucenik.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+
+@views.route('/prikaziraspored/', methods=['GET'])
+def prikaziraspored():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    skola = request.cookies.get('isSkolaLoggedIn')
+    loggedInUserID = request.cookies.get('loggedInUser')
+    loggedInUser = User.query.filter_by(id=loggedInUserID).first()
+    classroom_id = loggedInUser.classroom_id
+    raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
+    if raspored_sati:
+        raspored_string = raspored_sati.raspored_string
+    else:
+        raspored_string = ","*45
+    data = raspored_string.split(',')
+    return render_template('templates-pc/raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+    
