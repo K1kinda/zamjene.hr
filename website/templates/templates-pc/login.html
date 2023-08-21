@@ -62,9 +62,6 @@
     </aside>
 
     <section class="login-window">
-      {% if error %}
-      {{ error }}
-      {% endif %}
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
       <form class="login-container" action="/loginsend" method="POST">
         <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
@@ -77,12 +74,14 @@
 
     <div class="background-shadow"></div>
     
-    <section class="wrong-info-container">
-      <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}">
-      <p class="wrong-info-text">Unijeli ste pogrešan E-Mail/Lozinku.</p>
-      <div class="line"></div>
-      <button class="try-again-button">Pokušaj ponovno</button>
-    </section>
+    {% if error %}
+      <section class="wrong-info-container">
+        <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}">
+        <p class="wrong-info-text">{{ error }}</p>
+        <div class="line"></div>
+        <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>
+      </section>
+    {% endif %}
   </div>
 </body>
 
