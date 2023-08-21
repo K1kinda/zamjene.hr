@@ -18,67 +18,78 @@
 <body>
   <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
   <div class="body-login">
-  <aside class="sidebar">
-    <div class="logo-container">
-      <span class="logo-text">zamjene.hr</span>
-    </div>
-    <section class="sidebar-buttons">
-      <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      {% if isLoggedIn=="True" %}
-        {% if admin!="True" %}
-          <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
-          <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
-          {% if skola!="True" %}
-            <button class="zamjene-button" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
-            <button class="raspored-p-button" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+    <aside class="sidebar">
+      <div class="logo-container">
+        <span class="logo-text">zamjene.hr</span>
+      </div>
+      <section class="sidebar-buttons">
+        <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
+        {% if isLoggedIn=="True" %}
+          {% if admin!="True" %}
+            <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+            <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+            {% if skola!="True" %}
+              <button class="zamjene-button" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
+              <button class="raspored-p-button" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+            {% endif %}
           {% endif %}
         {% endif %}
-      {% endif %}
-    </section>
-    <section class="login-signup-container">
-      {% if isLoggedIn=="True" %}
-        {% if skola=="True" %}
-        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% elif admin=="True" %}
-          <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
-        {% else %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+      </section>
+
+      <section class="login-signup-container">
+        {% if isLoggedIn=="True" %}
+          {% if skola=="True" %}
+          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
           <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% endif %}
-      {% else %}
-        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
-        <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
-        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-      {% endif %} 
-      <!--div class="name-container">
-        <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
-        <p class="name">Mato Osman</p>
-      </div-->
+          {% elif admin=="True" %}
+            <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
+            <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+          {% else %}
+            <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
+            <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
+          {% endif %}
+        {% else %}
+          <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
+          <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
+          <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+          <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
+        {% endif %} 
+        <!--div class="name-container">
+          <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
+          <p class="name">Mato Osman</p>
+        </div-->
+      </section>
+    </aside>
+
+    <section class="login-window">
+      {% if error %}
+      {{ error }}
+      {% endif %}
+      <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+      <form class="login-container" action="/loginsend" method="POST">
+        <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
+        <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password">
+        <button style="width:106%;" type="submit">Prijavi se</button>
+      </form>
+      <p class="noaccounttext">Ako nemaš račun:</p>
+      <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
     </section>
-  </aside>
 
-  <section class="login-window">
-    {% if error %}
-    {{ error }}
-    {% endif %}
-    <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
-    <form class="login-container" action="/loginsend" method="POST">
-      <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
-      <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password">
-      <button style="width:106%;" type="submit">Prijavi se</button>
-    </form>
-    <p class="noaccounttext">Ako nemaš račun:</p>
-    <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
-  </section>
-
-  <script>
-    function changeUrl(url){
-      window.location.href=url;
-    }
-  </script>
+    <div class="background-shadow"></div>
+    
+    <section class="wrong-info-container">
+      <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}">
+      <p class="wrong-info-text">Unijeli ste pogrešan E-Mail/Lozinku.</p>
+      <div class="line"></div>
+      <button class="try-again-button">Pokušaj ponovno</button>
+    </section>
   </div>
 </body>
+
+<script>
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script>
+
 </html>
