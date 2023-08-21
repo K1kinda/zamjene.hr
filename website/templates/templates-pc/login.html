@@ -13,8 +13,11 @@
   <title>zamjene.hr</title>
 </head>
 
-<body class="body-login">
 
+
+<body>
+  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
+  <div class="body-login">
   <aside class="sidebar">
     <div class="logo-container">
       <span class="logo-text">zamjene.hr</span>
@@ -57,13 +60,6 @@
     </section>
   </aside>
 
-  <header>
-    <nav class="search-bar-container">
-      <img class="search-icon" src="{{ url_for('static', filename='pictures/search.svg')}}">
-      <input class="search-bar" type="text" placeholder="Pretraži">
-    </nav>
-  </header>
-
   <section class="login-window">
     {% if error %}
     {{ error }}
@@ -83,6 +79,6 @@
       window.location.href=url;
     }
   </script>
-
+  </div>
 </body>
 </html>

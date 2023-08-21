@@ -3,18 +3,21 @@ main {
   padding-top: 60px;
 }
 
+.page-center {
+  height: 100%;
+}
+
 .news-board, .changes-box {
   display: flex;
   flex-direction: column;
   flex: 1;
-  max-height: 89vh; 
   min-width: 420px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
   border-radius: 7px;
   padding-left: 15px;
   padding-right: 10px;
   padding-top: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 51px;
   overflow: hidden;
   overflow-y: scroll;
 }
@@ -104,6 +107,7 @@ main {
 
 .login-window {
   top: 30%;
+  background-color: rgb(253, 239, 239);
 }
 
 .user-icon-login {

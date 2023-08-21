@@ -14,7 +14,7 @@
 </head>
 
 <body>
-
+  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
   <aside class="sidebar">
     <div class="logo-container">
       <span class="logo-text">zamjene.hr</span>
@@ -56,13 +56,6 @@
       </div-->
     </section>
   </aside>
-
-  <!--header>
-    <nav class="search-bar-container">
-      <img class="search-icon" src="{{ url_for('static', filename='pictures/search.svg')}}">
-      <input class="search-bar" type="text" placeholder="Pretraži">
-    </nav>
-  </header-->
 
   <main class="page-center">
     <table>
@@ -117,17 +110,19 @@
       {% endfor %}
     </table>
   </main>
+</body>
 
   <script>
     function changeUrl(url){
       window.location.href=url;
     }
   </script>
+
   <style>
     input[type="text"] {
       width: 20px;
       font-weight: bold;
     }
   </style>
-</body>
+
 </html>

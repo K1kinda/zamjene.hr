@@ -15,6 +15,7 @@
 
 
 <body>
+  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
   <aside class="sidebar">
     <div class="logo-container">
       <span class="logo-text">zamjene.hr</span>
@@ -120,11 +121,13 @@
     {% endfor %}
   </section>
 </body>
+
 <script>
   function changeUrl(url){
     window.location.href=url;
   }
 </script> 
+
 </html>
 
 
