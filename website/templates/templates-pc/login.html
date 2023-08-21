@@ -71,12 +71,11 @@
       <p class="noaccounttext">Ako nemaš račun:</p>
       <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
     </section>
-
-    <div class="background-shadow"></div>
     
     {% if error %}
+      <div class="background-shadow"></div>
       <section class="wrong-info-container">
-        <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}">
+        <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
         <p class="wrong-info-text">{{ error }}</p>
         <div class="line"></div>
         <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>

@@ -98,6 +98,7 @@ main {
   border-radius: 7px;
   width: 20%;
   min-width: 300px;
+  margin-left: max(140px, 10%);
   z-index: 1;
 }
 
@@ -184,9 +185,10 @@ main {
   width: 200px;
   height: 180px;
   background-color: white;
-  z-index: 2;
+  z-index: 102;
   border-radius: 7px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  margin-left: max(140px, 10%);
 }
 
 .alert-icon {
@@ -221,8 +223,8 @@ main {
 
 .background-shadow {
   background-color: black;
-  opacity: 0.1;
-  width: 100px;
-  height: 100px;
-  z-index: 10;
+  opacity: 0.5;
+  width: 10000vh;
+  height: 105vh;
+  z-index: 101;
 }
