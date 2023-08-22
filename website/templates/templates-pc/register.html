@@ -63,6 +63,7 @@
       {{ error }}
       {% endif %}
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+      <p class="login-text">Napravi račun</p>
       <form class="register-container" action="/registersend" method="POST">
         <div class="name-box">
           <input class="name-register" type="text" placeholder="Ime" required="true" name="name">

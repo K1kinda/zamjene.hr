@@ -63,12 +63,20 @@
       {% if error %}
       {{ error }}
       {% endif %}
-      <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
-      <p>DODAVANJE ŠKOLE</p>
+      <img class="user-icon-login" src="{{ url_for('static', filename='pictures/school-icon.svg')}}">
+      <p class="login-text">Dodaj školu</p>
       <form class="login-container" action="/addschool" method="POST">
         <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd">
         <button style="width:106%;" type="submit">Prijavi se</button>
       </form>
+    </section>
+
+    <div class="background-shadow"></div>
+    <section class="wrong-info-container">
+      <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
+      <p class="wrong-info-text">Pogrešna Lozinka</p>
+      <div class="line"></div>
+      <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>
     </section>
   </div>
 </body>

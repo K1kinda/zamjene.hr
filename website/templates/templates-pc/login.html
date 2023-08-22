@@ -63,6 +63,7 @@
 
     <section class="login-window">
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+      <p class="login-text">Prijavite se kao učenik</p>
       <form class="login-container" action="/loginsend" method="POST">
         <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
         <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password">

@@ -20,6 +20,7 @@ main {
   padding-bottom: 51px;
   overflow: hidden;
   overflow-y: scroll;
+  height: 91vh;
 }
 
 .news-board {
@@ -225,6 +226,19 @@ main {
   background-color: black;
   opacity: 0.5;
   width: 10000vh;
-  height: 105vh;
+  height: 105.4vh;
   z-index: 101;
+}
+
+.login-text {
+  font-family: Montserrat;
+  font-size: 30px;
+  margin: 0;
+}
+
+.upit-text {
+  font-family: Montserrat;
+  font-size: 14px;
+  text-align: center;
+  opacity: 0.8;
 }
