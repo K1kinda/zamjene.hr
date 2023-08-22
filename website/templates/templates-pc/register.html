@@ -59,9 +59,6 @@
     </aside>
 
     <section class="register-window">
-      {% if error %}
-      {{ error }}
-      {% endif %}
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
       <p class="login-text">Napravi račun</p>
       <form class="register-container" action="/registersend" method="POST">
@@ -80,6 +77,18 @@
       <p class="noaccounttext">Ako imaš račun:</p>
       <button class="signup-loginbox" onclick="changeUrl('/login')">Prijavi se</button>
     </section>
+
+    {% if error %}
+      <div class="background-shadow"></div>
+        <section class="wrong-info-container">
+          <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
+          <p class="wrong-info-text">{{ error }}</p>
+          <div class="line"></div>
+          <button onclick="changeUrl('/register')" class="try-again-button">Pokušaj ponovno</button>
+        </section>
+      </div>
+    {% endif %}
+
   </div>
 </body>
 

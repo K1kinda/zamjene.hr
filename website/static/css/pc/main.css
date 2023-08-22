@@ -184,7 +184,7 @@ main {
   position: fixed;
   top: 42%;
   width: 200px;
-  height: 180px;
+  height: auto;
   background-color: white;
   z-index: 102;
   border-radius: 7px;

@@ -293,7 +293,7 @@ def loginskolasend():
             response.set_cookie('isUserLoggedIn', value="False")
             return response
     else:
-        error="Škola s tim ID-em ne postoji."
+        error="Krivi ID škole."
         response = make_response(redirect(url_for("views.loginskola", error=error)))
         response.set_cookie('isUserLoggedIn', value="False")
         return response

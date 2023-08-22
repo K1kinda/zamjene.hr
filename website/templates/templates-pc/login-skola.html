@@ -59,9 +59,6 @@
     </aside>
 
     <section class="login-window">
-      {% if error %}
-      {{ error }}
-      {% endif %}
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/school-icon.svg')}}">
       <p class="login-text">Prijavite se kao škola</p>
       <form class="login-container" action="/loginskolasend" method="POST">
@@ -72,14 +69,18 @@
       <p class="upit-text">Ako vaša škola nema račun pošaljite upit za izradu računa na e-mail: info@zamjene.hr</p>
     </section>
 
-    <div class="background-shadow"></div>
-    <section class="wrong-info-container">
-      <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
-      <p class="wrong-info-text">Pogrešan E-Mail.</p>
-      <div class="line"></div>
-      <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>
-    </section>
-  </div>
+    {% if error %}
+      <div class="background-shadow"></div>
+        <section class="wrong-info-container">
+          <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
+          <p class="wrong-info-text">{{ error }}</p>
+          <div class="line"></div>
+          <button onclick="changeUrl('/loginskola')" class="try-again-button">Pokušaj ponovno</button>
+        </section>
+      </div>
+    {% endif %}
+
+    
 </body>
 
 <script>
