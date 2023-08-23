@@ -9,8 +9,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-  margin-bottom: -100px;
 }
 
 .home-body {
@@ -44,4 +42,9 @@ body {
   height: max-content;
   z-index: -1;
   opacity: 0.2;
+}
+
+html, body{
+  margin:0;
+  padding:0;
 }
