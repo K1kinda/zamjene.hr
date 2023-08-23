@@ -60,24 +60,23 @@
     </aside>
 
     <section class="login-window">
-      {% if error %}
-      {{ error }}
-      {% endif %}
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/school-icon.svg')}}">
-      <p class="login-text">Dodaj školu</p>
-      <form class="login-container" action="/addschool" method="POST">
-        <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd">
-        <button style="width:106%;" type="submit">Prijavi se</button>
+      <p style="margin-left:40px; margin-right:40px;" class="login-text">Dodajte školu</p><br>
+      <form class="login-container" action="/loginsend" method="POST">
+        <input style="margin-bottom: -10px;"   class="input-box" type="password" placeholder="Lozinka" id="password" name="password"><br>
+        <button style="width:107.2%;" type="submit">Prijavi se</button>
       </form>
+      <p class="noaccounttext">Ako nemaš račun:</p>
+      <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
     </section>
 
-    <div class="background-shadow"></div>
+    <!--div class="background-shadow"></div>
     <section class="wrong-info-container">
       <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
       <p class="wrong-info-text">Pogrešna Lozinka</p>
       <div class="line"></div>
       <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>
-    </section>
+    </section--->
   </div>
 </body>
 
