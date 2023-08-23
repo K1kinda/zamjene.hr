@@ -5,9 +5,12 @@ main {
 
 .page-center {
   height: 100%;
+  margin-top: -60px;
 }
 
 .news-board, .changes-box {
+  margin-right: 15px;
+  margin-top: 25px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -23,8 +26,8 @@ main {
   height: 91vh;
 }
 
-.news-board {
-  margin-right: 15px;
+.schedule{
+  margin-top: 10px;
 }
 
 .post-box {

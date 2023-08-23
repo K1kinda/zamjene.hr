@@ -57,26 +57,28 @@
       </div-->
     </section>
   </aside>
-  <table>
-    <tr>
-      <th></th>
-      <th>Pon</th>
-      <th>Uto</th>
-      <th>Sri</th>
-      <th>Cet</th>
-      <th>Pet</th>
-    </tr>
-    {% for i in range(9) %}
-    <tr>
-      <th>{{ i+1 }}.sat</th>
-      {% for j in range(5) %}
-      <th>
-        <input id="{{ i }}_{{ j }}" type="text" placeholder="{{ data[j + i*5] }}" name="predmet_{{ i }}_{{ j }}" disabled>
-      </th>
+  <main class="page-center">
+    <table class="schedule">
+      <tr>
+        <th></th>
+        <th>Pon</th>
+        <th>Uto</th>
+        <th>Sri</th>
+        <th>Cet</th>
+        <th>Pet</th>
+      </tr>
+      {% for i in range(9) %}
+      <tr>
+        <th>{{ i+1 }}.sat</th>
+        {% for j in range(5) %}
+        <th>
+          <input id="{{ i }}_{{ j }}" type="text" placeholder="{{ data[j + i*5] }}" name="predmet_{{ i }}_{{ j }}" disabled>
+        </th>
+        {% endfor %}
+      </tr>
       {% endfor %}
-    </tr>
-    {% endfor %}
-  </table>
+    </table>
+  </main>
 </body>
 
 <script>
