@@ -64,33 +64,49 @@
       </div>
       <div class="post-box">
         {% if user.email %}
-        <div class="post-title">Email: {{ user.email }}</div>
+        <div class="post-title">
+          <span style="white-space: nowrap;">Email:</span>
+          <span style="white-space: nowrap;" contenteditable="true">{{ user.email }}</span>
+        </div>
         {% else %}
         <div class="post-title">Email: nema</div>
         {% endif %}
+
         {% if user.password %}
-        <div class="post-title">Lozinka: {{ user.password }}</div>
+        <div class="post-title" style="white-space: nowrap;">
+          <span style="white-space: nowrap;">Lozinka:</span>
+          <span style="white-space: nowrap;" contenteditable="true">{{ user.password }}</span> 
+        </div>
         {% else %}
         <div class="post-title">Lozinka: nema</div>
         {% endif %}
+
         {% if user.school_id %}
-        <div class="post-title">ID škole: {{ user.school_id }}</div>
+        <div class="post-title">
+          <span style="white-space: nowrap;">ID škole:</span>
+          <span style="white-space: nowrap;" contenteditable="true">{{ user.school_id }}</span>
+        </div>
         {% else %}
         <div class="post-title">ID škole: nema</div>
         {% endif %}
+
         {% if user.classroom_id %}
-        <div class="post-title">ID razreda: {{ user.classroom_id }}</div>
+        <div class="post-title">
+          <span style="white-space: nowrap;">ID razreda:</span>
+          <span style="white-space: nowrap;" contenteditable="true">{{ user.classroom_id }}</span>
+        </div>
         {% else %}
         <div class="post-title">ID razreda: nema</div>
         {% endif %}
+        
       </div>
       <div>
-        <button>UREDI</button>
+        <button>Spremi promjene</button>
       </div>
     </section>
   </main>
 </body>
-
+ 
   <script>
     function changeUrl(url){
       window.location.href=url;
