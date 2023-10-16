@@ -35,7 +35,7 @@
                 {% if isLoggedIn=="True" %}
                     {% if skola=="True" %}
                     <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-                    <button class="sidebarbuttondarkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
                     {% elif admin=="True" %}
                     <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
                     <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
@@ -52,7 +52,101 @@
             </div>
         </div>
         <div class="main-cont">
-            <div class="p"></div>
+            <!--p></p>
+            {% if isLoggedIn!="True" or admin=="True" %}
+                POČETNA STRANICA
+            {% else %}
+            <p></p-->
+                {% if skola=="True" %}
+                    <section class="obavijesti-cont">
+                        {% if sve_obavijesti %}
+                            {% for obavijest in sve_obavijesti %}
+                                <div class="post-title">{{ obavijest.name }}</div> <br>
+                                <div class="post-desc">{{ obavijest.content }}</div>
+                                <!--div class="post-img"{{ obavijest.image }}></div-->
+                                <br>
+                            {% endfor %}
+                        {% else %}
+                            <p class="post-title">Nema obavijesti</p>
+                        {% endif %}
+                    </section>
+                {% else %}
+                    <section class="obavijesti-cont">
+                        {% if sve_obavijesti %}
+                            {% for obavijest in sve_obavijesti %}
+                                <div class="post-title">{{ obavijest.name }}</div> <br>
+                                <div class="post-desc">{{ obavijest.content }}</div>
+                                <!--div class="post-img"{{ obavijest.image }}></div-->
+                                <br>
+                            {% endfor %}
+                        {% else %}
+                            <p class="post-title">Nemaš obavijesti</p>
+                        {% endif %}
+                    </section>
+                
+                    <section class="zamjene-cont">
+                        <div class="zamjne-today">
+                            <p class="zamjene-naslov">Zamjene danas</p>
+                            {% if zamjeneDanas %}
+                                {% for zamjena in zamjeneDanas %}
+                                    <p class="zamjene-desc">
+                                        Od {{ zamjena.od }} <br>
+                                        Do {{ zamjena.do }} <br>
+                                        Novi predmet: {{ zamjena.zamjena }}
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Nemaš zamjena danas</p>
+                            {% endif %}
+                        </div>
+                        <div class="zamjene-sutra">
+                            <p class="zamjene-naslov">Zamjene sutra</p>
+                            {% if zamjeneSutra %}
+                                {% for zamjena in zamjeneSutra %}
+                                    <p class="zamjene-desc">
+                                        Od {{ zamjena.od }} <br>
+                                        Do {{ zamjena.do }} <br>
+                                        Novi predmet: {{ zamjena.zamjena }}
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Nemaš zamjena sutra</p>
+                            {% endif %}
+                        </div>
+                        <div class="zamjene-prekosutra">
+                            <p class="zamjene-naslov">Zamjene prekosutra</p>
+                            {% if zamjenePrekosutra %}
+                                {% for zamjena in zamjenePrekosutra %}
+                                    <p class="zamjene-desc">
+                                        Od {{ zamjena.od }} <br>
+                                        Do {{ zamjena.do }} <br>
+                                        Novi predmet: {{ zamjena.zamjena }}
+                                    </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Nemaš zamjena prekosutra</p>
+                            {% endif %}
+                        </div>
+            
+                        <div class="zamjene-sljtjedan">
+                            <p class="zamjene-naslov">Idući tjedan</p>
+                            {% if zamjeneSljedeciTjedan %}
+                                {% for zamjena in zamjeneSljedeciTjedan %}
+                                <p class="zamjene-desc">
+                                    Od {{ zamjena.od }} <br>
+                                    Do {{ zamjena.do }} <br>
+                                    Datum zamjene: {{ zamjena.datum }} <br>
+                                    Novi predmet: {{ zamjena.zamjena }}
+                                </p>
+                                {% endfor %}
+                            {% else %}
+                                <p>Nemaš zamjena sljedeći tjedan</p>
+                            {% endif %}
+                        </div>
+                    </section>
+                {% endif %}
+            <!--p>{% endif %}</p-->
+            
         </div>
     </div>
 </body>

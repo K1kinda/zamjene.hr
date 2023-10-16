@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/home.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/start.css')}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <title>zamjene.hr</title>
+</head>
+
+
+<body>
+    <div class="main"> 
+        <div class="logo-container">
+          <span class="logo-text">zamjene.hr</span>
+        </div>
+        <div class="main-cont-start">
+          <p class="starttext">Sve tvoje zamjene na jednom mjestu.</p>      
+          <div class="startloginiliregister">
+            <button class="sidebarbuttonstart" onclick="changeUrl('/login')">Prijavi se</button>
+            <button class="sidebarbuttonstart darkbutton" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+            <button class="sidebarbuttonstart" onclick="changeUrl('/register')">Napravi račun</button>
+          </div>
+        </div>
+    </div>
+</body>
+
+
+<script>
+    function changeUrl(url){
+      window.location.href=url;
+    }
+  </script>
+</html>
