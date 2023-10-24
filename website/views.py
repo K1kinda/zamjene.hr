@@ -635,7 +635,6 @@ def oglasnaploca():
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
 
-    sveObavijesti = sveObavijesti[::-1]
     return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
 
 @views.route('/rasporeducionica/', methods=['GET'])

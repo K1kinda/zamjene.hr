@@ -2,11 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/general.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/header.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/main.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/home.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/zamjene.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -14,111 +12,110 @@
 </head>
 
 <body>
-  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
-  <aside class="sidebar">
-    <div class="logo-container">
-      <span class="logo-text">zamjene.hr</span>
-    </div>
-    <section class="sidebar-buttons">
-      <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      {% if isLoggedIn=="True" %}
-        {% if admin!="True" %}
-          <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
-          <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+  <div class="main">
+    <div class="sidebar-cont">
+      <div class="logo-container">
+        <span class="logo-text">zamjene.hr</span>
+      </div>
+      <div class="sidebar-buttons-cont">
+        <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
+        {% if isLoggedIn=="True" %}
           {% if skola!="True" %}
-            <button class="zamjene-button" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
-            <button class="raspored-p-button" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+            <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
+            <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+          {% endif %}
+          {% if admin!="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+            <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
           {% endif %}
         {% endif %}
-      {% endif %}
-    </section>
-    <section class="login-signup-container">
-      {% if isLoggedIn=="True" %}
-        {% if skola=="True" %}
-        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% elif admin=="True" %}
-          <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+      </div>
+      <div class="sidebar-profile-cont">
+        {% if isLoggedIn=="True" %}
+          {% if skola=="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+          {% elif admin=="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+          {% else %}
+            <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Profil</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+          {% endif %}
         {% else %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% endif %}
-      {% else %}
-        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
-        <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
-        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-      {% endif %} 
-      <!--div class="name-container">
-        <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
-        <p class="name">Mato Osman</p>
-      </div-->
-    </section>
-  </aside>
-
-    {% if isLoggedIn!="True" or admin=="True" %}
-      POČETNA STRANICA
-    {% else %}
-        <section class="changes-box">
-          <div class="today">
-            Zamjene danas
+          <button class="sidebarbutton" onclick="changeUrl('/login')">Prijavi se</button>
+          <button class="sidebarbutton darkbutton" onclick="changeUrl('/register')">Napravi račun</button>
+          <button class="sidebarbutton" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+          <button class="sidebarbutton darkbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+        {% endif %} 
+      </div>
+    </div>
+    <div class="main-cont-zamjene main-cont">
+      <div class="whole-zamjene zamjene-standalone">
+        <div class="section-title">ZAMJENE</div> 
+        <section class="zamjene-cont">
+          <div class="zamjne-today">
+            <p class="zamjene-naslov">Zamjene danas</p>
             {% if zamjeneDanas %}
               {% for zamjena in zamjeneDanas %}
-                <p>Od {{ zamjena.od }} <br>
+                <p class="zamjene-desc">
+                  Od {{ zamjena.od }} <br>
                   Do {{ zamjena.do }} <br>
-                  Datum zamjene: {{ zamjena.datum }} <br>
                   Novi predmet: {{ zamjena.zamjena }}
                 </p>
               {% endfor %}
             {% else %}
-                <p>Nema zamjena</p>
+              <p>Nemaš zamjena danas</p>
             {% endif %}
           </div>
-          <div class="tomorrow">
-            Zamjene sutra
+          <div class="zamjene-sutra">
+            <p class="zamjene-naslov">Zamjene sutra</p>
             {% if zamjeneSutra %}
               {% for zamjena in zamjeneSutra %}
-                <p>Od {{ zamjena.od }} <br>
-                  Do {{ zamjena.do }} <br>
-                  Datum zamjene: {{ zamjena.datum }} <br>
+                <p class="zamjene-desc">
+                  Od: {{ zamjena.od }} <br>
+                  Do: {{ zamjena.do }} <br>
                   Novi predmet: {{ zamjena.zamjena }}
                 </p>
               {% endfor %}
             {% else %}
-              <p>Nema zamjena</p>
+              <p>Nemaš zamjena sutra</p>
             {% endif %}
           </div>
-          <div class="after-tomorrow">
-            Zamjene prekosutra
+          <div class="zamjene-prekosutra">
+            <p class="zamjene-naslov">Zamjene prekosutra</p>
             {% if zamjenePrekosutra %}
               {% for zamjena in zamjenePrekosutra %}
-                <p>Od {{ zamjena.od }} <br>
+                <p class="zamjene-desc">
+                  Od {{ zamjena.od }} <br>
                   Do {{ zamjena.do }} <br>
-                  Datum zamjene: {{ zamjena.datum }} <br>
                   Novi predmet: {{ zamjena.zamjena }}
                 </p>
               {% endfor %}
             {% else %}
-                <p>Nema zamjena</p>
+              <p>Nemaš zamjena prekosutra</p>
             {% endif %}
           </div>
-          <div class="next-week">
-            Idući tjedan
+
+          <div class="zamjene-sljtjedan">
+            <p class="zamjene-naslov">Idući tjedan</p>
             {% if zamjeneSljedeciTjedan %}
               {% for zamjena in zamjeneSljedeciTjedan %}
-                <p>Od {{ zamjena.od }} <br>
+                <p class="zamjene-desc">
+                  Od {{ zamjena.od }} <br>
                   Do {{ zamjena.do }} <br>
                   Datum zamjene: {{ zamjena.datum }} <br>
                   Novi predmet: {{ zamjena.zamjena }}
                 </p>
               {% endfor %}
             {% else %}
-                <p>Nema zamjena</p>
+              <p>Nemaš zamjena sljedeći tjedan</p>
             {% endif %}
           </div>
         </section>
-    {% endif %}
+      </div>
+    </div>
+  </div>
 </body>
 
   <script>

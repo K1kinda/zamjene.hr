@@ -5,7 +5,7 @@
     background-color: rgb(253, 239, 239);
 }
 
-.body-login{
+.body-login, .body-register{
     display: flex;
     font-family: Montserrat;
 }
@@ -55,7 +55,6 @@
     bottom: 25%;
     top: 25%;
     align-items: center;
-    width: 20%;
     background-color: rgb(253, 239, 239);
 }
 
@@ -74,7 +73,6 @@
     bottom: 30%;
     top: 30%;
     align-items: center;
-    width: 20%;
     background-color: rgb(253, 239, 239);
 }
 
@@ -174,6 +172,7 @@ button:hover{
     padding-top: 15px;
     width: 20%;
     margin-bottom: 0px;
+    background-color: white;
 }
   
 .wrong-info-text {
@@ -186,6 +185,7 @@ button:hover{
     margin-bottom: 0;
     text-align: center;
     opacity: 0.8;
+    background-color: white;
 }
 
 .upit-text {
