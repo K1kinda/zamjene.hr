@@ -67,7 +67,8 @@
 }
 
 .whole-obavijesti{
-    padding: 0px, 15px, 15px, 15px;
+    padding: 0px 15px 15px 15px;
+    padding-bottom: 0px;
     width: 50%;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
     margin-top: 15px;
@@ -77,6 +78,7 @@
     border-radius: 7px;
     max-height: 97%;
     overflow: scroll;
+    overflow-x: hidden;
 }
 
 .obavijesti-cont{
