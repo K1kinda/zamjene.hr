@@ -1,12 +1,11 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/general.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/header.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/main.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/pc/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/profile.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -14,96 +13,74 @@
 </head>
 
 <body>
-  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
-  <aside class="sidebar">
+  <div class="sidebar-cont">
     <div class="logo-container">
-      <span class="logo-text">zamjene.hr</span>
+        <span class="logo-text">zamjene.hr</span>
     </div>
-    <section class="sidebar-buttons">
-      <button class="pocetna-button" onclick="changeUrl('/')">Početna</button>
-      {% if isLoggedIn=="True" %}
-        {% if admin!="True" %}
-          <button class="oglasna-button" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
-          <button class="raspored-u-button"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
-          {% if skola!="True" %}
-            <button class="zamjene-button" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
-            <button class="raspored-p-button" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
-          {% endif %}
+    <div class="sidebar-buttons-cont">
+        <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
+        {% if isLoggedIn=="True" %}
+            {% if Skola!="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
+            <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+            {% endif %}
+            {% if admin!="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+            <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+            {% endif %}
         {% endif %}
-      {% endif %}
-    </section>
-    <section class="login-signup-container">
-      {% if isLoggedIn=="True" %}
-        {% if skola=="True" %}
-        <button class="log-in-button" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-        <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% elif admin=="True" %}
-          <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+    </div>
+    <div class="sidebar-profile-cont">
+        {% if isLoggedIn=="True" %}
+            {% if Skola=="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+            {% elif admin=="True" %}
+            <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+            {% else %}
+            <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Profil</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+            {% endif %}
         {% else %}
-          <button class="log-in-button" onclick="changeUrl('/viewprofile')">Profil</button>
-          <button class="sign-up-button" onclick="changeUrl('/logout')">Odjavi se</button>
-        {% endif %}
-      {% else %}
-        <button class="log-in-button" onclick="changeUrl('/login')">Prijavi se</button>
-        <button class="sign-up-button" onclick="changeUrl('/register')">Napravi račun</button>
-        <button class="log-in-button" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
-        <button class="log-in-button" onclick="changeUrl('/addschool')">Dodaj školu</button>
-      {% endif %} 
-      <!--div class="name-container">
-        <img class="user-icon" src="{{ url_for('static', filename='pictures/user.svg')}}">
-        <p class="name">Mato Osman</p>
-      </div-->
-    </section>
-  </aside>
+            <button class="sidebarbutton" onclick="changeUrl('/login')">Prijavi se</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/register')">Napravi račun</button>
+            <button class="sidebarbutton" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+            <button class="sidebarbutton darkbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+        {% endif %} 
+    </div>
+  </div>
 
   <main class="page-center">
-    <section class="news-board">
+    <form onsubmit="submitForm('/edituserdata'); return false;" class="news-board">
+      <!-- your form content here -->
       <div class="post-box">
-        <div class="post-title">{{ user.name }} {{ user.lastname }}</div>
+        <div class="post-title">
+          <span>Name:</span>
+          <span class="editable-span" contenteditable="true" id="name">{{ user.name }} {{ user.lastname }}</span>
+        </div>
       </div>
       <div class="post-box">
-        {% if user.email %}
+        <!-- Other fields with editable spans -->
         <div class="post-title">
-          <span style="white-space: nowrap;">Email:</span>
-          <span style="white-space: nowrap;" contenteditable="true">{{ user.email }}</span>
+          <span>Email:</span>
+          <span class="editable-span" contenteditable="true" id="email">{{ user.email }}</span>
         </div>
-        {% else %}
-        <div class="post-title">Email: nema</div>
-        {% endif %}
-
-        {% if user.password %}
-        <div class="post-title" style="white-space: nowrap;">
-          <span style="white-space: nowrap;">Lozinka:</span>
-          <span style="white-space: nowrap;" contenteditable="true">{{ user.password }}</span> 
-        </div>
-        {% else %}
-        <div class="post-title">Lozinka: nema</div>
-        {% endif %}
-
-        {% if user.school_id %}
         <div class="post-title">
-          <span style="white-space: nowrap;">ID škole:</span>
-          <span style="white-space: nowrap;" contenteditable="true">{{ user.school_id }}</span>
+          <span>ID škole:</span>
+          <span class="editable-span" contenteditable="true" id="idskole">{{ user.school_id }}</span>
         </div>
-        {% else %}
-        <div class="post-title">ID škole: nema</div>
-        {% endif %}
-
-        {% if user.classroom_id %}
         <div class="post-title">
-          <span style="white-space: nowrap;">ID razreda:</span>
-          <span style="white-space: nowrap;" contenteditable="true">{{ user.classroom_id }}</span>
+          <span>ID razreda:</span>
+          <span class="editable-span" contenteditable="true" id="idrazreda">{{ user.classroom_id }}</span>
         </div>
-        {% else %}
-        <div class="post-title">ID razreda: nema</div>
-        {% endif %}
-        
+        <div class="post-title">
+          <span class="editable-span" contenteditable="true" id="iducenika" hidden>{{ user.id }}</span>
+        </div>
       </div>
-      <div>
-        <button>Spremi promjene</button>
-      </div>
-    </section>
+      <!-- other fields... -->
+      <button type="submit" class="save-changes">Spremi promjene</button>
+    </form>
   </main>
 </body>
  
@@ -112,5 +89,37 @@
       window.location.href=url;
     }
   </script>
-
+<script>
+  function submitForm(url) {
+    var form = document.querySelector('.news-board');
+    var formData = new FormData(form);
+  
+    // Convert form data to JSON
+    var jsonData = {};
+    formData.forEach(function (value, key) {
+      jsonData[key] = value;
+    });
+  
+    // If using editable spans, manually extract content for each span
+    jsonData['name'] = document.getElementById('name').innerText;
+    jsonData['email'] = document.getElementById('email').innerText;
+    jsonData['iducenika'] = document.getElementById('iducenika').innerText;
+    jsonData['idskole'] = document.getElementById('idskole').innerText;
+    jsonData['idrazreda'] = document.getElementById('idrazreda').innerText;
+  
+    var jsonBody = JSON.stringify(jsonData);
+  
+    // Send POST request with JSON content type
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    })
+  changeUrl("/viewprofile")
+  }
+  
+  </script>
+  
 </html>

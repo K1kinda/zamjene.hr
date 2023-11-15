@@ -430,6 +430,7 @@ def prikazizamjene():
     classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
 
     zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
+    zamjene = zamjene[::-1]
 
     return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
 
@@ -703,3 +704,27 @@ def prikaziraspored():
     data = raspored_string.split(',')
     return render_template('templates-pc/raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
     
+@views.route('/edituserdata', methods=['POST'])
+def edituserdata():
+    namee = request.json.get('name')
+    email = request.json.get('email')
+    idskole = request.json.get('idskole')
+    idrazreda = request.json.get('idrazreda')
+    iducenika = request.json.get('iducenika')
+
+    a = namee.find(' ')
+    name=namee[:a]
+    lastname=namee[a:]
+
+    user = User.query.get(iducenika)
+
+    if user:
+        user.name = name
+        user.lastname = lastname
+        user.email = email
+        user.school_id = idskole
+        user.classroom_id = idrazreda
+
+        db.session.commit()
+    
+    return "a"
