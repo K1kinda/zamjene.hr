@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/login.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/login.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -19,7 +19,7 @@
       <p class="login-text">Prijavite se kao škola</p><br>
       <form class="login-container" action="/loginskolasend" method="POST">
         <input class="input-box" type="text" placeholder="ID Škole" name="id" id="id">
-        <input class="input-box" type="password" placeholder="Lozinka" name="password" id="passowrd"><br>
+        <input class="input-box" type="text" placeholder="Lozinka" name="password" id="passowrd"><br>
         <button style="width:107%;" type="submit">Prijavite se</button><br>
       </form>
       <p class="upit-text">Ako vaša škola nema račun pošaljite upit <br>

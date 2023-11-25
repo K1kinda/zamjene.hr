@@ -99,8 +99,7 @@
                 {% if zamjeneDanas %}
                   {% for zamjena in zamjeneDanas %}
                     <p class="zamjene-desc">
-                      Od {{ zamjena.od }} <br>
-                      Do {{ zamjena.do }} <br>
+                      {{ zamjena.od }} <br>
                       Novi predmet: {{ zamjena.zamjena }}
                     </p>
                   {% endfor %}
@@ -113,8 +112,7 @@
                 {% if zamjeneSutra %}
                   {% for zamjena in zamjeneSutra %}
                     <p class="zamjene-desc">
-                      Od: {{ zamjena.od }} <br>
-                      Do: {{ zamjena.do }} <br>
+                      {{ zamjena.od }} <br>
                       Novi predmet: {{ zamjena.zamjena }}
                     </p>
                   {% endfor %}
@@ -127,8 +125,7 @@
                 {% if zamjenePrekosutra %}
                   {% for zamjena in zamjenePrekosutra %}
                     <p class="zamjene-desc">
-                      Od {{ zamjena.od }} <br>
-                      Do {{ zamjena.do }} <br>
+                      {{ zamjena.od }} <br>
                       Novi predmet: {{ zamjena.zamjena }}
                     </p>
                   {% endfor %}
@@ -142,8 +139,7 @@
                 {% if zamjeneSljedeciTjedan %}
                   {% for zamjena in zamjeneSljedeciTjedan %}
                     <p class="zamjene-desc">
-                      Od {{ zamjena.od }} <br>
-                      Do {{ zamjena.do }} <br>
+                      {{ zamjena.od }} <br>
                       Datum zamjene: {{ zamjena.datum }} <br>
                       Novi predmet: {{ zamjena.zamjena }}
                     </p>

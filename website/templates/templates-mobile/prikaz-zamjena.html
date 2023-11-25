@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/sidebar.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/home.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/obavijesti.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/zamjene.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/home.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/obavijesti.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/zamjene.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
@@ -59,21 +59,31 @@
             <form class="nova-zamjena-form" action="/dodajzamjenu" method="post">
               <p class="section-title">Dodaj novu zamjenu</p>
               <div class="od-do-cont">
-                <p class="od-do">Sat:
+                <p class="od-do">Od:
                   <select class="select-zamjene" id="from" name="from">
-                    <option value="1. sat">1. sat</option>
-                    <option value="2. sat">2. sat</option>
-                    <option value="3. sat">3. sat</option>
-                    <option value="4. sat">4. sat</option>
-                    <option value="5. sat">5. sat</option>
-                    <option value="6. sat">6. sat</option>
-                    <option value="7. sat">7. sat</option>
-                    <option value="8. sat">8. sat</option>
-                    <option value="9. sat">9. sat</option>
+                    <option value="1. sata">1. sata</option>
+                    <option value="2. sata">2. sata</option>
+                    <option value="3. sata">3. sata</option>
+                    <option value="4. sata">4. sata</option>
+                    <option value="5. sata">5. sata</option>
+                    <option value="6. sata">6. sata</option>
+                    <option value="7. sata">7. sata</option>
+                    <option value="8. sata">8. sata</option>
+                    <option value="9. sata">9. sata</option>
                   </select>
                 </p>
-                <p>Blok sat:
-                  <input type="checkbox" class="select-zamjene-checkbox" id="to" name="to"></input>   
+                <p>Do:
+                  <select class="select-zamjene" id="to" name="to">
+                    <option value="1. sata">1. sata</option>
+                    <option value="2. sata">2. sata</option>
+                    <option value="3. sata">3. sata</option>
+                    <option value="4. sata">4. sata</option>
+                    <option value="5. sata">5. sata</option>
+                    <option value="6. sata">6. sata</option>
+                    <option value="7. sata">7. sata</option>
+                    <option value="8. sata">8. sata</option>
+                    <option value="9. sata">9. sata</option>
+                  </select>   
                 </p>
               </div>
 
@@ -87,8 +97,8 @@
               <section>
                 <p class="section-title" >Zamjene za: {{ razred.name }}</p>
                 {% for zamjena in sve_zamjene %}
-                  <div class="zamjene-cont-skola">
-                    {{ zamjena.od }} <br>
+                  <div class="zamjene-cont-skola">Od {{ zamjena.od }} <br>
+                    Do {{ zamjena.do }} <br>
                     Datum zamjene: {{ zamjena.datum }} <br>
                     Novi predmet: {{ zamjena.zamjena }}
                     <form action="/delete_zamjene/{{ zamjena.id }}" method="post">

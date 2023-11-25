@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/login.css')}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <title>zamjene.hr</title>
+</head>
+
+
+
+<body>
+  <img class="background-image" src="{{ url_for('static', filename='pictures/background.png')}}">
+  <div class="body-login">
+    <section class="login-window">
+      <img class="user-icon-login" src="{{ url_for('static', filename='pictures/user.svg')}}">
+      <p class="login-text">Prijavite se kao učenik</p><br>
+      <form class="login-container" action="/loginsend" method="POST">
+        <input class="input-box" type="text" placeholder="E-Mail" name="email" id="email">
+        <input class="input-box" type="password" placeholder="Lozinka" id="password" name="password"><br>
+        <button style="width:106%;" type="submit">Prijavi se</button><br>
+      </form>
+      <p class="noaccounttext">Ako nemaš račun:</p>
+      <button class="signup-loginbox" onclick="changeUrl('/register')">Napravi račun</button>
+    </section>
+    
+    {% if error %}
+      <div class="background-shadow"></div>
+      <section class="wrong-info-container">
+        <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
+        <p class="wrong-info-text">{{ error }}</p><br>
+        <div class="line"></div>
+        <button onclick="changeUrl('/login')" class="try-again-button">Pokušaj ponovno</button>
+      </section>
+    {% endif %}
+  </div>
+</body>
+
+<script>
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script>
+
+</html>

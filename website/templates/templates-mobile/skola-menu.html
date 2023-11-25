@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/home.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/skolamenu.css')}}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+  <title>zamjene.hr</title>
+</head>
+
+
+<body>
+  <div class="main">
+      <div class="sidebar-cont">
+          <div class="logo-container">
+              <span class="logo-text">zamjene.hr</span>
+          </div>
+          <div class="sidebar-buttons-cont">
+              <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
+              {% if isLoggedIn=="True" %}
+                  {% if Skola!="True" %}
+                  <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
+                  <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+                  {% endif %}
+                  {% if admin!="True" %}
+                  <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
+                  <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
+                  {% endif %}
+              {% endif %}
+          </div>
+          <div class="sidebar-profile-cont">
+              {% if isLoggedIn=="True" %}
+                  {% if Skola=="True" %}
+                  <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+                  <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+                  {% elif admin=="True" %}
+                  <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+                  <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
+                  {% else %}
+                  <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Profil</button>
+                  <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
+                  {% endif %}
+              {% else %}
+                  <button class="sidebarbutton" onclick="changeUrl('/login')">Prijavi se</button>
+                  <button class="sidebarbutton darkbutton" onclick="changeUrl('/register')">Napravi račun</button>
+                  <button class="sidebarbutton" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
+                  <button class="sidebarbutton darkbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
+              {% endif %} 
+          </div>
+      </div>
+      <div class="main-cont">
+      
+        <div class="skola-main-container">
+          <div class="skola-main">
+            <p class="skola-title">Upravni centar</p>
+            <p>Ime škole: <br> {{ skola.name }}</p>
+            <p>ID škole: {{ skola.id }}</p>
+          </div>
+
+          <div class="skola-raspored-ucionica">
+            <form action="/update_table" method="get">
+              <input type="hidden" name="school_id" value="{{ skola.id }}">
+              <button class="raspored-ucionica-button" type="submit">Raspored ucionica</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="skola-obavijesti">
+          <form class="nova-obavijest-form" method="post" action="/addad">
+            <label class="skola-title">Nova obavijest:</label> <br><br>
+            <input class="input-obavijesti" type="text" name="name" title="Naslov oglasa" placeholder="Naslov" required> <br><br>
+            <input class="input-obavijesti" type="text" name="content" title="Opis oglasa" placeholder="Sadržaj" required> <br><br>
+            <input class="dodaj-obavijest-button" type="submit" value="Dodaj novu obavijest">
+            <br><br>
+          </form>
+
+          <div class="sve-obavijesti">
+            <p class="skola-title">Sve obavijesti:</p>
+            {% for obavijest in obavijesti %}
+            <p>
+              <div class="obavijest-info">
+                <p class="obavijest-title">{{ obavijest.name }}</p>
+                <p class="obavijest-content">{{ obavijest.content }}</p>
+              </div>
+              <form class="obrisi-obavijest-form" action="/obrisiobavijest" method="post">
+                <button class="obrisi-obavijest-button" type="submit">Obriši obavijest</button>
+                <input type="hidden" name="school_id" value="{{ skola.id }}">
+                <input type="hidden" name="obavijest_id" value="{{ obavijest.id }}"> 
+              </form>
+            </p>
+            {% endfor %}
+          </div>   
+        </div>
+
+        <div class="skola-razredi">
+          <form class="novi-razred-form" method="post" action="/dodajrazred"> 
+            <label class="skola-title" for="classroom_name">Dodaj novi razred:</label><br><br>
+            <input class="input-obavijesti"  type="text" name="classroom_name" placeholder="Ime razreda" required><br><br>
+            <input class="dodaj-obavijest-button" type="submit" value="Dodaj novi razred"><br><br>
+          </form>
+
+          <section class="sve-obavijesti">
+            <p class="skola-title">Svi razredi:</p>
+            {% for classroom in classrooms %}
+            <p>
+              <div class="razred-info">
+                <p class="obavijest-title">Razred: {{ classroom.name }} </p>
+                <p class="obavijest-content">ID: {{ classroom.id }}</p>
+              </div>
+              <section>
+                <form action="/dodajraspored" method="get">
+                  <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
+                  <button class="obrisi-razred-button" type="submit">Raspored</button>
+                </form>
+                <form action="/prikazizamjene" method="post">
+                    <input type="hidden" name="school_id" value="{{ skola.id }}">
+                    <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
+                    <button class="obrisi-razred-button" type="submit">Zamjene</button>
+                </form>
+                <form action="/obrisirazred" method="post">
+                  <button class="obrisi-razred-button" type="submit">Obriši razred</button>
+                  <input type="hidden" name="school_id" value="{{ skola.id }}">
+                  <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
+                </form>
+              </section>
+            </p>
+            {% endfor %}
+          </section>
+        </div>   
+      </div>
+  </div>
+</body>
+
+
+
+<script>
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script> 
+
+</html>
+
+
+
+
+
+

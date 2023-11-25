@@ -2,14 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/home.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/sidebar.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/pc/zamjene.css')}}">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/home.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/sidebar.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/obavijesti.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
   <title>zamjene.hr</title>
 </head>
+
 
 <body>
   <div class="main">
@@ -50,74 +52,32 @@
         {% endif %} 
       </div>
     </div>
-    <div class="main-cont-zamjene main-cont">
-      <div class="whole-zamjene zamjene-standalone">
-        <div class="section-title">ZAMJENE</div> 
-        <section class="zamjene-cont">
-          <div class="zamjne-today">
-            <p class="zamjene-naslov">Zamjene danas</p>
-            {% if zamjeneDanas %}
-              {% for zamjena in zamjeneDanas %}
-                <p class="zamjene-desc">
-                  {{ zamjena.od }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
-                </p>
-              {% endfor %}
-            {% else %}
-              <p>Nemaš zamjena danas</p>
-            {% endif %}
-          </div>
-          <div class="zamjene-sutra">
-            <p class="zamjene-naslov">Zamjene sutra</p>
-            {% if zamjeneSutra %}
-              {% for zamjena in zamjeneSutra %}
-                <p class="zamjene-desc">
-                  {{ zamjena.od }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
-                </p>
-              {% endfor %}
-            {% else %}
-              <p>Nemaš zamjena sutra</p>
-            {% endif %}
-          </div>
-          <div class="zamjene-prekosutra">
-            <p class="zamjene-naslov">Zamjene prekosutra</p>
-            {% if zamjenePrekosutra %}
-              {% for zamjena in zamjenePrekosutra %}
-                <p class="zamjene-desc">
-                  {{ zamjena.od }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
-                </p>
-              {% endfor %}
-            {% else %}
-              <p>Nemaš zamjena prekosutra</p>
-            {% endif %}
-          </div>
-
-          <div class="zamjene-sljtjedan">
-            <p class="zamjene-naslov">Idući tjedan</p>
-            {% if zamjeneSljedeciTjedan %}
-              {% for zamjena in zamjeneSljedeciTjedan %}
-                <p class="zamjene-desc">
-                  {{ zamjena.od }} <br>
-                  Datum zamjene: {{ zamjena.datum }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
-                </p>
-              {% endfor %}
-            {% else %}
-              <p>Nemaš zamjena sljedeći tjedan</p>
-            {% endif %}
-          </div>
+    <div class="main-cont">
+      <div class="whole-obavijesti obavijesti-standalone">
+        <div class="section-title">OBAVIJESTI</div> 
+        <section class="obavijesti-cont">
+          {% if sve_obavijesti %}
+            {% for obavijest in sve_obavijesti %}
+              <div class="obavijesti-section">
+                <div class="post-title">{{ obavijest.name }}</div> <br>
+                <div class="post-desc">{{ obavijest.content }}</div>
+                <!--div class="post-img"{{ obavijest.image }}></div-->
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="post-title">Nema obavijesti</p>
+          {% endif %}
         </section>
       </div>
     </div>
   </div>
 </body>
 
-  <script>
-    function changeUrl(url){
-      window.location.href=url;
-    }
-  </script>
 
+
+<script>
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script>
 </html>
