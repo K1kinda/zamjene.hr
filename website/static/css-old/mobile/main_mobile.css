@@ -1,7 +1,10 @@
 main {
   padding-top: 50px;
   position: fixed;
+}
 
+.page-center{
+  width: 95%;
 }
 
 .changes-box, .news-board {
@@ -19,7 +22,7 @@ main {
 }
 
 .news-board {
-  height: 109vw;
+  height: 102vw;
 }
 
 .today, .tomorrow, .after-tomorrow, .next-week {
@@ -28,7 +31,6 @@ main {
   font-size: 20px;
   margin-bottom: 10px;
   padding-bottom: 10px;
-  margin-bottom: 10px;
   border-bottom-style: solid;
   border-bottom-width: 1px;
   border-color: rgba(0,0,0,0.3);
@@ -48,14 +50,13 @@ main {
   border-bottom-style: solid;
   border-bottom-width: 1px;
   margin-right: 10px;
-  margin-left: 10px;
   border-color: rgba(0,0,0,0.3);
 }
 
 .post-title {
   font-weight: bold;
   font-family: Montserrat;
-  font-size: 30px;
+  font-size: 20px;
   margin-bottom: 10px;
   cursor: pointer;
   color: rgb(27, 23, 23);
@@ -78,3 +79,24 @@ main {
   width: 90%;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
 }
+
+.dropdown-menu {
+  overflow: hidden;
+  transition: max-height 0s ease-out, opacity 0s ease-out; 
+  opacity: 0; 
+}
+
+.dropdown-menu.open-menu {
+  opacity: 1; 
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  transition-delay: 0.1s; 
+}
+
+.standalone{
+  height: auto;
+  max-height: 80vh;
+}
+
+
+
+

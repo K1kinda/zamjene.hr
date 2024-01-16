@@ -1,22 +1,24 @@
-.main-cont {
-  display: flex;
-  flex-direction: column;
-  justify-content: center; 
-  align-items: center; 
-  height: 100vh;
+.schedule {
+  margin-top: 50%;
+  background-color: rgb(253, 239, 239);
 }
 
-.schedule {
-  background-color: rgb(253, 239, 239);
+body{
+  display: flex;
+  width: 100%;
+  height: 90%;
+  overflow: hidden;
 }
 
 .schedule th,
 .schedule td {
-  padding: 10px;
+  margin-left: 5%;
+  width: 15%;
+  padding: 4px;
   text-align: center;
   font-weight: bold;
   font-family: Montserrat;
-  font-size: 20px;
+  font-size: 12px;
   cursor: default;
   border: 1px solid rgb(174, 174, 243);
   border-radius: 5px;
@@ -24,10 +26,37 @@
 }
 
 .schedule input[type="text"] {
-  width: 100%;
+  width: 80%;
   font-family: Montserrat;
-  font-size: 20px;
+  font-size: 6px;
   font-weight: bold;
   cursor: default;
   color: rgb(34, 46, 80) !important;
+}
+
+.spremi-raspored-button{
+  width: 35%;
+  margin-left: 37.5%;
+  margin-top: 15px;
+}
+
+.info-raspored{
+  text-align: center;
+  font-weight: bold;
+}
+
+button{
+  padding: 10px 20px;
+  border: none;
+  border-radius: 7px;
+  padding: 5px 10px 5px 10px;
+  background-color: rgb(110, 110, 202);
+  color: white;
+  font-family: Montserrat;
+  font-weight: 600;
+  font-size: 12px;
+  cursor: pointer;
+  transition: scale 0.2s, opacity 0.1s;
+  box-shadow: 0px 3px 5px rgba(0, 0, 0, 0.15);
+  transition: scale 0.2s;
 }

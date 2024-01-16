@@ -26,64 +26,138 @@
 
   <div class="dropdown-menu" id="subMenu">
       <div class="dropdown-box">
-        <p class="dropdown-text">Početna</p>
+        <p class="dropdown-text" onclick="changeUrl('/')">Početna</p>
       </div>
-      <div class="dropdown-box">
-        <p class="dropdown-text">Moje zamjene</p>
-      </div>
-      <div class="dropdown-box">
-        <p class="dropdown-text">Oglasna ploča</p>
-      </div>
-      <div class="dropdown-box">
-        <p class="dropdown-text">Moj raspored sati</p>
-      </div>
-      <div class="dropdown-box">
-        <p class="dropdown-text">Moj raspored učionica</p>
-      </div>
+      {% if isLoggedIn=="True" %}
+        {% if skola!="True" %}
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</p>
+          </div>
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</p>
+          </div>
+        {% endif %}
+        {% if admin!="True" %}
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</p>
+          </div>
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/rasporeducionica')">Raspored učionica</p>
+          </div>
+        {% endif %}
+      {% endif %}
+        {% if isLoggedIn=="True" %}
+            {% if skola=="True" %}
+            <div class="dropdown-box dark">
+              <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
+            </div>
+            <div class="dropdown-box dark">
+              <p class="dropdown-text dark" onclick="changeUrl('/logout')">Odjavi se</p>
+            </div>
+            {% elif admin=="True" %}
+            <div class="dropdown-box">
+              <p class="dropdown-text dark" onclick="changeUrl('/addschool')">Dodaj školu</p>
+            </div>
+            <div class="dropdown-box">
+              <p class="dropdown-text dark" onclick="changeUrl('/logout')">Izađi iz admin moda</p>
+            </div>
+            {% else %}
+            <div class="dropdown-box dark">
+              <p class="dropdown-text" onclick="changeUrl('/viewprofile')">Profil</p>
+            </div>
+            <div class="dropdown-box  dark">
+              <p class="dropdown-text" onclick="changeUrl('/logout')">Odjavi se</p>
+            </div>
+            {% endif %}
+        {% endif %} 
   </div>
-  
+
   <main class="page-center">
-    <div class="changes-box">
-      <div class="today">
-        Zamjene danas
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="tomorrow">
-        Zamjene sutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="after-tomorrow">
-        Zamjene prekosutra
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
-      <div class="next-week">
-        Idući tjedan
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-        <div class="changes">Zamjena</div>
-      </div>
+      <section class="changes-box">
+        <div class="today">
+          Zamjene danas
+          {% if zamjeneDanas %}
+            {% for zamjena in zamjeneDanas %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Novi predmet: {{ zamjena.zamjena }}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena danas</p>
+          {% endif %}
+        </div>
+        <div class="tomorrow">
+          Zamjene sutra
+          {% if zamjeneSutra %}
+            {% for zamjena in zamjeneSutra %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Novi predmet: {{ zamjena.zamjena }}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena sutra</p>
+          {% endif %}
+        </div>
+        <div class="after-tomorrow">
+          Zamjene prekosutra
+          {% if zamjenePrekosutra %}
+            {% for zamjena in zamjenePrekosutra %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Novi predmet: {{ zamjena.zamjena }}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena prekosutra</p>
+          {% endif %}
+        </div>
+        <div class="next-week">
+          Zamjene sljedeći tjedan
+          {% if zamjeneSljedeciTjedan %}
+            {% for zamjena in zamjeneSljedeciTjedan %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Datum zamjene: {{ zamjena.datum }} <br>
+                Novi predmet: {{ zamjena.zamjena }}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena sljedeći tjedan</p>
+          {% endif %}
+        </div>
+      </section>
+    <div class="news-board">
+      {% if skola!="True" %}
+        <section class="obavijesti-cont">
+          {% if sve_obavijesti %}
+            {% for obavijest in sve_obavijesti %}
+              <div class="post-box">
+                <div class="post-title">{{ obavijest.name }}</div> <br>
+                <div class="post-desc">{{ obavijest.content }}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="post-title">Nema obavijesti</p>
+          {% endif %}
+        </section>
+      {% else %}
+        <section class="obavijesti-cont obavijesti-standalone">
+          {% if sve_obavijesti %}
+            {% for obavijest in sve_obavijesti %}
+              <div class="post-box">
+                <div class="post-title">{{ obavijest.name }}</div> <br>
+                <div class="post-desc">{{ obavijest.content }}</div>
+              </div>
+            {% endfor %}
+          {% else %}
+            <p class="post-title">Nema obavijesti</p>
+          {% endif %}
+        </section>
+      {% endif %}
     </div>
 
-
-    <section class="news-board">
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/image.jpg')}}">
-        </div>
-      </div>
-      <div class="post-box">
-        <div class="post-title">Naslov objave</div>
-        <div class="post-image-container">
-          <img class="post-image" src="{{ url_for('static', filename='pictures/profile-picture.jpg')}}">
-        </div>
-      </div>
   </main>
 
   <script>
@@ -93,6 +167,12 @@
       subMenu.classList.toggle("open-menu")
     }
   </script>
+  <script>
+    function changeUrl(url){
+      window.location.href=url;
+    }
+  </script>
+
 
 </body>
 </html>

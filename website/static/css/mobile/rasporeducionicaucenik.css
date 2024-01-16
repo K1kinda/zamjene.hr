@@ -1,60 +1,49 @@
-body {
-  font-family: 'Montserrat', sans-serif;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.main-cont {
-  width: 85%;
-  height: 100%;
-}
-
 .schedule {
-  margin: auto;
-  table-layout: fixed;
-  width: 95%;
-  height: 95%;
+  background-color: rgb(253, 239, 239);
+}
+
+body{
+  display: flex;
+  width: 100vw;
+  height: 85%;
+  overflow: hidden;
+}
+
+.page-center{
+    overflow-x: scroll;
 }
 
 .schedule th,
 .schedule td {
-  padding: 0px;
-  size: auto;
-  font-size: 12px;
+  margin-left: 5%;
+  width: 25%;
+  padding: 3px;
   text-align: center;
+  font-weight: bold;
+  font-family: Montserrat;
+  font-size: 10px;
   cursor: default;
-  border: 1px solid rgb(174, 174, 243);
-  background-color: transparent;
-  overflow: visible;
 }
+
 .schedule th{
   border: none;
   font-weight: bold;
-  font-size: 16px;
-}
-
-.schedule th:first-of-type {
-  border: none; /* Remove border for the first th */
-}
-
-.schedule td:first-child {
-  border: none; /* Remove borders for the first column */
-}
-
-.schedule tr:first-child td {
-  border: none; /* Remove borders for the first row */
+  font-size: 13px;
 }
 
 .schedule input[type="text"] {
-  width: 100%;
-  padding: 0;
-  font-size: 12px;
+  width: 25px;
   text-align: center;
+  font-family: Montserrat;
+  font-size: 10px;
   font-weight: bold;
   cursor: default;
-  color: rgb(34, 46, 80);
-  border: none;
+  color: rgb(34, 46, 80) !important;
+}
+
+.info{
+  margin-left: 25px;
+  font-family: 'Montserrat', sans-serif;
+  font-size: 10px;
+  font-weight: bold;
 }

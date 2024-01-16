@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/sidebar.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/home.css')}}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/obavijesti.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/mobile/general_mobile.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/mobile/header_mobile.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/mobile/main_mobile.css')}}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css-old/mobile/sidebar_mobile.css')}}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/mobile/zamjene.css')}}">
   <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,43 +17,65 @@
 
 <body>
     <div class="main">
-        <div class="sidebar-cont">
-            <div class="logo-container">
-                <span class="logo-text">zamjene.hr</span>
-            </div>
-            <div class="sidebar-buttons-cont">
-                <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
-                {% if isLoggedIn=="True" %}
-                    {% if skola!="True" %}
-                    <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
-                    <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
-                    {% endif %}
-                    {% if admin!="True" %}
-                    <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
-                    <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
-                    {% endif %}
-                {% endif %}
-            </div>
-            <div class="sidebar-profile-cont">
-                {% if isLoggedIn=="True" %}
-                    {% if skola=="True" %}
-                    <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
-                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
-                    {% elif admin=="True" %}
-                    <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
-                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Izađi iz admin moda</button>
-                    {% else %}
-                    <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Profil</button>
-                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
-                    {% endif %}
-                {% else %}
-                    <button class="sidebarbutton" onclick="changeUrl('/login')">Prijavi se</button>
-                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/register')">Napravi račun</button>
-                    <button class="sidebarbutton" onclick="changeUrl('/loginskola')">Prijavi se (Škola)</button>
-                    <button class="sidebarbutton darkbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>
-                {% endif %} 
-            </div>
+      <header>
+        <div class="logo">
+          <span class="logo-text">zamjene.hr</span>
         </div>
+        <div class="menu">
+          <div class="shape"></div>
+          <img class="menu-icon" onclick="toggleMenu()" src="{{ url_for('static', filename='pictures/menu.svg')}}">
+        </div>
+      </header>
+    
+      <div class="dropdown-menu" id="subMenu">
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/')">Početna</p>
+          </div>
+          {% if isLoggedIn=="True" %}
+            {% if skola!="True" %}
+              <div class="dropdown-box">
+                <p class="dropdown-text" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</p>
+              </div>
+              <div class="dropdown-box">
+                <p class="dropdown-text" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</p>
+              </div>
+            {% endif %}
+            {% if admin!="True" %}
+              <div class="dropdown-box">
+                <p class="dropdown-text" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</p>
+              </div>
+              <div class="dropdown-box">
+                <p class="dropdown-text" onclick="changeUrl('/rasporeducionica')">Raspored učionica</p>
+              </div>
+            {% endif %}
+          {% endif %}
+            {% if isLoggedIn=="True" %}
+                {% if skola=="True" %}
+                <div class="dropdown-box dark">
+                  <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
+                </div>
+                <div class="dropdown-box dark">
+                  <p class="dropdown-text dark" onclick="changeUrl('/logout')">Odjavi se</p>
+                </div>
+                {% elif admin=="True" %}
+                <div class="dropdown-box">
+                  <p class="dropdown-text dark" onclick="changeUrl('/addschool')">Dodaj školu</p>
+                </div>
+                <div class="dropdown-box">
+                  <p class="dropdown-text dark" onclick="changeUrl('/logout')">Izađi iz admin moda</p>
+                </div>
+                {% else %}
+                <div class="dropdown-box dark">
+                  <p class="dropdown-text" onclick="changeUrl('/viewprofile')">Profil</p>
+                </div>
+                <div class="dropdown-box  dark">
+                  <p class="dropdown-text" onclick="changeUrl('/logout')">Odjavi se</p>
+                </div>
+                {% endif %}
+            {% endif %} 
+      </div>
+
+      
         <div class="main-cont-zamjene main-cont">
           <div class="whole-zamjene zamjene-standalone">
             <div class="section-title">ZAMJENE</div>
@@ -97,8 +120,8 @@
               <section>
                 <p class="section-title" >Zamjene za: {{ razred.name }}</p>
                 {% for zamjena in sve_zamjene %}
-                  <div class="zamjene-cont-skola">Od {{ zamjena.od }} <br>
-                    Do {{ zamjena.do }} <br>
+                  <div class="zamjene-cont-skola">
+                    {{ zamjena.od }} <br>
                     Datum zamjene: {{ zamjena.datum }} <br>
                     Novi predmet: {{ zamjena.zamjena }}
                     <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
@@ -118,6 +141,13 @@
 <script>
   function changeUrl(url){
     window.location.href=url;
+  }
+</script>
+<script>
+  let subMenu = document.getElementById("subMenu");
+  
+  function toggleMenu(){
+    subMenu.classList.toggle("open-menu")
   }
 </script>
 </html>
