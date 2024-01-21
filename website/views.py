@@ -11,6 +11,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime, date, timedelta
 import random
 import string
+from werkzeug.security import generate_password_hash, check_password_hash
 
 views = Blueprint('views', __name__)
 
@@ -257,7 +258,7 @@ def registersend():
             error="Korisnik s tim emailom već postoji."
             return redirect(url_for("views.register", error=error))
         else:
-            newUser = User(name = name, lastname=surname, email=email, password=password, school_id=schoolID, classroom_id=classID)
+            newUser = User(name = name, lastname=surname, email=email, password=generate_password_hash(password, method='pbkdf2:sha256'), school_id=schoolID, classroom_id=classID)
             db.session.add(newUser)
             db.session.commit()
 
@@ -277,7 +278,7 @@ def loginsend():
     password = request.form['password']
     user = User.query.filter_by(email=email).first()
     if user:
-        if user.password==password:
+        if check_password_hash(user.password, password):
             response = make_response(redirect("/"))
             response.set_cookie('isUserLoggedIn', value="True")
             response.set_cookie('loggedInUser', value=str(user.id))
@@ -315,7 +316,7 @@ def loginskolasend():
     if school:
         instertedpassword = request.form['password']
         password=school.login_password
-        if instertedpassword==password:
+        if check_password_hash(password, instertedpassword):
             response = make_response(redirect("/skolamenu"))
             response.set_cookie('isUserLoggedIn', value="True")
             response.set_cookie('isSkolaLoggedIn', value="True")
@@ -419,7 +420,7 @@ def addschoolfunction():
             error="Korisnik s tim emailom već postoji."
             return redirect(url_for("views.addschoolmenu", error=error))
         else:
-            newSchool = School(name = name, login_password=password, id=id)
+            newSchool = School(name = name, login_password=generate_password_hash(password, method='pbkdf2:sha256'), id=id)
             db.session.add(newSchool)
             db.session.commit()
 
