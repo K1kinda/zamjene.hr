@@ -67,7 +67,7 @@
     <section class="login-window">
       <img class="user-icon-login" src="{{ url_for('static', filename='pictures/school-icon.svg')}}">
       <p style="margin-left:40px; margin-right:40px;" class="login-text">Dodajte školu</p><br>
-      <form class="login-container" action="/loginsend" method="POST">
+      <form class="login-container" action="/loginadminsend" method="POST">
         <input style="margin-bottom: -10px;"   class="input-box" type="password" placeholder="Lozinka" id="password" name="password"><br>
         <button style="width:107.2%;" type="submit">Prijavi se</button>
       </form>

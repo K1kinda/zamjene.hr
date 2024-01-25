@@ -1,4 +1,5 @@
 from . import db
+from datetime import datetime
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -12,19 +13,25 @@ class User(db.Model):
     school = db.relationship('School', backref=db.backref('users', lazy=True))
     classroom = db.relationship('Classroom', backref=db.backref('users', lazy=True))
 
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class School(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     login_password = db.Column(db.String(100), nullable=False)
 
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class Classroom(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
-
+    razrednik = db.Column(db.String(100), nullable=False)
     school = db.relationship('School', backref=db.backref('classrooms', lazy=True))
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class Zamjene(db.Model):
@@ -34,6 +41,10 @@ class Zamjene(db.Model):
     do = db.Column(db.String(100), nullable=False)
     datum = db.Column(db.Date, nullable=False)
     zamjena = db.Column(db.String(100), nullable=False)
+    stariprofesor = db.Column(db.String(100), nullable=False)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class RasporedSati(db.Model):
@@ -41,11 +52,15 @@ class RasporedSati(db.Model):
     classroom_id = db.Column(db.Integer, db.ForeignKey('classroom.id'), nullable=False)
     raspored_string = db.Column(db.String(1000), nullable=False)
 
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class RasporedUcionica(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
     raspored_string = db.Column(db.String(10000), nullable=False)
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class Obavjesti(db.Model):
@@ -53,3 +68,13 @@ class Obavjesti(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(100), nullable=False)
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Predmeti(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
+    predmet = db.Column(db.String(100), nullable=False)
+    profesor = db.Column(db.String(100), nullable=False)
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)

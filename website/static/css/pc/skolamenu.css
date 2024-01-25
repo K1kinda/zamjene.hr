@@ -114,6 +114,7 @@
 
 .skola-raspored-ucionica{
     height: fit-content;
+    margin-bottom: 25px;
 }
 
 .raspored-ucionica-button{
@@ -137,7 +138,7 @@
 }
 
 .novi-razred-form{
-    height: 175px;
+    height: 225px;
     width: 100%;
 }
 

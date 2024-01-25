@@ -72,6 +72,18 @@
               <button class="raspored-ucionica-button" type="submit">Raspored učionica</button>
             </form>
           </div>
+          <div class="skola-raspored-ucionica">
+            <form action="/dodajpredmet" method="get">
+              <input type="hidden" name="school_id" value="{{ skola.id }}">
+              <button class="raspored-ucionica-button" type="submit">Dodaj predmet</button>
+            </form>
+          </div>
+          <div class="skola-raspored-ucionica">
+            <form action="/prikazizamjene" method="post">
+              <input type="hidden" name="school_id" value="{{ skola.id }}">
+              <button class="raspored-ucionica-button" type="submit">Zamjene</button>
+            </form>
+          </div>
         </div>
 
         <div class="skola-obavijesti">
@@ -105,6 +117,7 @@
           <form class="novi-razred-form" method="post" action="/dodajrazred"> 
             <label class="skola-title" for="classroom_name">Dodaj novi razred:</label><br><br>
             <input class="input-obavijesti"  type="text" name="classroom_name" placeholder="Ime razreda" required><br><br>
+            <input class="input-obavijesti"  type="text" name="razrednik" placeholder="Razrednik" required><br><br>
             <input class="dodaj-obavijest-button" type="submit" value="Dodaj novi razred"><br><br>
           </form>
 
@@ -114,6 +127,7 @@
             <p>
               <div class="razred-info">
                 <p class="obavijest-title">Razred: {{ classroom.name }} </p>
+                <p class="obavijest-content">Razrednik: {{ classroom.razrednik }}</p>
                 <p class="obavijest-content">ID: {{ classroom.id }}</p>
               </div>
               <section>

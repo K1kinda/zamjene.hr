@@ -1,9 +1,6 @@
-#dodavanje razreda u html
-#loggedInSkola, isSkolaLoggedin, isUserLoggedin, loggedInSchoolID
-
 from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify
-from .models import User, School, Classroom, Zamjene, Obavjesti, RasporedSati, RasporedUcionica
-from . import db
+from .models import User, School, Classroom, Zamjene, Obavjesti, RasporedSati, RasporedUcionica, Predmeti
+from . import db, mail
 import time
 import pandas as pd
 import os
@@ -12,6 +9,7 @@ from datetime import datetime, date, timedelta
 import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_mail import Mail, Message
 
 views = Blueprint('views', __name__)
 
@@ -33,8 +31,7 @@ def home():
 
     if isSkolaLoggedIn=="True":
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
-        sveObavijesti = sveObavijesti[::-1]
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
@@ -63,7 +60,7 @@ def home():
 
         zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
 
-        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInUser.school_id).all()
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
@@ -166,9 +163,9 @@ def skolamenu():
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
-    
-    obavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
-    obavijesti = obavijesti[::-1]
+
+    obavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
+
     if isUserLoggedIn and isSkolaLoggedIn:
         classrooms = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
         if 'Mobile' in userDevice:
@@ -300,12 +297,12 @@ def loginadminsend():
     error=""
     password = request.form['password']
     if password=="lozinka":   ##promjenit!!
-        response = make_response(redirect("/adminmenu"))
+        response = make_response(redirect("/add-school-menu"))
         response.set_cookie('isAdminLoggedIn', value="True")
         return response
     else:
         error="Kriva lozinka."
-        return redirect(url_for("views.loginadmin", error=error))
+        return redirect(url_for("views.loginAdmin", error=error))
 
 #logika za ulogiravanje administracije skola
 @views.route('/loginskolasend', methods=['GET', 'POST'])
@@ -346,8 +343,13 @@ def logout():
 @views.route('/dodajrazred', methods=['GET', 'POST'])
 def dodajrazred():
         classroom_name = request.form.get('classroom_name')
+        razrednik = request.form.get('razrednik')
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-        db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID))
+        characters = string.digits
+        id = int(''.join(random.choice(characters) for _ in range(8)))
+        while Classroom.query.filter_by(id=id).first():
+            id = int(''.join(random.choice(characters) for _ in range(8)))
+        db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID, id=id, razrednik=razrednik))
         db.session.commit()
         return redirect(url_for("views.skolamenu"))
 
@@ -400,6 +402,8 @@ def addschoolfunction():
         password = request.form['password']
         characters = string.digits
         id = int(''.join(random.choice(characters) for _ in range(8)))
+        while School.query.filter_by(id=id).first():
+            id = int(''.join(random.choice(characters) for _ in range(8)))
 
         has_letter = any(char.isalpha() for char in password)
         has_number = any(char.isdigit() for char in password)
@@ -438,56 +442,52 @@ def prikazizamjene():
     user_agent = request.headers.get('User-Agent')
     isLoggedIn = request.cookies.get('isUserLoggedIn')
     skola = request.cookies.get('isSkolaLoggedIn')
-
-    if request.method=="POST":
-        schoolID = request.form['school_id']
-        classroomID = request.form['classroom_id']
-    else:
-        schoolID = request.args.get("schoolid")
-        classroomID = request.args.get("classroomid")
-    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
-
-    zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
-    zamjene = zamjene[::-1]
+    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+    svirazredi = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
+    svipredmeti = Predmeti.query.filter_by(school_id=loggedInSkolaID).all()
+    sviprofesori = []
+    predmetistrings = []       
+    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).all()
+    for predmet in svipredmeti:
+        if predmet.profesor not in sviprofesori:
+            sviprofesori += [predmet.profesor]
+        predmetistrings += [predmet.predmet + " | " + predmet.profesor]
 
     if 'Mobile' in user_agent:
-        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
 
     elif 'Windows' in user_agent:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
 
     else:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
 
 
 @views.route('/dodajzamjenu', methods=['GET', 'POST'])
 def dodajzamjenu():
-    error=request.args.get("error")
-    isLoggedIn = request.cookies.get('isLoggedIn')
-
-    schoolID = request.form['school_id']
-    classroomID = request.form['classroom_id']
-    classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
-
     if request.method=="POST":
-        od = request.form['from']
-        print(od)
-        do = ""
+        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        zamjenaza = request.form['zamjenaza']
+
         datum = request.form['date']
-        zamjena = request.form['zamjena']
+        datum = datetime.strptime(datum, '%Y-%m-%d').date()
+
+        od = request.form['from']
+        do = ""
 
         if 'to' in request.form:
             od = od[:2] + ' i ' + str(int(od[0])+1)+ '. sat'
 
-        datum = datetime.strptime(datum, '%Y-%m-%d').date()
+        classroomID = request.form['razred']
+       
+        zamjena = request.form['novipredmet']
 
-        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=zamjena, classroom_id=classroomID)
+        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=zamjena, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID)
         db.session.add(nova_zamjena)
         db.session.commit()
 
-        zamjene = Zamjene.query.filter_by(classroom_id=classroomID).all()
 
-    return redirect(url_for("views.prikazizamjene", error=error, isLoggedIn=isLoggedIn, sve_zamjene=zamjene, razred=classroom, classroomid=classroomID, schoolid=schoolID))
+    return redirect(url_for("views.prikazizamjene"))
 
 @views.route('/delete_zamjene/<int:zamjene_id>', methods=['POST'])
 def delete_zamjene(zamjene_id):
@@ -510,7 +510,8 @@ def delete_zamjene(zamjene_id):
 def obriširazred():
     schoolID = request.form['school_id']
     classroomID = request.form['classroom_id']
-
+    User.query.filter_by(classroom_id=classroomID).update({'classroom_id': ""})
+    db.session.commit()
     classroom = Classroom.query.filter_by(id=classroomID, school_id=schoolID).first()
 
     db.session.delete(classroom)
@@ -691,11 +692,10 @@ def oglasnaploca():
     if skola!="True":
         loggedInUserID = int(request.cookies.get('loggedInUser'))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
-        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInUser.school_id).all()
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
     elif skola:
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-        sveObavijesti = Obavjesti.query.filter_by(school_id=loggedInSkolaID).all()
-        sveObavijesti = sveObavijesti[::-1]
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
     if 'Mobile' in user_agent:
         return render_template('templates-mobile/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
@@ -797,17 +797,31 @@ def prikaziraspored():
     
 @views.route('/edituserdata', methods=['POST'])
 def edituserdata():
-    namee = request.json.get('name')
-    email = request.json.get('email')
-    idskole = request.json.get('idskole')
-    idrazreda = request.json.get('idrazreda')
     iducenika = request.json.get('iducenika')
+    user = User.query.get(iducenika)
+    if request.json.get('name'):
+        namee = request.json.get('name')
+    else:
+        namee = user.name + " " + user.lastname
+    if request.json.get('email'):
+        email = request.json.get('email')
+    else:
+        email = user.email
+    if request.json.get('idskole'):
+        if request.json.get('idskole')!="********":
+            idskole = request.json.get('idskole')
+        else:
+            idskole = user.school_id
+    if request.json.get('idrazreda'):
+        if request.json.get('idrazreda')!="********":
+            idrazreda = request.json.get('idrazreda')
+        else:
+            idrazreda = user.classroom_id
+
 
     a = namee.find(' ')
     name=namee[:a]
     lastname=namee[a:]
-
-    user = User.query.get(iducenika)
 
     if user:
         user.name = name
@@ -819,3 +833,84 @@ def edituserdata():
         db.session.commit()
     
     return "a"
+ 
+@views.route('/forgotpassword', methods=['GET', 'POST'])
+def forgotpassword():
+    userDevice = request.headers.get('User-Agent')
+    if request.method=="GET":
+        if 'Mobile' in userDevice:
+            return render_template("templates-mobile/forgotpassword.html")
+        elif 'Windows' in userDevice:
+            return render_template("templates-pc/forgotpassword.html")
+        else:
+            return render_template("templates-pc/forgotpassword.html")
+    elif request.method=="POST":
+        email = request.form["email"]
+        randompass = ""
+        for i in range(8):
+            x=random.randint(48,57)
+            y=random.randint(97,122)
+            z=random.randint(65,90)
+            j=random.randint(1,3)
+            if j==1:
+                randompass+=chr(x)
+            elif j==2:
+                randompass+=chr(y)
+            elif j==3:
+                randompass+=chr(z)
+
+        user = User.query.filter_by(email=email).first()
+        if user:
+            message = Message(
+                subject='Pozdrav of administrativnog tima zamjene.hr',
+                recipients=[email],
+                body='Tvoja nova lozinka je: ' + randompass + ". Molim te promjeni ju kada se ulogiraš u sustav.")
+            mail.send(message)
+            user.password = generate_password_hash(randompass, method='pbkdf2:sha256')
+            db.session.commit()
+
+        return redirect(url_for("views.login"))
+    
+@views.route('/notify', methods=['GET', 'POST'])
+def notify():
+    return render_template("templates-pc/notify.html")
+
+
+@views.route('/dodajpredmet', methods=['GET', 'POST'])
+def dodajpredmet():
+    error=request.args.get("error")
+    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    userDevice = request.headers.get('User-Agent')
+    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn') 
+    schoolID = int(request.cookies.get('loggedInSchoolID'))
+
+    if request.method=="GET":
+        predmeti = Predmeti.query.filter_by(school_id=schoolID).all()
+        if 'Mobile' in userDevice:
+            return render_template("templates-mobile/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+        elif 'Windows' in userDevice:
+            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+        else:
+            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+
+    elif request.method=="POST":
+        predmet = request.form['predmet']
+        profesor = request.form['profesor']
+
+        novi_predmet = Predmeti(school_id=schoolID, predmet=predmet, profesor=profesor)
+
+        db.session.add(novi_predmet)
+        db.session.commit()
+
+        return redirect(url_for("views.dodajpredmet"))
+
+@views.route('/obrisipredmet', methods=['POST'])
+def delete_predmet():
+    id_zamjene = request.form['predmet_id']
+
+    predmet = Predmeti.query.get(id_zamjene)
+
+    db.session.delete(predmet)
+    db.session.commit()
+
+    return redirect(url_for("views.dodajpredmet", code=303))

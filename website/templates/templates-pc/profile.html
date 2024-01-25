@@ -58,7 +58,6 @@
 
   <main class="page-center">
     <form onsubmit="submitForm('/edituserdata'); return false;" class="news-board">
-      <!-- your form content here -->
       <div class="post-box">
         <div class="post-title">
           <span>Ime:</span>
@@ -66,24 +65,37 @@
         </div>
       </div>
       <div class="post-box">
-        <!-- Other fields with editable spans -->
         <div class="post-title">
           <span>E-Mail:</span>
           <span class="editable-span" contenteditable="true" id="email">{{ user.email }}</span>
         </div>
         <div class="post-title">
+          <span class="editable-span" contenteditable="true" id="iducenika" hidden>{{ user.id }}</span>
+        </div>
+      </div>
+      <button type="submit" class="save-changes">Spremi promjene</button>
+    </form>
+  </main>
+  <main class="page-center">
+    <form onsubmit="submitForm('/edituserdata'); return false;" class="news-board">
+      <div class="post-box">
+        <div class="post-title">
+          <span>Mijenjanje ID-ova</span>
+        </div>
+      </div>
+      <div class="post-box">
+        <div class="post-title">
           <span>ID škole:</span>
-          <span class="editable-span" contenteditable="true" id="idskole">{{ user.school_id }}</span>
+          <span class="editable-span" contenteditable="true" id="idskole" style="font-weight: 100; font-size: 22px;">********</span>
         </div>
         <div class="post-title">
           <span>ID razreda:</span>
-          <span class="editable-span" contenteditable="true" id="idrazreda">{{ user.classroom_id }}</span>
+          <span class="editable-span" contenteditable="true" id="idrazreda" style="font-weight: 100; font-size: 22px;">********</span>
         </div>
         <div class="post-title">
           <span class="editable-span" contenteditable="true" id="iducenika" hidden>{{ user.id }}</span>
         </div>
       </div>
-      <!-- other fields... -->
       <button type="submit" class="save-changes">Spremi promjene</button>
     </form>
   </main>
@@ -99,13 +111,11 @@
     var form = document.querySelector('.news-board');
     var formData = new FormData(form);
   
-    // Convert form data to JSON
     var jsonData = {};
     formData.forEach(function (value, key) {
       jsonData[key] = value;
     });
   
-    // If using editable spans, manually extract content for each span
     jsonData['name'] = document.getElementById('name').innerText;
     jsonData['email'] = document.getElementById('email').innerText;
     jsonData['iducenika'] = document.getElementById('iducenika').innerText;
@@ -114,7 +124,6 @@
   
     var jsonBody = JSON.stringify(jsonData);
   
-    // Send POST request with JSON content type
     fetch(url, {
       method: 'POST',
       headers: {
@@ -144,5 +153,18 @@
     function changeUrl(url){
       window.location.href=url;
     }
+  </script>
+  <script>
+    var editableSpanIds = ['idskole', 'idrazreda'];
+
+    editableSpanIds.forEach(function(spanId) {
+      var editableSpan = document.getElementById(spanId);
+
+      editableSpan.addEventListener('keydown', function() {
+        if (this.textContent === '********' || this.textContent === '********') {
+          this.textContent = '';
+        }
+      });
+    });
   </script>
 </html>

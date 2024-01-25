@@ -60,83 +60,25 @@
         </div>
         <div class="main-cont-zamjene main-cont">
           <div class="whole-zamjene zamjene-standalone">
-            <div class="section-title">ZAMJENE</div>
-            <form class="nova-zamjena-form" action="/dodajzamjenu" method="post">
-              <p class="section-title">Dodaj novu zamjenu</p>
-
-              <div class="od-do-cont">
-                <p class="od-do">Zamjena za profesora:
-                  <select class="select-zamjene" id="zamjenaza" name="zamjenaza">
-                    {% for profesor in profesori %}
-                      <option value="{{ profesor }}">{{ profesor }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div>
-
-              <input class="nova-zamjna-kalendar" type="date" id="date" name="date"><br><br>
-
-              <div class="od-do-cont">
-                <p class="od-do">Sat:
-                  <select class="select-zamjene" id="from" name="from">
-                    <option value="1. sat">1. sat</option>
-                    <option value="2. sat">2. sat</option>
-                    <option value="3. sat">3. sat</option>
-                    <option value="4. sat">4. sat</option>
-                    <option value="5. sat">5. sat</option>
-                    <option value="6. sat">6. sat</option>
-                    <option value="7. sat">7. sat</option>
-                    <option value="8. sat">8. sat</option>
-                    <option value="9. sat">9. sat</option>
-                  </select>
-                </p>
-
-                <p>Blok sat:
-                  <input type="checkbox" class="select-zamjene-checkbox" id="to" name="to"></input>   
-                </p>
-
-              </div>
-              <div class="od-do-cont">
-                <p class="od-do">Razred:
-                  <select class="select-zamjene" id="razred" name="razred">
-                    {% for razred in razredi %}
-                      <option value="{{ razred.id }}">{{ razred.name }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div>
-              <div class="od-do-cont">
-                <p class="od-do">Novi predmet:
-                  <select class="select-zamjene" id="novipredmet" name="novipredmet">
-                    {% for predmet in predmeti %}
-                      <option value="{{ predmet }}">{{ predmet }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div>
-
+            <div class="section-title">PREDMETI</div>
+            <form class="nova-zamjena-form" action="/dodajpredmet" method="post">
+              <p class="section-title">Dodaj novi predmet</p>
+              <input class="nova-zamjena-input" type="text" id="predmet" name="predmet" placeholder="Ime predmeta" required><br><br>
+              <input class="nova-zamjena-input" type="text" id="profesor" name="profesor" placeholder="Profesor koji predaje predmet" required><br><br>
               <input class="dodaj-zamjenu-button" type="submit" value="Dodaj zamjenu">
             </form> 
             <section class="zamjene-cont">
               <section>
-                {% for razred in razredi %}
-                  <p class="section-title" >Zamjene za: {{ razred.name }}</p>
-                  {% for zamjena in sve_zamjene %}
-                    {% if razred.id == zamjena.classroom_id %}
-                      <div class="zamjene-cont-skola">
-                        Zamjena za: {{ zamjena.stariprofesor }} <br>
-                        Datum zamjene: {{ zamjena.datum }} <br>
-                        {{ zamjena.od }} <br>
-                        Novi predmet: {{ zamjena.zamjena }}
-                        <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
-                          <input class="dodaj-zamjenu-button" type="submit" value="Obriši zamjenu">
-                          <input type="hidden" name="school_id" value="">
-                          <input type="hidden" name="classroom_id" value="{{ classroomid }}">
-                        </form>
-                      </div>
-                    {% endif %}
+                  {% for predmet in predmeti %}
+                  <div class="zamjene-cont-skola">
+                    Predmet: {{ predmet.predmet }} <br>
+                    Profesor: {{ predmet.profesor }}
+                    <form action="/obrisipredmet" method="post">
+                      <input class="dodaj-zamjenu-button" type="submit" value="Obriši predmet">
+                      <input type="hidden" name="predmet_id" value="{{ predmet.id }}">
+                    </form>
+                  </div>
                   {% endfor %}
-                {% endfor %}
               </section>
             </section>
           </div>            
