@@ -78,3 +78,12 @@ class Predmeti(db.Model):
     profesor = db.Column(db.String(100), nullable=False)
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
+class Profesor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    pin = db.Column(db.Integer)
+
+    date_added = db.Column(db.DateTime, default=datetime.utcnow)
+
