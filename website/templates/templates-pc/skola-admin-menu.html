@@ -79,14 +79,14 @@
           </form>
 
           <section class="sve-obavijesti">
-            <p class="skola-title">Svi profesori:</p>
+            <p class="sviprofesori-skola-title">Svi profesori:</p>
             {% for profesor in profesori %}
             <p>
               <div class="razred-info">
                 <p class="obavijest-title">Ime i prezime profesora: {{ profesor.name }} </p>
                 <p class="obavijest-content">ID: <span class="id-span">****</span></p>
                 <p class="obavijest-content">PIN: <span class="pin-span">****</span></p><br>
-                <button class="show-hide-button obrisi-razred-button" onclick="toggleVisibility(this, {{ profesor.id }}, {{ profesor.pin }})">Prikazi/Sakri</button>
+                <button class="show-hide-button obrisi-razred-button" onclick="toggleVisibility(this, {{ profesor.id }}, {{ profesor.pin }})">Prikaži / Sakrij</button>
               </div>
               <section class="hidden">
                 <form action="/obrisiprofesora" method="post">

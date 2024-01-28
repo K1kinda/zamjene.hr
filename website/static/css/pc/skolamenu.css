@@ -76,6 +76,14 @@
     text-align: center;
 }
 
+.sviprofesori-skola-title {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 28px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
 .obavijest-info{
     margin: 5px;
     padding: 5px;
