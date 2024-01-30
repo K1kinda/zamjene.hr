@@ -31,6 +31,26 @@ def home():
 
     if isSkolaLoggedIn=="True":
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
+
+        today = date.today()
+        tomarrow = today + timedelta(days=1)
+        dayAfterTomarrow = tomarrow + timedelta(days=1)
+
+        professor_name = loggedInProf.name  
+
+        zamjeneDanas = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==today).all()
+        zamjeneSutra = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==tomarrow).all()
+        zamjenePrekosutra = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==dayAfterTomarrow).all()
+
+        daysUntilNextMonday = (-1 - today.weekday()) % 7
+        nextMonday = today + timedelta(days=daysUntilNextMonday + 1)
+        nextWeekStart = nextMonday
+        nextWeekEnd = nextMonday + timedelta(days=6)
+
+        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).all()
+
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
         if 'Mobile' in userDevice:
@@ -60,7 +80,7 @@ def home():
 
         zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
 
-        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == User.school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInUser.school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
@@ -582,7 +602,10 @@ def dodajzamjenu():
         zamjenaza = request.form['zamjenaza']
 
         datum = request.form['date']
-        datum = datetime.strptime(datum, '%Y-%m-%d').date()
+        datum = request.form['date']
+        date_components = datum.split('-')
+        datum = '-'.join(date_components[::-1])
+        datum = datetime.strptime(datum, '%d-%m-%Y').date()
 
         od = request.form['from']
         do = ""
@@ -591,10 +614,11 @@ def dodajzamjenu():
             od = od[:2] + ' i ' + str(int(od[0])+1)+ '. sat'
 
         classroomID = request.form['razred']
+        classroom_name = Classroom.query.filter_by(id=classroomID).first().name
        
         zamjena = request.form['novipredmet']
 
-        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=zamjena, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID)
+        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=zamjena, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID, classroom_name=classroom_name)
         db.session.add(nova_zamjena)
         db.session.commit()
 
@@ -804,7 +828,8 @@ def oglasnaploca():
     if skola!="True":
         loggedInUserID = int(request.cookies.get('loggedInUser'))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
-        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
+        school_id=loggedInUser.school_id
+        sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
     elif skola:
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
@@ -1046,3 +1071,40 @@ def obrisiprofesora():
         db.session.delete(profesor)
         db.session.commit()
         return redirect(url_for("views.skolaadminmenu"))
+
+@views.route('/prikazzamjenaprofesor/', methods=['GET'])
+def prikazzamjenaprofesor():
+    error=request.args.get("error")
+    user_agent = request.headers.get('User-Agent')
+    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
+
+    today = date.today()
+    tomarrow = today + timedelta(days=1)
+    dayAfterTomarrow = tomarrow + timedelta(days=1)
+
+    professor_name = loggedInProf.name  
+    print(professor_name)
+
+    zamjeneDanas = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==today).all()
+    zamjeneSutra = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==tomarrow).all()
+    zamjenePrekosutra = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==dayAfterTomarrow).all()
+
+    daysUntilNextMonday = (-1 - today.weekday()) % 7
+    nextMonday = today + timedelta(days=daysUntilNextMonday + 1)
+    nextWeekStart = nextMonday
+    nextWeekEnd = nextMonday + timedelta(days=6)
+
+    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).all()
+
+        
+    if 'Mobile' in user_agent:
+        return render_template('templates-mobile/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+    elif 'Windows' in user_agent:
+        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+    else:
+        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)

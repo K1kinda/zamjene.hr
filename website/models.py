@@ -43,6 +43,7 @@ class Zamjene(db.Model):
     zamjena = db.Column(db.String(100), nullable=False)
     stariprofesor = db.Column(db.String(100), nullable=False)
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
+    classroom_name = db.Column(db.String(100), nullable=True)
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 

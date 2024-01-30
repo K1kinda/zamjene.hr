@@ -27,6 +27,10 @@ def create_app():
 
     create_db(app)
 
+    @app.template_filter('split')
+    def split_filter(value, delimiter='|'):
+        return value.split(delimiter)
+
     return app
 
 def create_db(app):

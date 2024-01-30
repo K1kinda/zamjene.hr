@@ -28,10 +28,11 @@
         <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
         {% if isLoggedIn=="True" %}
             {% if skola!="True" %}
-            <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
             <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
+            <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
             {% endif %}
             {% if admin!="True" %}
+              {% if skola=="True" %}<button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaprofesor')">Moje zamjene</button>{% endif %}
             <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
             <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
             {% endif %}

@@ -82,19 +82,19 @@
             <p class="sviprofesori-skola-title">Svi profesori:</p>
             {% for profesor in profesori %}
             <p>
-              <div class="razred-info">
+              <div class="razred-info hidden">
                 <p class="obavijest-title">Ime i prezime profesora: {{ profesor.name }} </p>
                 <p class="obavijest-content">ID: <span class="id-span">****</span></p>
                 <p class="obavijest-content">PIN: <span class="pin-span">****</span></p><br>
                 <button class="show-hide-button obrisi-razred-button" onclick="toggleVisibility(this, {{ profesor.id }}, {{ profesor.pin }})">Prikaži / Sakrij</button>
+                <section>
+                  <form action="/obrisiprofesora" method="post">
+                    <button class="obrisi-razred-button" type="submit">Obriši profesora</button>
+                    <input type="hidden" name="school_id" value="{{ skola.id }}">
+                    <input type="hidden" name="id" value="{{ profesor.id }}">
+                  </form>
+                </section>
               </div>
-              <section class="hidden">
-                <form action="/obrisiprofesora" method="post">
-                  <button class="obrisi-razred-button" type="submit">Obriši profesora</button>
-                  <input type="hidden" name="school_id" value="{{ skola.id }}">
-                  <input type="hidden" name="id" value="{{ profesor.id }}">
-                </form>
-              </section>
             </p>
             {% endfor %}
           </section>
@@ -132,7 +132,7 @@
 <script>
   function toggleVisibility(button, profesorid, profesorpin) {
     const parentDiv = button.parentElement;
-    const hiddenSection = parentDiv.nextElementSibling;
+    const hiddenSection = parentDiv;
     const idSpan = parentDiv.querySelector('.id-span');
     const pinSpan = parentDiv.querySelector('.pin-span');
 
