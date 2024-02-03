@@ -10,6 +10,7 @@ import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
+from sqlalchemy import func, cast, String, asc
 
 views = Blueprint('views', __name__)
 
@@ -245,6 +246,7 @@ def skolamenu():
 
     if isUserLoggedIn and isSkolaLoggedIn:
         classrooms = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
+        classrooms = sorted(classrooms, key=lambda x: x.name)
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti)
         elif 'Windows' in userDevice:
@@ -266,7 +268,7 @@ def skolaadminmenu():
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
 
     if isUserLoggedIn and isSkolaLoggedIn:
-        profesori = Profesor.query.filter_by(school_id=loggedInSkolaID).all()
+        profesori = Profesor.query.filter_by(school_id=loggedInSkolaID).order_by(asc(Profesor.name)).all()
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
         elif 'Windows' in userDevice:
@@ -616,9 +618,14 @@ def dodajzamjenu():
         classroomID = request.form['razred']
         classroom_name = Classroom.query.filter_by(id=classroomID).first().name
        
-        zamjena = request.form['novipredmet']
+        broj_novih_predmeta = int(request.form['broj-novih-predmeta'])
+        novi_predmet_values = [request.form[f'novipredmet{i}'] for i in range(1, broj_novih_predmeta + 1)]
 
-        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=zamjena, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID, classroom_name=classroom_name)
+        novi_predmet_string = ' - '.join(novi_predmet_values)
+
+        biljeska = request.form['biljeska']
+
+        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=novi_predmet_string, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID, classroom_name=classroom_name, biljeska=biljeska)
         db.session.add(nova_zamjena)
         db.session.commit()
 
@@ -1023,6 +1030,7 @@ def dodajpredmet():
 
     if request.method=="GET":
         predmeti = Predmeti.query.filter_by(school_id=schoolID).all()
+        predmeti = sorted(predmeti, key=lambda x: x.predmet)
         if 'Mobile' in userDevice:
             return render_template("templates-mobile/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
         elif 'Windows' in userDevice:
@@ -1088,7 +1096,11 @@ def prikazzamjenaprofesor():
     dayAfterTomarrow = tomarrow + timedelta(days=1)
 
     professor_name = loggedInProf.name  
-    print(professor_name)
+
+    zamjeneDanas = Zamjene.query.filter(func.substr(cast(Zamjene.zamjena, String), func.instr(cast(Zamjene.zamjena, String), professor_name) - 1) == professor_name, Zamjene.datum == today).all()
+    zamjeneSutra = Zamjene.query.filter(func.substr(cast(Zamjene.zamjena, String), func.instr(cast(Zamjene.zamjena, String), professor_name) - 1) == professor_name, Zamjene.datum == tomarrow).all()
+    zamjenePrekosutra = Zamjene.query.filter(func.substr(cast(Zamjene.zamjena, String), func.instr(cast(Zamjene.zamjena, String), professor_name) - 1) == professor_name, Zamjene.datum == dayAfterTomarrow).all()
+
 
     zamjeneDanas = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==today).all()
     zamjeneSutra = Zamjene.query.filter(Zamjene.zamjena.like(f"%{professor_name}%"), Zamjene.datum==tomarrow).all()

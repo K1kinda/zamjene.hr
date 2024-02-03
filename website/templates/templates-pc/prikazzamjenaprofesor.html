@@ -67,7 +67,10 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
+                  {% if zamjena.bilješka!="" %}
+                    Bilješka: {{ zamjena.bilješka %}}
+                  {% endif %}
                 </p>
               {% endfor %}
             {% else %}
@@ -81,7 +84,10 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
+                  {% if zamjena.bilješka!="" %}
+                    Bilješka: {{ zamjena.bilješka %}}
+                  {% endif %}
                 </p>
               {% endfor %}
             {% else %}
@@ -95,7 +101,10 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena }}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
+                  {% if zamjena.bilješka!="" %}
+                    Bilješka: {{ zamjena.bilješka %}}
+                  {% endif %}
                 </p>
               {% endfor %}
             {% else %}
@@ -112,6 +121,9 @@
                   Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
                   Novi predmet: {{ zamjena.zamjena|split|first|trim }}
+                  {% if zamjena.bilješka!="" %}
+                    Bilješka: {{ zamjena.bilješka %}}
+                  {% endif %}
                 </p>
               {% endfor %}
             {% else %}

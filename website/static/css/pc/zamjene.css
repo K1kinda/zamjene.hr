@@ -122,6 +122,10 @@
   margin-bottom: 15px;
 }
 
+.predmet{
+  margin-bottom: 25px;
+}
+
 .select-zamjene{
   border-radius: 5px;
 }
@@ -177,4 +181,16 @@ input[type="checkbox"]:checked {
 
 input[type="checkbox"]:focus {
   outline: none;
+}
+
+.input-obavijesti{
+  border-radius: 5px;
+  margin-left: 15px;
+  width: calc(100% - 45px);   
+  font-size: 18px;
+  padding: 5px;
+}
+
+.select-zamjene{
+  margin-bottom: 15px;
 }
