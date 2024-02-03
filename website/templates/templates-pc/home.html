@@ -91,8 +91,8 @@
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
                         {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                        Bilješka: {{ zamjena.bilješka }}
+                        {% if zamjena.biljeska!="" %}
+                        Bilješka: {{ zamjena.biljeska }}
                         {% endif %}
                       </p>
                     {% endfor %}
@@ -110,8 +110,8 @@
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
                         {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                        Bilješka: {{ zamjena.bilješka }}
+                        {% if zamjena.biljeska!="" %}
+                        Bilješka: {{ zamjena.biljeska }}
                         {% endif %}
                       </p>
                     {% endfor %}
@@ -129,8 +129,8 @@
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
                         {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                        Bilješka: {{ zamjena.bilješka }}
+                        {% if zamjena.biljeska!="" %}
+                        Bilješka: {{ zamjena.biljeska }}
                         {% endif %}
                       </p>
                     {% endfor %}
@@ -150,8 +150,8 @@
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
                         {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                        Bilješka: {{ zamjena.bilješka }}
+                        {% if zamjena.biljeska!="" %}
+                        Bilješka: {{ zamjena.biljeska }}
                         {% endif %}
                       </p>
                     {% endfor %}
@@ -172,9 +172,9 @@
                     <p class="zamjene-desc">
                       {{ zamjena.od }} <br>
                       Razred: {{ zamjena.classroom_name }} <br>
-                      Predmet: {{ zamjena.zamjena|split|first|trim }}
-                      {% if zamjena.bilješka!="" %}
-                      Bilješka: {{ zamjena.bilješka }}
+                      Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                      {% if zamjena.biljeska!="" %}
+                      Bilješka: {{ zamjena.biljeska }}
                       {% endif %}
                     </p>
                   {% endfor %}
@@ -189,9 +189,9 @@
                     <p class="zamjene-desc">
                       {{ zamjena.od }} <br>
                       Razred: {{ zamjena.classroom_name }} <br>
-                      Predmet: {{ zamjena.zamjena|split|first|trim }}
-                      {% if zamjena.bilješka!="" %}
-                      Bilješka: {{ zamjena.bilješka }}
+                      Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                      {% if zamjena.biljeska!="" %}
+                      Bilješka: {{ zamjena.biljeska }}
                       {% endif %}
                     </p>
                   {% endfor %}
@@ -206,9 +206,9 @@
                     <p class="zamjene-desc">
                       {{ zamjena.od }} <br>
                       Razred: {{ zamjena.classroom_name }} <br>
-                      Predmet: {{ zamjena.zamjena|split|first|trim }}
-                      {% if zamjena.bilješka!="" %}
-                      Bilješka: {{ zamjena.bilješka }}
+                      Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                      {% if zamjena.biljeska!="" %}
+                      Bilješka: {{ zamjena.biljeska }}
                       {% endif %}
                     </p>
                   {% endfor %}
@@ -226,8 +226,8 @@
                       Razred: {{ zamjena.classroom_name }} <br>
                       Predmet: {{ zamjena.zamjena|split|first|trim }} <br>
                       Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }}<br>
-                      {% if zamjena.bilješka!="" %}
-                      Bilješka: {{ zamjena.bilješka }}
+                      {% if zamjena.biljeska!="" %}
+                      Bilješka: {{ zamjena.biljeska }}
                       {% endif %}
                     </p>
                   {% endfor %}

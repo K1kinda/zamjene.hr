@@ -147,7 +147,7 @@
                           {{ predmet }}<br>
                         {% endfor %}
                         {% if zamjena.bilješka!="" %}
-                          Bilješka: {{ zamjena.bilješka }}
+                          Bilješka: {{ zamjena.biljeska }}
                         {% endif %}
                         <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
                           <input class="dodaj-zamjenu-button" type="submit" value="Obriši zamjenu">

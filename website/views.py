@@ -587,6 +587,10 @@ def prikazizamjene():
             sviprofesori += [predmet.profesor]
         predmetistrings += [predmet.predmet + " | " + predmet.profesor]
 
+    sviprofesori = sorted(sviprofesori)
+    svirazredi = sorted(svirazredi, key=lambda x: x.name)
+    predmetistrings = sorted(predmetistrings)
+
     if 'Mobile' in user_agent:
         return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
 
@@ -1012,7 +1016,6 @@ def forgotpassword():
             mail.send(message)
             user.password = generate_password_hash(randompass, method='pbkdf2:sha256')
             db.session.commit()
-
         return redirect(url_for("views.login"))
     
 @views.route('/notify', methods=['GET', 'POST'])

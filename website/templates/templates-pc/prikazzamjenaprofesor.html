@@ -67,9 +67,9 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
-                  {% if zamjena.bilješka!="" %}
-                    Bilješka: {{ zamjena.bilješka %}}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                  {% if zamjena.biljeska!="" %}
+                    Bilješka: {{ zamjena.biljeska }}
                   {% endif %}
                 </p>
               {% endfor %}
@@ -84,9 +84,9 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
-                  {% if zamjena.bilješka!="" %}
-                    Bilješka: {{ zamjena.bilješka %}}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                  {% if zamjena.biljeska!="" %} 
+                    Bilješka: {{ zamjena.biljeska }}
                   {% endif %}
                 </p>
               {% endfor %}
@@ -101,9 +101,9 @@
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
-                  {% if zamjena.bilješka!="" %}
-                    Bilješka: {{ zamjena.bilješka %}}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }} <br>
+                  {% if zamjena.biljeska!="" %}
+                    Bilješka: {{ zamjena.biljeska }}
                   {% endif %}
                 </p>
               {% endfor %}
@@ -120,9 +120,9 @@
                   {{ zamjena.od }} <br>
                   Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} <br>
                   Razred: {{ zamjena.classroom_name }} <br>
-                  Novi predmet: {{ zamjena.zamjena|split|first|trim }}
-                  {% if zamjena.bilješka!="" %}
-                    Bilješka: {{ zamjena.bilješka %}}
+                  Novi predmet: {{ zamjena.zamjena|split|first|trim }} <br>
+                  {% if zamjena.biljeska!="" %}
+                    Bilješka: {{ zamjena.biljeska }}
                   {% endif %}
                 </p>
               {% endfor %}
