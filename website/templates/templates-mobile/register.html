@@ -27,7 +27,11 @@
           <input class="surname-register" type="text" placeholder="Prezime" required="true" name="surname">
         </div>
         <input class="input-box" type="text" placeholder="E-Mail" required="true" name="email">
-        <input class="input-box" type="password" placeholder="Lozinka" required="true" name="password">
+        <input class="input-box" type="password" placeholder="Lozinka" required="true" name="password" id="password">
+        <span id="passwordHint">Lozinka treba sadržavati: <br>
+          - minimalno 8 znakova <br>
+          - slova i brojeve
+        </span>
         <div class="name-box">
           <input class="name-register" type="text" placeholder="ID Škole" name="schoolID">
           <input class="surname-register" type="text" placeholder="ID Učionice" name="classID">
@@ -75,5 +79,14 @@
   function changeUrl(url){
     window.location.href=url;
   }
+</script>
+<script>
+  document.getElementById("password").addEventListener("focus", function() {
+    document.getElementById("passwordHint").style.display = "block";
+  });
+  
+  document.getElementById("password").addEventListener("blur", function() {
+    document.getElementById("passwordHint").style.display = "none";
+  });
 </script>
 </html>

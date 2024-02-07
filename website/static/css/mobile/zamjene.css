@@ -1,67 +1,17 @@
-.zamjne-today, .zamjene-sutra, .zamjene-prekosutra, .zamjene-sljtjedan {
-  padding: 10px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-  margin-bottom: 10px;
-  border-radius: 6px;
+*{
   font-family: Montserrat;
-  text-shadow: 3px 1px 10px rgba(0,0,0,0.2);
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  border-color: rgba(0,0,0,0.3);
-  color: rgb(27, 23, 23);
-  cursor: default;
+}
 
+.main-cont-add-zamjena{
   display: flex;
   flex-direction: column;
-}
-
-.changes {
-  font-size: 25px;
-  font-weight: normal;
-  color: rgb(27, 23, 23);
-  cursor: default;
-}
-
-.whole-zamjene{
-  padding: 15px;
-  padding-bottom: 0px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
-  margin-top: 50px;
-  margin-left: 15px;
-  margin-right: 15px;
-  margin-bottom: 10px;
-  border-radius: 7px;
-  max-height: 97%;
-  display: flex;
-  flex-direction: column;
-}
-
-.zamjene-cont{
-  padding: 10px 10px;
-  height: fit-content;
-}
-
-.zamjene-naslov{
-  font-weight: bold;
-}
-
-.zamjene-desc{
-  box-shadow: 0 3px 2px -2px rgba(0,0,0,0.2);
-  margin-top: 5px;
-  padding-left: 20px;
-  padding-bottom: 5px;
-  overflow: hidden;
-}
-
-.zamjene-desc-cont{
-  margin: 5px;
-  padding: 0px;
-  overflow: scroll;
 }
 
 .nova-zamjena-form{
-  padding: 10px 10px;
-  margin: 10px;
+  margin-top: 35px;
+  margin-left: 15px;
+  margin-right: 15px;
+  width: calc(100% - 30px);
   box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
   border-radius: 6px;
   font-family: Montserrat;
@@ -99,7 +49,7 @@
 }
 
 .od-do-cont{
-  margin: 15px;
+  margin: 0 15px;
   width: calc(100% - 30px);
   display: flex;
   flex-direction: column;
@@ -108,7 +58,11 @@
 }
 
 .od-do{
-  margin-bottom: 15px;
+  margin-bottom: 0px;
+}
+
+.predmet{
+  margin-bottom: 25px;
 }
 
 .select-zamjene{
@@ -131,6 +85,11 @@
   padding: 5px;
 }
 
+.zamjene-cont{
+  margin-left: 15px;
+  width: calc(100% - 30px);
+}
+
 .zamjene-cont-skola{
   padding: 10px 10px;
   margin-top: 15px;
@@ -146,7 +105,47 @@
   cursor: default;
 }
 
-body{
-  display: flex;
-  flex-direction: column;
+
+input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgb(110, 110, 202);
+  border-radius: 4px;
+  margin-right: 8px;
+  cursor: pointer;
 }
+
+input[type="checkbox"]:checked {
+  background-color: rgb(110, 110, 202);
+  border: 2px solid rgb(110, 110, 202);
+}
+
+input[type="checkbox"]:focus {
+  outline: none;
+}
+
+.input-obavijesti{
+  border-radius: 5px;
+  margin-left: 15px;
+  width: calc(100% - 45px);   
+  font-size: 18px;
+  padding: 5px;
+}
+
+.section-title{
+  font-weight: bold;
+  font-family: Montserrat;
+  font-size: 24px;
+  padding-top: 15px;
+  padding-left: 15px;
+  padding-bottom: 10px;
+  margin-bottom: 5px;
+  box-shadow: 0 3px 2px -2px rgba(0,0,0,0.2);
+  border-radius: 6px;
+  overflow: hidden;
+  min-height: 40px;
+}
+

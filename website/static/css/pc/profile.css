@@ -50,3 +50,7 @@ body{
 .post-title{
     width: 100%;
 }
+
+main{
+    display: flex;
+}

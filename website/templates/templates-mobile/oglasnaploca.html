@@ -43,6 +43,11 @@
           </div>
         {% endif %}
         {% if admin!="True" %}
+          {% if skola=="True" %}
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/prikazzamjenaprofesor')">Moje zamjene</p>
+          </div>
+          {% endif %}
           <div class="dropdown-box">
             <p class="dropdown-text" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</p>
           </div>

@@ -2,31 +2,27 @@
     font-family: Montserrat;    
 }
 
-.main{
+body{
     display: flex;
-    width: 100%;
 }
 
-.main-cont{
-    width: 100%;
+.skola-main-container{
+    margin: 15px;
+    width: calc(100% - 30px);
+    height: fit-content;
+    border-radius: 5px;
 }
 
 .skola-main{
-    width: calc(100% - 60px);
-    padding: 15px;
-    margin: 15px;
-    border-radius: 5px;
     margin-top: 50px;
+    width: calc(100% - 30px);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
 }
 
-.skola-raspored-ucionica{
-    width: 80%;
-    margin-left: 10%
-}
-
 .skola-obavijesti{
-    width: calc(100% - 60px);
     padding: 15px;
     margin: 15px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
@@ -35,7 +31,6 @@
 }
 
 .obrisi-obavijest-button{
-    width: 40%;
     border: none;
     border-radius: 7px;
     padding: 5px 10px 5px 10px;
@@ -55,7 +50,6 @@
 }
 
 .dodaj-obavijest-button{
-    width: 40%;
     border: none;
     border-radius: 7px;
     padding: 5px 10px 5px 10px;
@@ -68,7 +62,7 @@
     box-shadow: 0px 3px 5px rgba(0,0,0,0.15);
     transition: scale 0.2s;
     margin-left: 15px;
-    margin-bottom: 50px;
+    margin-bottom: 25px;
     width: calc(100% - 30px);   
 }
 
@@ -80,7 +74,16 @@
 .skola-title{
     font-weight: bold;
     font-size: 28px;
-    margin: 0px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.sviprofesori-skola-title {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 28px;
+    padding-bottom: 10px;
+    text-align: center;
 }
 
 .obavijest-info{
@@ -122,6 +125,7 @@
 
 .skola-raspored-ucionica{
     height: fit-content;
+    margin-bottom: 25px;
 }
 
 .raspored-ucionica-button{
@@ -145,12 +149,17 @@
 }
 
 .novi-razred-form{
+    height: 225px;
+    width: 100%;
+}
+
+.novi-razred-form-admin{
     height: 175px;
     width: 100%;
 }
 
 .skola-razredi{
-    width: calc(100% - 60px);
+    width: calc(100% - 30px);
     padding: 15px;
     margin: 15px;
     box-shadow: 0px 0px 10px rgba(0,0,0,0.2);
@@ -159,7 +168,7 @@
 }
 
 .obrisi-razred-button{
-    width: calc(100% - 60px);
+    width: 40%;
     border: none;
     border-radius: 7px;
     padding: 5px 10px 5px 10px;
@@ -188,8 +197,4 @@
 .obrisi-razred-button:hover{
     background-color: rgb(56, 76, 131);
     scale: 1.05;
-}
-
-.obavijest-title{
-    font-size: 18px;
 }

@@ -81,22 +81,36 @@
     <form onsubmit="submitForm('/edituserdata'); return false;" class="news-board">
       <div class="post-box">
         <div class="post-title">
-          <span>Name:</span>
+          <span>Ime:</span>
           <span class="editable-span" contenteditable="true" id="name">{{ user.name }} {{ user.lastname }}</span>
         </div>
       </div>
       <div class="post-box">
         <div class="post-title">
-          <span>Email:</span>
+          <span>E-Mail:</span>
           <span class="editable-span" contenteditable="true" id="email">{{ user.email }}</span>
         </div>
         <div class="post-title">
+          <span class="editable-span" contenteditable="true" id="iducenika" hidden>{{ user.id }}</span>
+        </div>
+      </div>
+      <button type="submit" class="save-changes">Spremi promjene</button>
+    </form>
+ 
+    <form onsubmit="submitForm('/edituserdata'); return false;" class="news-board">
+      <div class="post-box">
+        <div class="post-title">
+          <span>Mijenjanje ID-ova</span>
+        </div>
+      </div>
+      <div class="post-box">
+        <div class="post-title">
           <span>ID škole:</span>
-          <span class="editable-span" contenteditable="true" id="idskole" password>{{ user.school_id }}</span>
+          <span class="editable-span" contenteditable="true" id="idskole" style="font-weight: 100; font-size: 22px;">********</span>
         </div>
         <div class="post-title">
           <span>ID razreda:</span>
-          <span class="editable-span" contenteditable="true" id="idrazreda" hidden>{{ user.classroom_id }}</span>
+          <span class="editable-span" contenteditable="true" id="idrazreda" style="font-weight: 100; font-size: 22px;">********</span>
         </div>
         <div class="post-title">
           <span class="editable-span" contenteditable="true" id="iducenika" hidden>{{ user.id }}</span>
@@ -130,7 +144,6 @@
   
     var jsonBody = JSON.stringify(jsonData);
   
-    // Send POST request with JSON content type
     fetch(url, {
       method: 'POST',
       headers: {
@@ -142,32 +155,43 @@
   }
   
   </script>
-
-<script>
-  let subMenu = document.getElementById("subMenu");
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      var cookieNotification = document.getElementById("cookie-notification");
+      var cookieBtn = document.getElementById("cookie-btn");
   
-  function toggleMenu(){
-    subMenu.classList.toggle("open-menu")
-  }
-</script>
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    var cookieNotification = document.getElementById("cookie-notification");
-    var cookieBtn = document.getElementById("cookie-btn");
-
-    if (!localStorage.getItem("cookiesAccepted")) {
-      cookieNotification.style.display = "block";
-    }
-
-    cookieBtn.addEventListener("click", function () {
-      cookieNotification.style.display = "none";
-      localStorage.setItem("cookiesAccepted", true);
+      if (!localStorage.getItem("cookiesAccepted")) {
+        cookieNotification.style.display = "block";
+      }
+  
+      cookieBtn.addEventListener("click", function () {
+        cookieNotification.style.display = "none";
+        localStorage.setItem("cookiesAccepted", true);
+      });
     });
-  });
-
-  function changeUrl(url){
-    window.location.href=url;
-  }
-</script>
   
+    function changeUrl(url){
+      window.location.href=url;
+    }
+  </script>
+  <script>
+    var editableSpanIds = ['idskole', 'idrazreda'];
+
+    editableSpanIds.forEach(function(spanId) {
+      var editableSpan = document.getElementById(spanId);
+
+      editableSpan.addEventListener('keydown', function() {
+        if (this.textContent === '********' || this.textContent === '********') {
+          this.textContent = '';
+        }
+      });
+    });
+  </script>
+  <script>
+    let subMenu = document.getElementById("subMenu");
+    
+    function toggleMenu(){
+      subMenu.classList.toggle("open-menu")
+    }
+  </script>
 </html>

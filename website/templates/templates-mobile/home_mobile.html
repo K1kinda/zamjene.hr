@@ -43,6 +43,11 @@
           </div>
         {% endif %}
         {% if admin!="True" %}
+          {% if skola=="True" %}
+          <div class="dropdown-box">
+            <p class="dropdown-text" onclick="changeUrl('/prikazzamjenaprofesor')">Moje zamjene</p>
+          </div>
+          {% endif %}
           <div class="dropdown-box">
             <p class="dropdown-text" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</p>
           </div>
@@ -78,6 +83,7 @@
   </div>
 
   <main class="page-center">
+    {% if skola!="True" and isLoggedIn %}
       <section class="changes-box">
         <div class="today">
           Zamjene danas
@@ -85,7 +91,13 @@
             {% for zamjena in zamjeneDanas %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -98,7 +110,13 @@
             {% for zamjena in zamjeneSutra %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -111,7 +129,13 @@
             {% for zamjena in zamjenePrekosutra %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -133,6 +157,82 @@
           {% endif %}
         </div>
       </section>
+    {% else %}
+      <section class="changes-box">
+        <div class="today">
+          Zamjene danas
+          {% if zamjeneDanas %}
+            {% for zamjena in zamjeneDanas %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Razred: {{ zamjena.classroom_name }} <br>
+                Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena danas</p>
+          {% endif %}
+        </div>
+        <div class="tomorrow">
+          Zamjene sutra
+          {% if zamjeneSutra %}
+            {% for zamjena in zamjeneSutra %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Razred: {{ zamjena.classroom_name }} <br>
+                Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena sutra</p>
+          {% endif %}
+        </div>
+        <div class="after-tomorrow">
+          Zamjene prekosutra
+          {% if zamjenePrekosutra %}
+            {% for zamjena in zamjenePrekosutra %}
+              <p class="changes">
+                {{ zamjena.od }} <br>
+                Razred: {{ zamjena.classroom_name }} <br>
+                Predmet: {{ zamjena.zamjena|split|first|trim }}<br>
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena prekosutra</p>
+          {% endif %}
+        </div>
+        <div class="next-week">
+          Zamjene sljedeći tjedan
+          {% if zamjeneSljedeciTjedan %}
+            {% for zamjena in zamjeneSljedeciTjedan %}
+              <p class="changes">
+                Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
+                {{ zamjena.od }} <br>
+                Razred: {{ zamjena.classroom_name }} <br>
+                Predmet: {{ zamjena.zamjena|split|first|trim }} <br>
+                {% if zamjena.biljeska!="" %}
+                  Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
+              </p>
+            {% endfor %}
+          {% else %}
+            <p class="changes">Nemaš zamjena sljedeći tjedan</p>
+          {% endif %}
+        </div>
+      </section>
+    {% endif %}
+
+
+
     <div class="news-board">
       {% if skola!="True" %}
         <section class="obavijesti-cont">

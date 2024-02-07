@@ -23,9 +23,10 @@
       <img class="school-icon-login" src="{{ url_for('static', filename='pictures/school-icon.svg')}}"><br>
       <p class="login-text">Prijavite se kao škola</p><br>
       <form class="login-container" action="/loginskolasend" method="POST">
-        <input class="input-box" type="text" placeholder="ID Škole" name="id" id="id">
-        <input class="input-box" type="password" placeholder="Lozinka" name="password" id="passowrd"><br>
-        <input type="hidden" name="prof" value="ne"> 
+        <input class="input-box" type="text" placeholder="ID Škole" name="id-skola" id="id-skola">
+        <input class="input-box" type="text" placeholder="ID" name="id-prof" id="id-prof">
+        <input class="input-box" type="password" placeholder="PIN" name="pin" id="pin"><br>
+        <input type="hidden" name="prof" value="da"> 
         <button style="width:107%;" type="submit">Prijavite se</button><br>
       </form>
       <p class="upit-text">Ako vaša škola nema račun pošaljite upit <br>
@@ -38,7 +39,7 @@
           <img class="alert-icon" src="{{ url_for('static', filename='pictures/alert-circle.svg')}}"><br>
           <p class="wrong-info-text">{{ error }}</p>
           <div class="line"></div>
-          <button onclick="changeUrl('/loginskola')" class="try-again-button">Pokušaj ponovno</button>
+          <button onclick="changeUrl('/loginskolaprof')" class="try-again-button">Pokušaj ponovno</button>
         </section>
       </div>
     {% endif %}

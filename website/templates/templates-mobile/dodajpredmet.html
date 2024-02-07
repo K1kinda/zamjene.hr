@@ -15,7 +15,6 @@
   <title>zamjene.hr</title>
 </head>
 
-
 <body>
   <div id="cookie-notification" class="cookie-notification">
     <p class="cookie-text">Ova web stranica koristi kolačiće kako bi poboljšala svoju funkcionalnost. Kolačići se koriste isključivo u tehničke svrhe i ne prikupljaju osobne podatke.</p>
@@ -89,102 +88,26 @@
         <div class="main-cont-zamjene main-cont">
           <div class="whole-zamjene zamjene-standalone">
             <br>
-            <form class="nova-zamjena-form" action="/dodajzamjenu" method="post">
-              <p class="section-title">Dodaj novu zamjenu</p>
-        
-              <div class="od-do-cont">
-                <p class="od-do">Zamjena za profesora:
-                  <select class="select-zamjene" id="zamjenaza" name="zamjenaza">
-                    {% for profesor in profesori %}
-                      <option value="{{ profesor }}">{{ profesor }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div><br>
-        
-              <input class="nova-zamjna-kalendar" type="date" id="date" name="date"><br>
-        
-              <div class="od-do-cont">
-                <p class="od-do">Sat:
-                  <select class="select-zamjene" id="from" name="from">
-                    <option value="1. sat">1. sat</option>
-                    <option value="2. sat">2. sat</option>
-                    <option value="3. sat">3. sat</option>
-                    <option value="4. sat">4. sat</option>
-                    <option value="5. sat">5. sat</option>
-                    <option value="6. sat">6. sat</option>
-                    <option value="7. sat">7. sat</option>
-                    <option value="8. sat">8. sat</option>
-                    <option value="9. sat">9. sat</option>
-                  </select>
-                </p>
-        
-                <p>Blok sat:
-                  <input type="checkbox" class="select-zamjene-checkbox" id="to" name="to"></input>   
-                </p>
-        
-              </div>
-              <div class="od-do-cont">
-                <p class="od-do">Razred:
-                  <select class="select-zamjene" id="razred" name="razred">
-                    {% for razred in razredi %}
-                      <option value="{{ razred.id }}">{{ razred.name }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div>
-              <div class="od-do-cont">
-                <p class="od-do">Broj novih predmeta:
-                  <select class="select-zamjene" id="broj-novih-predmeta" name="broj-novih-predmeta">
-                    {% for i in range(1, 11) %}
-                      <option value="{{ i }}" {% if i == 1 %} selected {% endif %}>{{ i }}</option>
-                    {% endfor %}
-                  </select>
-                </p>
-              </div>
-              
-              <div class="od-do-cont" id="novi-predmet-section">
-                <p class="novipredmet">Novi predmet/predmeti: <br><br>
-                  {% for i in range(1, 11) %}
-                    <select class="select-zamjene" id="novipredmet{{ i }}" name="novipredmet{{ i }}" style="display: {% if i == 1 %}block{% else %}none{% endif %};">
-                      {% for predmet in predmeti %}
-                      <option class="novipredmet" value="{{ predmet }}">{{ predmet }}</option>
-                      {% endfor %}
-                    </select>
-                  {% endfor %}
-                </p>
-              </div>
-        
-              <input class="input-obavijesti"  type="text" name="biljeska" placeholder="Bilješka"><br><br>
-        
-              <input class="dodaj-zamjenu-button" type="submit" value="Dodaj zamjenu">
+            <form class="nova-zamjena-form" action="/dodajpredmet" method="post">
+              <p class="section-title">Dodaj novi predmet</p>
+              <input class="nova-zamjena-input" type="text" id="predmet" name="predmet" placeholder="Ime predmeta" required><br><br>
+              <input class="nova-zamjena-input" type="text" id="profesor" name="profesor" placeholder="Profesor koji predaje predmet" required><br><br>
+              <input class="dodaj-zamjenu-button" type="submit" value="Dodaj predmet">
             </form> 
             <section class="zamjene-cont">
               <section>
-                {% for zamjena in sve_zamjene %}
-                  {% if school_id == zamjena.school_id %}
-                      <div class="zamjene-cont-skola">
-                        Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
-                        Razred: {{ zamjena.classroom_id | razred }} <br>
-                        {{ zamjena.od }} <br>
-                        Zamjena za: {{ zamjena.stariprofesor }} <br>
-                        Novi predmet/predmeti: <br>
-                        {% for predmet in zamjena.zamjena.split(' - ') %}
-                          {{ predmet }}<br>
-                        {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                          Bilješka: {{ zamjena.biljeska }}
-                        {% endif %}
-                        <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
-                          <input class="dodaj-zamjenu-button" type="submit" value="Obriši zamjenu">
-                          <input type="hidden" name="school_id" value="">
-                          <input type="hidden" name="classroom_id" value="{{ classroomid }}">
-                        </form>
-                      </div>
-                  {% endif %}
-                {% endfor %}
+                  {% for predmet in predmeti %}
+                  <div class="zamjene-cont-skola">
+                    Predmet: {{ predmet.predmet }} <br>
+                    Profesor: {{ predmet.profesor }}
+                    <form action="/obrisipredmet" method="post">
+                      <input class="dodaj-zamjenu-button" type="submit" value="Obriši predmet">
+                      <input type="hidden" name="predmet_id" value="{{ predmet.id }}">
+                    </form>
+                  </div>
+                  {% endfor %}
               </section>
-            </section>  
+            </section>
           </div>            
         </div>
     </div>
@@ -224,6 +147,31 @@
 </html>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+   
 
 
 

@@ -46,6 +46,11 @@
             </div>
           {% endif %}
           {% if admin!="True" %}
+            {% if Skola=="True" %}
+            <div class="dropdown-box">
+              <p class="dropdown-text" onclick="changeUrl('/prikazzamjenaprofesor')">Moje zamjene</p>
+            </div>
+            {% endif %}
             <div class="dropdown-box">
               <p class="dropdown-text" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</p>
             </div>
@@ -80,19 +85,32 @@
           {% endif %} 
      </div>
 
-
+    
       <div class="main-cont">
+      
         <div class="skola-main-container">
           <div class="skola-main">
             <p class="skola-title">Upravni centar</p>
-            <p>Ime škole: {{ skola.name }}</p>
+            <p>Ime škole: <br> {{ skola.name }}</p>
             <p>ID škole: {{ skola.id }}</p>
           </div>
 
           <div class="skola-raspored-ucionica">
             <form action="/update_table" method="get">
               <input type="hidden" name="school_id" value="{{ skola.id }}">
-              <button class="raspored-ucionica-button" type="submit">Raspored ucionica</button>
+              <button class="raspored-ucionica-button" type="submit">Raspored učionica</button>
+            </form>
+          </div>
+          <div class="skola-raspored-ucionica">
+            <form action="/dodajpredmet" method="get">
+              <input type="hidden" name="school_id" value="{{ skola.id }}">
+              <button class="raspored-ucionica-button" type="submit">Dodaj predmet</button>
+            </form>
+          </div>
+          <div class="skola-raspored-ucionica">
+            <form action="/prikazizamjene" method="post">
+              <input type="hidden" name="school_id" value="{{ skola.id }}">
+              <button class="raspored-ucionica-button" type="submit">Zamjene</button>
             </form>
           </div>
         </div>
@@ -128,6 +146,7 @@
           <form class="novi-razred-form" method="post" action="/dodajrazred"> 
             <label class="skola-title" for="classroom_name">Dodaj novi razred:</label><br><br>
             <input class="input-obavijesti"  type="text" name="classroom_name" placeholder="Ime razreda" required><br><br>
+            <input class="input-obavijesti"  type="text" name="razrednik" placeholder="Razrednik" required><br><br>
             <input class="dodaj-obavijest-button" type="submit" value="Dodaj novi razred"><br><br>
           </form>
 
@@ -137,17 +156,13 @@
             <p>
               <div class="razred-info">
                 <p class="obavijest-title">Razred: {{ classroom.name }} </p>
+                <p class="obavijest-content">Razrednik: {{ classroom.razrednik }}</p>
                 <p class="obavijest-content">ID: {{ classroom.id }}</p>
               </div>
               <section>
                 <form action="/dodajraspored" method="get">
                   <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
                   <button class="obrisi-razred-button" type="submit">Raspored</button>
-                </form>
-                <form action="/prikazizamjene" method="post">
-                    <input type="hidden" name="school_id" value="{{ skola.id }}">
-                    <input type="hidden" name="classroom_id" value="{{ classroom.id }}">
-                    <button class="obrisi-razred-button" type="submit">Zamjene</button>
                 </form>
                 <form action="/obrisirazred" method="post">
                   <button class="obrisi-razred-button" type="submit">Obriši razred</button>
@@ -170,14 +185,6 @@
     window.location.href=url;
   }
 </script> 
-
-<script>
-  let subMenu = document.getElementById("subMenu");
-  
-  function toggleMenu(){
-    subMenu.classList.toggle("open-menu")
-  }
-</script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
     var cookieNotification = document.getElementById("cookie-notification");
@@ -197,7 +204,13 @@
     window.location.href=url;
   }
 </script>
-
+<script>
+  let subMenu = document.getElementById("subMenu");
+  
+  function toggleMenu(){
+    subMenu.classList.toggle("open-menu")
+  }
+</script>
 </html>
 
 

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,8 +76,8 @@
             {% endif %}
         {% endif %} 
   </div>
-
-  <main class="page-center">
+    
+    <main class="page-center">
       <section class="changes-box standalone">
         <div class="today">
           Zamjene danas
@@ -86,7 +85,13 @@
             {% for zamjena in zamjeneDanas %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -99,7 +104,13 @@
             {% for zamjena in zamjeneSutra %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                  Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -112,7 +123,13 @@
             {% for zamjena in zamjenePrekosutra %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                  Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -120,13 +137,19 @@
           {% endif %}
         </div>
         <div class="next-week">
-          Zamjene sljedeći tjedan
+          Zamjene idući tjedan
           {% if zamjeneSljedeciTjedan %}
             {% for zamjena in zamjeneSljedeciTjedan %}
               <p class="changes">
                 {{ zamjena.od }} <br>
-                Datum zamjene: {{ zamjena.datum }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                  Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
+                  Novi predmet/predmeti: <br>
+                  {% for predmet in zamjena.zamjena.split(' - ') %}
+                    {{ predmet }}<br>
+                  {% endfor %}
+                  {% if zamjena.biljeska!="" %}
+                    Bilješka: {{ zamjena.biljeska }}
+                  {% endif %}
               </p>
             {% endfor %}
           {% else %}
@@ -136,38 +159,37 @@
       </section>
   </main>
 
-  <script>
-    let subMenu = document.getElementById("subMenu");
-    
-    function toggleMenu(){
-      subMenu.classList.toggle("open-menu")
-    }
-  </script>
-  <script>
-    function changeUrl(url){
-      window.location.href=url;
-    }
-  </script>
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var cookieNotification = document.getElementById("cookie-notification");
-      var cookieBtn = document.getElementById("cookie-btn");
-  
-      if (!localStorage.getItem("cookiesAccepted")) {
-        cookieNotification.style.display = "block";
-      }
-  
-      cookieBtn.addEventListener("click", function () {
-        cookieNotification.style.display = "none";
-        localStorage.setItem("cookiesAccepted", true);
-      });
-    });
-  
-    function changeUrl(url){
-      window.location.href=url;
-    }
-  </script>
-
-
 </body>
+
+  <script>
+    function changeUrl(url){
+      window.location.href=url;
+    }
+  </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var cookieNotification = document.getElementById("cookie-notification");
+    var cookieBtn = document.getElementById("cookie-btn");
+
+    if (!localStorage.getItem("cookiesAccepted")) {
+      cookieNotification.style.display = "block";
+    }
+
+    cookieBtn.addEventListener("click", function () {
+      cookieNotification.style.display = "none";
+      localStorage.setItem("cookiesAccepted", true);
+    });
+  });
+
+  function changeUrl(url){
+    window.location.href=url;
+  }
+</script>
+<script>
+  let subMenu = document.getElementById("subMenu");
+  
+  function toggleMenu(){
+    subMenu.classList.toggle("open-menu")
+  }
+</script>
 </html>
