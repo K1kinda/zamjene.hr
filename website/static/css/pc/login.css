@@ -215,7 +215,6 @@ button:hover{
     padding: 0 10px 0 10px;
     font-family: Montserrat;
     background-color: white;
-    font-family: Montserrat;
     font-size: 15px;
 }
 
@@ -226,4 +225,17 @@ button:hover{
   
 .surname-register {
     width: 100%;
+}
+
+#passwordHint {
+    margin-left: 125%;
+    width: 50%;
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 10px;
+    font-family: Montserrat;
+    font-size: 15px;
 }

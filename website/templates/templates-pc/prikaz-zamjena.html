@@ -134,14 +134,13 @@
             </form> 
             <section class="zamjene-cont">
               <section>
-                {% for razred in razredi %}
-                  <p class="section-title" >Zamjene za: {{ razred.name }}</p>
-                  {% for zamjena in sve_zamjene %}
-                    {% if razred.id == zamjena.classroom_id %}
+                {% for zamjena in sve_zamjene %}
+                  {% if school_id == zamjena.school_id %}
                       <div class="zamjene-cont-skola">
-                        Zamjena za: {{ zamjena.stariprofesor }} <br>
-                        Datum zamjene: {{ zamjena.datum }} <br>
+                        Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
+                        Razred: {{ zamjena.classroom_id | razred }} <br>
                         {{ zamjena.od }} <br>
+                        Zamjena za: {{ zamjena.stariprofesor }} <br>
                         Novi predmet/predmeti: <br>
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
@@ -155,8 +154,7 @@
                           <input type="hidden" name="classroom_id" value="{{ classroomid }}">
                         </form>
                       </div>
-                    {% endif %}
-                  {% endfor %}
+                  {% endif %}
                 {% endfor %}
               </section>
             </section>

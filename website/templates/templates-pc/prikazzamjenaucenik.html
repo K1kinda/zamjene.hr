@@ -124,7 +124,7 @@
               {% for zamjena in zamjeneSljedeciTjedan %}
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
-                  Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} <br>
+                  Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
                   Novi predmet/predmeti: <br>
                   {% for predmet in zamjena.zamjena.split(' - ') %}
                     {{ predmet }}<br>

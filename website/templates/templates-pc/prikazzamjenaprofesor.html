@@ -118,7 +118,7 @@
               {% for zamjena in zamjeneSljedeciTjedan %}
                 <p class="zamjene-desc">
                   {{ zamjena.od }} <br>
-                  Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} <br>
+                  Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
                   Razred: {{ zamjena.classroom_name }} <br>
                   Novi predmet: {{ zamjena.zamjena|split|first|trim }} <br>
                   {% if zamjena.biljeska!="" %}

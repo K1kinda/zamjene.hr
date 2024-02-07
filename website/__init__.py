@@ -1,11 +1,14 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_mail import Mail
+import locale
+from datetime import datetime
+from .models import db
+from .models import Classroom
 
-db=SQLAlchemy()
 mail = Mail()
 DB_NAME = 'database.db'
+locale.setlocale(locale.LC_TIME, 'hr_HR.UTF-8')
 
 def create_app():
     app = Flask(__name__)
@@ -30,6 +33,18 @@ def create_app():
     @app.template_filter('split')
     def split_filter(value, delimiter='|'):
         return value.split(delimiter)
+    
+    @app.template_filter('dan')
+    def dan_filter(value):
+        date = datetime.strptime(value, '%Y-%m-%d')
+        day_of_week = date.weekday()
+        day_names = {0: 'Ponedjeljak', 1: 'Utorak', 2: 'Srijeda', 3: 'Četvrtak', 4: 'Petak', 5: 'Subota', 6: 'Nedjelja'}
+        return day_names[day_of_week]
+    
+    @app.template_filter('razred')
+    def razred_filter(value):
+        classroom = Classroom.query.get(value)
+        return classroom.name
 
     return app
 

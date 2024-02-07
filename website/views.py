@@ -11,8 +11,11 @@ import string
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
 from sqlalchemy import func, cast, String, asc
+import locale
 
 views = Blueprint('views', __name__)
+
+locale.setlocale(locale.LC_TIME, 'hr_HR.UTF-8')
 
 #prikazi stranica
 
@@ -581,7 +584,7 @@ def prikazizamjene():
     svipredmeti = Predmeti.query.filter_by(school_id=loggedInSkolaID).all()
     sviprofesori = []
     predmetistrings = []       
-    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).all()
+    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Zamjene.datum, Zamjene.classroom_id).all()
     for predmet in svipredmeti:
         if predmet.profesor not in sviprofesori:
             sviprofesori += [predmet.profesor]
@@ -592,13 +595,13 @@ def prikazizamjene():
     predmetistrings = sorted(predmetistrings)
 
     if 'Mobile' in user_agent:
-        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
+        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
 
     elif 'Windows' in user_agent:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
 
     else:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
 
 
 @views.route('/dodajzamjenu', methods=['GET', 'POST'])

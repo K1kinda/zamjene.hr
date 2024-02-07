@@ -144,8 +144,8 @@
                   {% if zamjeneSljedeciTjedan %}
                     {% for zamjena in zamjeneSljedeciTjedan %}
                       <p class="zamjene-desc">
+                        Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
                         {{ zamjena.od }} <br>
-                        Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} <br>
                         Novi predmet/predmeti: <br>
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
@@ -222,12 +222,12 @@
                 {% if zamjeneSljedeciTjedan %}
                   {% for zamjena in zamjeneSljedeciTjedan %}
                     <p class="zamjene-desc">
+                      Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
                       {{ zamjena.od }} <br>
                       Razred: {{ zamjena.classroom_name }} <br>
                       Predmet: {{ zamjena.zamjena|split|first|trim }} <br>
-                      Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }}<br>
                       {% if zamjena.biljeska!="" %}
-                      Bilješka: {{ zamjena.biljeska }}
+                        Bilješka: {{ zamjena.biljeska }}
                       {% endif %}
                     </p>
                   {% endfor %}
