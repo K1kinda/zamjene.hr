@@ -1069,10 +1069,10 @@ def delete_predmet():
 @views.route('/dodajprofesora', methods=['GET', 'POST'])
 def dodajprofesora():
         name = request.form.get('name')
-        id = random.randrange(1000, 10000)
-        pin = random.randrange(1000, 10000)
+        id = random.randrange(1000, 999999)
+        pin = random.randrange(1000, 9999)
         while Profesor.query.filter_by(id=id).first():
-            id = random.randrange(1000, 10000)
+            id = random.randrange(1000, 999999)
         school_id = request.cookies.get('loggedInSchoolID') 
         db.session.add(Profesor(id=id, school_id=school_id, name=name, pin=pin))
         db.session.commit()
