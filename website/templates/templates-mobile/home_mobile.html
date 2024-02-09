@@ -153,7 +153,13 @@
                 Zamjena za: {{ zamjena.stariprofesor }} <br>
                 {{ zamjena.od }} <br>
                 Datum zamjene: {{ zamjena.datum }} <br>
-                Novi predmet: {{ zamjena.zamjena }}
+                Novi predmet/predmeti: <br>
+                {% for predmet in zamjena.zamjena.split(' - ') %}
+                  {{ predmet }}<br>
+                {% endfor %}
+                {% if zamjena.biljeska!="" %}
+                  Bilješka: {{ zamjena.biljeska }}
+                {% endif %}
               </p>
             {% endfor %}
           {% else %}
