@@ -61,9 +61,11 @@
           {% endif %}
             {% if isLoggedIn=="True" %}
                 {% if skola=="True" %}
-                <div class="dropdown-box dark">
-                  <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
-                </div>
+                  {% if profesor.is_admin==1 %}
+                  <div class="dropdown-box dark">
+                    <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
+                  </div>
+                  {% endif %}
                 <div class="dropdown-box dark">
                   <p class="dropdown-text dark" onclick="changeUrl('/logout')">Odjavi se</p>
                 </div>

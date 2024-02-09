@@ -39,7 +39,9 @@
     <div class="sidebar-profile-cont">
         {% if isLoggedIn=="True" %}
             {% if Skola=="True" %}
-            <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+              {% if profesor.is_admin==1 %}
+              <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
+              {% endif %}
             <button class="sidebarbutton darkbutton" onclick="changeUrl('/logout')">Odjavi se</button>
             {% elif admin=="True" %}
             <button class="sidebarbutton" onclick="changeUrl('/addschool')">Dodaj školu</button>

@@ -36,6 +36,7 @@ def home():
     if isSkolaLoggedIn=="True":
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        profesor = Profesor.query.filter_by(id=loggedInProfID).first()
         loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
 
         today = date.today()
@@ -58,11 +59,11 @@ def home():
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+            return render_template("templates-mobile/home_mobile.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti, profesor=profesor)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+            return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti, profesor=profesor)
         else:
-            return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti)
+            return render_template("templates-pc/home.html", zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, sve_obavijesti=sveObavijesti, profesor=profesor)
 
 
     elif isUserLoggedIn=="True":
@@ -244,6 +245,8 @@ def skolamenu():
     loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
     print(loggedInProfID)
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     obavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
@@ -251,11 +254,11 @@ def skolamenu():
         classrooms = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
         classrooms = sorted(classrooms, key=lambda x: x.name)
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti)
+            return render_template("templates-mobile/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti, profesor=profesor)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti)
+            return render_template("templates-pc/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti, profesor=profesor)
         else:
-            return render_template("templates-pc/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti)
+            return render_template("templates-pc/skola-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, classrooms=classrooms, obavijesti=obavijesti, profesor=profesor)
         
     else:
         return redirect("/")
@@ -269,15 +272,17 @@ def skolaadminmenu():
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if isUserLoggedIn and isSkolaLoggedIn:
         profesori = Profesor.query.filter_by(school_id=loggedInSkolaID).order_by(asc(Profesor.name)).all()
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
+            return render_template("templates-mobile/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
+            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
         else:
-            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
+            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
         
     else:
         return redirect("/")
@@ -593,15 +598,17 @@ def prikazizamjene():
     sviprofesori = sorted(sviprofesori)
     svirazredi = sorted(svirazredi, key=lambda x: x.name)
     predmetistrings = sorted(predmetistrings)
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if 'Mobile' in user_agent:
-        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+        return render_template("templates-mobile/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID, profesor=profesor)
 
     elif 'Windows' in user_agent:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID, profesor=profesor)
 
     else:
-        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+        return render_template("templates-pc/prikaz-zamjena.html", skola=skola, error=error, isLoggedIn=isLoggedIn, profesori=sviprofesori, predmeti=predmetistrings, razredi=svirazredi, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID, profesor=profesor)
 
 
 @views.route('/dodajzamjenu', methods=['GET', 'POST'])
@@ -700,6 +707,8 @@ def dodajraspored():
     user_agent = request.headers.get('User-Agent')
     isLoggedIn = request.cookies.get('isUserLoggedIn')
     skola = request.cookies.get('isSkolaLoggedIn')
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     if request.method=='GET':
         classroom_id = request.args.get('classroom_id')
         raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
@@ -710,11 +719,11 @@ def dodajraspored():
         data = raspored_string.split(',')
 
         if 'Mobile' in user_agent:
-            return render_template('templates-mobile/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-mobile/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
         elif 'Windows' in user_agent:
-            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)   
+            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)   
         else:
-            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
 
     
 
@@ -768,6 +777,8 @@ def update_table():
     isLoggedIn = request.cookies.get('isUserLoggedIn')
     user_agent = request.headers.get('User-Agent')
     skola = request.cookies.get('isSkolaLoggedIn')
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     if request.method=='GET':
         school_id = request.args.get('school_id')
         raspored = RasporedUcionica.query.filter_by(school_id=school_id).first()
@@ -778,11 +789,11 @@ def update_table():
         data = raspored_string.split(',')
 
         if 'Mobile' in user_agent:
-            return render_template('templates-mobile/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-mobile/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
         elif 'Windows' in user_agent:
-            return render_template('templates-pc/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-pc/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
         else:
-            return render_template('templates-pc/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-pc/rasporeducionica.html', skola=skola, data=data, school_id=school_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
 
 
 
@@ -845,15 +856,17 @@ def oglasnaploca():
         school_id=loggedInUser.school_id
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
     elif skola:
+        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        profesor = Profesor.query.filter_by(id=loggedInProfID).first()
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
     if 'Mobile' in user_agent:
-        return render_template('templates-mobile/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
+        return render_template('templates-mobile/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
     elif 'Windows' in user_agent:
-        return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
+        return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
     else:
-        return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error)
+        return render_template('templates-pc/oglasnaploca.html', admin=isAdminLoggedIn, skola=skola, sve_obavijesti=sveObavijesti, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
 
 
 
@@ -872,6 +885,8 @@ def rasporeducionica():
     elif isSkolaLoggedIn:
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
         raspored = RasporedUcionica.query.filter_by(school_id=loggedInSkolaID).first()
+        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if raspored:
         raspored_string = raspored.raspored_string
@@ -881,11 +896,11 @@ def rasporeducionica():
 
     
     if 'Mobile' in user_agent:
-        return render_template('templates-mobile/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-mobile/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
     elif 'Windows' in user_agent:
-        return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
     else:
-        return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-pc/rasporeducionicaprikaz.html', admin=isAdminLoggedIn, skola=isSkolaLoggedIn, data=data, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
 
 
 @views.route('/prikazzamjenaucenik/', methods=['GET'])
@@ -1033,16 +1048,18 @@ def dodajpredmet():
     userDevice = request.headers.get('User-Agent')
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn') 
     schoolID = int(request.cookies.get('loggedInSchoolID'))
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if request.method=="GET":
         predmeti = Predmeti.query.filter_by(school_id=schoolID).all()
         predmeti = sorted(predmeti, key=lambda x: x.predmet)
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+            return render_template("templates-mobile/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor)
         else:
-            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti)
+            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor)
 
     elif request.method=="POST":
         predmet = request.form['predmet']
@@ -1099,7 +1116,9 @@ def prikazzamjenaprofesor():
     isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
 
     loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
+    
 
     today = date.today()
     tomarrow = today + timedelta(days=1)
@@ -1125,8 +1144,8 @@ def prikazzamjenaprofesor():
 
         
     if 'Mobile' in user_agent:
-        return render_template('templates-mobile/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-mobile/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
     elif 'Windows' in user_agent:
-        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
     else:
-        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error)
+        return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
