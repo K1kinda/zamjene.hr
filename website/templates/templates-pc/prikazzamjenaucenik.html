@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+6<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -65,6 +65,7 @@
             {% if zamjeneDanas %}
               {% for zamjena in zamjeneDanas %}
                 <p class="zamjene-desc">
+                  {{ zamjena.stariprofesor }} <br>
                   {{ zamjena.od }} <br>
                   Novi predmet/predmeti: <br>
                   {% for predmet in zamjena.zamjena.split(' - ') %}
@@ -84,6 +85,7 @@
             {% if zamjeneSutra %}
               {% for zamjena in zamjeneSutra %}
                 <p class="zamjene-desc">
+                  {{ zamjena.stariprofesor }} <br>
                   {{ zamjena.od }} <br>
                   Novi predmet/predmeti: <br>
                   {% for predmet in zamjena.zamjena.split(' - ') %}
@@ -103,6 +105,7 @@
             {% if zamjenePrekosutra %}
               {% for zamjena in zamjenePrekosutra %}
                 <p class="zamjene-desc">
+                  {{ zamjena.stariprofesor }} <br>
                   {{ zamjena.od }} <br>
                   Novi predmet/predmeti: <br>
                   {% for predmet in zamjena.zamjena.split(' - ') %}
@@ -123,6 +126,7 @@
             {% if zamjeneSljedeciTjedan %}
               {% for zamjena in zamjeneSljedeciTjedan %}
                 <p class="zamjene-desc">
+                  {{ zamjena.stariprofesor }} <br>
                   {{ zamjena.od }} <br>
                   Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
                   Novi predmet/predmeti: <br>
