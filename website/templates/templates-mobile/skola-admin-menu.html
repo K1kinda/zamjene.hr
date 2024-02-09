@@ -35,11 +35,9 @@
     <div class="dropdown-menu" id="subMenu">
           {% if isLoggedIn=="True" %}
               {% if Skola=="True" %}
-                {% if profesor.is_admin==1 %}
-                <div class="dropdown-box dark">
-                  <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
-                </div>
-                {% endif %}
+              <div class="dropdown-box dark">
+                <p class="dropdown-text dark" onclick="changeUrl('/skolaadminmenu')">Upravni centar</p>
+              </div>
               <div class="dropdown-box dark">
                 <p class="dropdown-text dark" onclick="changeUrl('/logout')">Odjavi se</p>
               </div>

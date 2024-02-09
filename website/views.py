@@ -242,10 +242,10 @@ def skolamenu():
     isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
-    print(loggedInProfID)
+    loggedInProfID = request.cookies.get('loggedInProfesorID')
+    if loggedInProfID:
+        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     obavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
@@ -272,17 +272,15 @@ def skolaadminmenu():
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
-    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if isUserLoggedIn and isSkolaLoggedIn:
         profesori = Profesor.query.filter_by(school_id=loggedInSkolaID).order_by(asc(Profesor.name)).all()
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
+            return render_template("templates-mobile/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
+            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
         else:
-            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori, profesor=profesor)
+            return render_template("templates-pc/skola-admin-menu.html", admin=isAdminLoggedIn, Skola=isSkolaLoggedIn, skola=loggedInSkola, isLoggedIn=isUserLoggedIn, profesori=profesori)
         
     else:
         return redirect("/")
