@@ -423,7 +423,7 @@ def loginskolasend():
                 pin = request.form['pin']
                 pravipin = prof.pin
                 if int(pin)==pravipin:
-                    response = make_response(redirect("/skolamenu"))
+                    response = make_response(redirect("/"))
                     response.set_cookie('isUserLoggedIn', value="True")
                     response.set_cookie('isSkolaLoggedIn', value="True")
                     response.set_cookie('loggedInSchoolID', value=str(idskola))
@@ -488,7 +488,7 @@ def dodajrazred():
             id = int(''.join(random.choice(characters) for _ in range(8)))
         db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID, id=id, razrednik=razrednik))
         db.session.commit()
-        return redirect(url_for("views.skolamenu"))
+        return redirect(url_for("views.home"))
 
 #logika za prikaz profila
 @views.route('/viewprofile')
@@ -497,7 +497,7 @@ def viewprofile():
     isUserLoggedIn = request.cookies.get('isUserLoggedIn')
     if isSkolaLoggedIn=="True":
         return redirect("/skolamenu")
-    else:
+    else: 
         return redirect(url_for("views.viewprofileuser", skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn))
 
 @views.route('/addschool', methods=['GET', 'POST'])
@@ -567,7 +567,7 @@ def addschoolfunction():
 
             #login novog usera
             school = School.query.filter_by(id=id).first()
-            response = make_response(redirect("/skolamenu"))
+            response = make_response(redirect("/"))
             response.set_cookie('isSkolaLoggedIn', value="True")
             response.set_cookie('isAdminLoggedIn', value="False")
             response.set_cookie('loggedInSchoolID', value=str(school.id))
@@ -667,7 +667,7 @@ def obriširazred():
     db.session.delete(classroom)
     db.session.commit()
 
-    return redirect("/skolamenu")
+    return redirect("/")
 
 @views.route('/addad', methods=['POST','GET'])
 def addad():
@@ -680,7 +680,7 @@ def addad():
     db.session.add(obavijest)
     db.session.commit()
 
-    return redirect("/skolamenu")
+    return redirect("/")
 
 @views.route('/obrisiobavijest', methods=['POST'])
 def obrisiobavijest():
@@ -692,7 +692,7 @@ def obrisiobavijest():
     db.session.delete(obavijest)
     db.session.commit()
 
-    return redirect("/skolamenu")
+    return redirect("/")
 
 @views.route('/dodajraspored/', methods=['GET', 'POST'])
 def dodajraspored():
@@ -1071,10 +1071,14 @@ def dodajprofesora():
         name = request.form.get('name')
         id = random.randrange(1000, 999999)
         pin = random.randrange(1000, 9999)
+        if 'is_admin' in request.form:
+            is_admin=1
+        else:
+            is_admin=0
         while Profesor.query.filter_by(id=id).first():
             id = random.randrange(1000, 999999)
         school_id = request.cookies.get('loggedInSchoolID') 
-        db.session.add(Profesor(id=id, school_id=school_id, name=name, pin=pin))
+        db.session.add(Profesor(id=id, school_id=school_id, name=name, pin=pin, is_admin=is_admin))
         db.session.commit()
         return redirect(url_for("views.skolaadminmenu"))
 

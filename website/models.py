@@ -88,6 +88,7 @@ class Profesor(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     pin = db.Column(db.Integer)
+    is_admin = db.Column(db.Integer, default=0)
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 

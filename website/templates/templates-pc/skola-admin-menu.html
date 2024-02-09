@@ -74,7 +74,8 @@
         <div class="skola-razredi">
           <form class="novi-razred-form-admin" method="post" action="/dodajprofesora"> 
             <label class="skola-title" for="classroom_name">Dodaj novog profesora kao administratora:</label><br><br>
-            <input class="input-obavijesti"  type="text" name="name" placeholder="Ime i prezime profesora" required><br><br>
+            <input class="input-obavijesti"  type="text" name="name" placeholder="Ime i prezime profesora" required><br>
+            <p class="obavijest-title-v2">Admin: <input type="checkbox" class="select-zamjene-checkbox" id="is_admin" name="is_admin"></input> </p>
             <input class="dodaj-obavijest-button" type="submit" value="Dodaj novog profesora">
           </form>
 
@@ -85,7 +86,14 @@
               <div class="razred-info hidden">
                 <p class="obavijest-title">Ime i prezime profesora: {{ profesor.name }} </p>
                 <p class="obavijest-content">ID: <span class="id-span">****</span></p>
-                <p class="obavijest-content">PIN: <span class="pin-span">****</span></p><br>
+                <p class="obavijest-content">PIN: <span class="pin-span">****</span></p>
+                <p class="obavijest-content">Admin: 
+                                              {% if profesor.is_admin==1 %}
+                                                da
+                                              {% else %}
+                                                ne
+                                              {% endif %}
+                </p><br>
                 <button class="show-hide-button obrisi-razred-button" onclick="toggleVisibility(this, {{ profesor.id }}, {{ profesor.pin }})">Prikaži / Sakrij</button>
                 <section>
                   <form action="/obrisiprofesora" method="post">

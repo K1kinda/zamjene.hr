@@ -107,6 +107,13 @@
     font-weight: bold;
 }
 
+.obavijest-title-v2{
+    font-weight: bold;
+    padding-bottom: 15px;
+    padding-left: 20px;
+    padding-top: 15px;
+}
+
 .obavijest-content{
     padding-left: 5px;
     padding-top: 5px;
