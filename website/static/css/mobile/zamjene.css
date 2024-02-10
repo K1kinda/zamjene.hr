@@ -149,3 +149,7 @@ input[type="checkbox"]:focus {
   min-height: 40px;
 }
 
+.povuceni-tekst{
+  margin-left: 15px;
+  font-size: 12px
+}

@@ -194,3 +194,7 @@ input[type="checkbox"]:focus {
 .select-zamjene{
   margin-bottom: 15px;
 }
+
+.povuceni-tekst{
+  margin-left: 25px;
+}

@@ -79,6 +79,7 @@
               <div class="post-box">
                 <div class="post-desc">Naslov obavijesti: {{ obavijest.name }}</div> 
                 <div class="post-desc">Sadržaj obavijesti: {{ obavijest.content }}</div>
+                <div class="post-desc">Dodano dana: {{ obavijest.date_added }}</div> 
                 <div class="post-desc">Dodao profesor: {{ obavijest.dodao_profesor | profesor }}</div>
               </div>
             {% endfor %}

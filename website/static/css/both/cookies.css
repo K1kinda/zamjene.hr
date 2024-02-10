@@ -47,3 +47,7 @@
     background-color: rgb(56, 76, 131);
     scale: 1.1;
 }
+
+:root {
+    color-scheme: light only;
+}
