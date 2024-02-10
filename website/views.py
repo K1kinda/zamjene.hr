@@ -848,6 +848,7 @@ def oglasnaploca():
     isLoggedIn = request.cookies.get('isUserLoggedIn')
     skola = request.cookies.get('isSkolaLoggedIn')
     isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    profesor=""
     if skola!="True":
         loggedInUserID = int(request.cookies.get('loggedInUser'))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
@@ -875,6 +876,7 @@ def rasporeducionica():
     isUserLoggedIn = request.cookies.get('isUserLoggedIn')
     isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
     isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    profesor=""
 
     if isSkolaLoggedIn!="True":
         loggedInUserID = int(request.cookies.get('loggedInUser'))
