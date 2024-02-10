@@ -54,7 +54,7 @@ def home():
         nextWeekStart = nextMonday
         nextWeekEnd = nextMonday + timedelta(days=6)
 
-        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).all()
+        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).order_by(Zamjene.datum).all()
 
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
@@ -83,7 +83,7 @@ def home():
         nextWeekStart = nextMonday
         nextWeekEnd = nextMonday + timedelta(days=6)
 
-        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
+        zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).order_by(Zamjene.datum).all()
 
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInUser.school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
