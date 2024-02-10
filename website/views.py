@@ -491,7 +491,7 @@ def dodajrazred():
             id = int(''.join(random.choice(characters) for _ in range(8)))
         db.session.add(Classroom(name=classroom_name, school_id=loggedInSkolaID, id=id, razrednik=razrednik))
         db.session.commit()
-        return redirect(url_for("views.home"))
+        return redirect(url_for("views.skolamenu"))
 
 #logika za prikaz profila
 @views.route('/viewprofile')
@@ -672,7 +672,7 @@ def obriširazred():
     db.session.delete(classroom)
     db.session.commit()
 
-    return redirect("/")
+    return redirect("/skolamenu")
 
 @views.route('/addad', methods=['POST','GET'])
 def addad():
@@ -927,7 +927,7 @@ def prikazzamjenaucenik():
     nextWeekStart = nextMonday
     nextWeekEnd = nextMonday + timedelta(days=6)
 
-    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).all()
+    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.classroom_id==loggedInUser.classroom_id).order_by(Zamjene.datum).all()
 
         
     if 'Mobile' in user_agent:
@@ -1140,7 +1140,7 @@ def prikazzamjenaprofesor():
     nextWeekStart = nextMonday
     nextWeekEnd = nextMonday + timedelta(days=6)
 
-    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).all()
+    zamjeneSljedeciTjedan = Zamjene.query.filter(Zamjene.datum >= nextWeekStart,Zamjene.datum <= nextWeekEnd, Zamjene.zamjena.like(f"%{professor_name}%")).order_by(Zamjene.datum).all()
 
         
     if 'Mobile' in user_agent:
