@@ -47,6 +47,7 @@ class Zamjene(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
     classroom_name = db.Column(db.String(100), nullable=True)
     biljeska = db.Column(db.String(100), nullable=True)
+    dodao_profesor = db.Column(db.Integer)
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 
@@ -72,6 +73,7 @@ class Obavjesti(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('school.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
     content = db.Column(db.String(100), nullable=False)
+    dodao_profesor = db.Column(db.Integer)
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 

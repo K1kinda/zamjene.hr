@@ -613,6 +613,7 @@ def prikazizamjene():
 def dodajzamjenu():
     if request.method=="POST":
         loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
         zamjenaza = request.form['zamjenaza']
 
         datum = request.form['date']
@@ -637,7 +638,9 @@ def dodajzamjenu():
 
         biljeska = request.form['biljeska']
 
-        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=novi_predmet_string, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID, classroom_name=classroom_name, biljeska=biljeska)
+        dodao_profesor = loggedInProfID
+
+        nova_zamjena = Zamjene(od=od, do=do, datum=datum, zamjena=novi_predmet_string, classroom_id=classroomID, stariprofesor=zamjenaza, school_id=loggedInSkolaID, classroom_name=classroom_name, biljeska=biljeska, dodao_profesor=dodao_profesor)
         db.session.add(nova_zamjena)
         db.session.commit()
 
@@ -677,15 +680,17 @@ def obriširazred():
 @views.route('/addad', methods=['POST','GET'])
 def addad():
     schoolID = int(request.cookies.get('loggedInSchoolID'))
+    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
     msg = request.form['content']
     name = request.form['name']
+    dodao_profesor = loggedInProfID
 
-    obavijest = Obavjesti(school_id=schoolID, name=name, content=msg)
+    obavijest = Obavjesti(school_id=schoolID, name=name, content=msg, dodao_profesor=dodao_profesor)
 
     db.session.add(obavijest)
     db.session.commit()
 
-    return redirect("/")
+    return redirect("/skolamenu")
 
 @views.route('/obrisiobavijest', methods=['POST'])
 def obrisiobavijest():
@@ -697,7 +702,7 @@ def obrisiobavijest():
     db.session.delete(obavijest)
     db.session.commit()
 
-    return redirect("/")
+    return redirect("/skolamenu")
 
 @views.route('/dodajraspored/', methods=['GET', 'POST'])
 def dodajraspored():
@@ -1149,3 +1154,41 @@ def prikazzamjenaprofesor():
         return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
     else:
         return render_template('templates-pc/prikazzamjenaprofesor.html', zamjeneDanas=zamjeneDanas, zamjeneSutra=zamjeneSutra, zamjenePrekosutra=zamjenePrekosutra, zamjeneSljedeciTjedan=zamjeneSljedeciTjedan, admin=isAdminLoggedIn, skola=isSkolaLoggedIn, isLoggedIn=isUserLoggedIn, error=error, profesor=profesor)
+
+
+@views.route('/arhivazamjene', methods=['GET', 'POST'])
+def arhivazamjene():
+    error=request.args.get("error")
+    user_agent = request.headers.get('User-Agent')
+    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    skola = request.cookies.get('isSkolaLoggedIn')
+    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID')) 
+    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID).order_by(Zamjene.datum).all()
+
+    if 'Mobile' in user_agent:
+        return render_template("templates-mobile/arhivazamjene.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/arhivazamjene.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+
+    else:
+        return render_template("templates-pc/arhivazamjene.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_zamjene=sve_zamjene, school_id=loggedInSkolaID)
+
+@views.route('/arhivaobavijesti', methods=['GET', 'POST'])
+def arhivaobavijesti():
+    error=request.args.get("error")
+    user_agent = request.headers.get('User-Agent')
+    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    skola = request.cookies.get('isSkolaLoggedIn')
+    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID')) 
+    sve_obavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID).order_by(Obavjesti.date_added).all()
+
+    if 'Mobile' in user_agent:
+        return render_template("templates-mobile/arhivaobavijesti.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti, school_id=loggedInSkolaID)
+
+    elif 'Windows' in user_agent:
+        return render_template("templates-pc/arhivaobavijesti.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti, school_id=loggedInSkolaID)
+
+    else:
+        return render_template("templates-pc/arhivaobavijesti.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti, school_id=loggedInSkolaID)
+

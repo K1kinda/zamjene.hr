@@ -4,7 +4,7 @@ from flask_mail import Mail
 import locale
 from datetime import datetime
 from .models import db
-from .models import Classroom
+from .models import Classroom, Profesor
 
 mail = Mail()
 DB_NAME = 'database.db'
@@ -45,6 +45,11 @@ def create_app():
     def razred_filter(value):
         classroom = Classroom.query.get(value)
         return classroom.name
+    
+    @app.template_filter('profesor')
+    def profesor_filter(value):
+        profesor = Profesor.query.get(value)
+        return profesor.name
 
     return app
 
