@@ -140,9 +140,9 @@
                   {% if school_id == zamjena.school_id %}
                       <div class="zamjene-cont-skola">
                         Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
-                        Razred: {{ zamjena.classroom_id | razred }} <br>
-                        {{ zamjena.od }} <br>
                         Zamjena za: {{ zamjena.stariprofesor }} <br>
+                        {{ zamjena.od }} <br>
+                        Razred: {{ zamjena.classroom_id | razred }} <br>
                         Novi predmet/predmeti: <br>
                         {% for predmet in zamjena.zamjena.split(' - ') %}
                           {{ predmet }}<br>
