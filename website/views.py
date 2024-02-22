@@ -767,11 +767,11 @@ def dodajraspored():
         db.session.commit()
 
         if 'Mobile' in user_agent:
-            return render_template('templates-mobile/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-mobile/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
         elif 'Windows' in user_agent:
-            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error) 
+            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor) 
         else:
-            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error)
+            return render_template('templates-pc/dodaj-raspored.html', skola=skola, data=new_data, classroom_id=classroom_id, isLoggedIn=isLoggedIn, error=error, profesor=profesor)
 
 
 @views.route('/update_table/', methods=['GET', 'POST'])
