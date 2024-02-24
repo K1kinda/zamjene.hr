@@ -1033,9 +1033,9 @@ def forgotpassword():
         user = User.query.filter_by(email=email).first()
         if user:
             message = Message(
-                subject='Pozdrav of administrativnog tima zamjene.hr',
+                subject='Pozdrav od administrativnog tima zamjene.hr',
                 recipients=[email],
-                body='Tvoja nova lozinka je: ' + randompass + ". Molim te promjeni ju kada se ulogiraš u sustav.")
+                body='Tvoja nova lozinka je: ' + randompass + ".")
             mail.send(message)
             user.password = generate_password_hash(randompass, method='pbkdf2:sha256')
             db.session.commit()
