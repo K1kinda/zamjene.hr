@@ -41,6 +41,14 @@
     </div>
     <div class="sidebar-profile-cont">
         {% if isLoggedIn=="True" %}
+        <span class="android_ios">
+          <form class="halfbuttonleftform" action="/downloadandroid" method="post">
+              <button class="sidebarbutton halfbuttonleft" type="submit">Android</button>
+          </form>
+          <form class="halfbuttonrightform" action="/downloadios" method="post">
+              <button class="sidebarbutton halfbuttonright" type="submit" disabled>IOS</button> 
+          </form>
+        </span>
             {% if skola=="True" %}
               {% if profesor.email=="noemail" %}
                 <button class="sidebarbutton darkbutton" onclick="changeUrl('/dodajemailprofesor')">Dodaj e-mail za obavijesti</button>
