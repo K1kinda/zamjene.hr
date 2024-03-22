@@ -26,13 +26,15 @@ def send_email_in_context(app, user_email, subject, body):
                         body=body)
         mail.send(message)
 
-key = Fernet.generate_key()
-#key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
+#key = Fernet.generate_key()
+key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
 cipher_suite = Fernet(key)
 def decrypt_cookie(cookie):
-    decrypted_value = cipher_suite.decrypt(cookie.encode())
-    return decrypted_value.decode()
-
+    try:
+        decrypted_value = cipher_suite.decrypt(cookie.encode())
+        return decrypted_value.decode()
+    except:
+        return None
 
 #prikazi stranica
 
