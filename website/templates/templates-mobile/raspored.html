@@ -55,6 +55,11 @@
       {% endif %}
         {% if isLoggedIn=="True" %}
             {% if skola=="True" %}
+            {% if profesor.email=="noemail" %}
+                <div class="dropdown-box dark">
+                  <p class="dropdown-text dark" onclick="changeUrl('/dodajemailprofesor')">Dodaj e-mail za obavijesti</p>
+                </div>
+              {% endif %}
               {% if profesor.is_admin==1 %}
               <div class="dropdown-box dark">
                 <p class="dropdown-text dark" onclick="changeUrl('/viewprofile')">Upravni centar</p>
