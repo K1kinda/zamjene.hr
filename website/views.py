@@ -614,13 +614,6 @@ def prikazizamjene():
     svirazredi = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
     svipredmeti = Predmeti.query.filter_by(school_id=loggedInSkolaID).all()
     sviprofesori = Profesor.query.filter_by(school_id=loggedInSkolaID).all()
-    L=[]
-    for predmet in svipredmeti:
-        for profesor in sviprofesori:
-            if profesor.name == predmet.profesor:
-                predmet.profesor = profesor.id
-                db.session.commit()
-    return 0
     sviprofesori = []
     predmetistrings = []       
     sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(desc(Zamjene.date_added), Zamjene.classroom_id).all()
