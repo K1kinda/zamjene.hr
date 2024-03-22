@@ -111,7 +111,7 @@
               <span class="povuceni-tekst">Profesor koji predaje predmet: </span>
               <select class="select-zamjene" id="zprofesor" name="profesor">
                 {% for profesor in profesori %}
-                  <option value="{{ profesor.name }}">{{ profesor.name }}</option>
+                  <option value="{{ profesor.id }}">{{ profesor.name }}</option>
                 {% endfor %}
               </select><br><br>
               <input class="dodaj-zamjenu-button" type="submit" value="Dodaj predmet">

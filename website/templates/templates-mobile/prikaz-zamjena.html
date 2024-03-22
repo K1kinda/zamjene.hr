@@ -165,7 +165,7 @@
                   {% for i in range(1, 11) %}
                     <select class="select-zamjene" id="novipredmet{{ i }}" name="novipredmet{{ i }}" style="display: {% if i == 1 %}block{% else %}none{% endif %};">
                       {% for predmet in predmeti %}
-                      <option class="novipredmet" value="{{ predmet }}">{{ predmet }}</option>
+                      <option class="novipredmet" value="{{ predmet }}">{{ predmet[0] }}</option>
                       {% endfor %}
                     </select>
                   {% endfor %}
@@ -257,7 +257,7 @@
                               {% for i in range(1, 11) %}
                                 <select class="select-zamjene" id="novipredmet{{ i }}" name="novipredmet{{ i }}" style="display: {% if i == 1 %}block{% else %}none{% endif %};">
                                   {% for predmet in predmeti %}
-                                    <option value="{{ predmet }}">{{ predmet }}</option>
+                                    <option value="{{ predmet }}">{{ predmet[0] }}</option>
                                   {% endfor %}
                                 </select>
                               {% endfor %}

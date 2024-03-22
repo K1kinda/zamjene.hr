@@ -613,13 +613,15 @@ def prikazizamjene():
     loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
     svirazredi = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
     svipredmeti = Predmeti.query.filter_by(school_id=loggedInSkolaID).all()
+    sviprofesori = Profesor.query.filter_by(school_id=loggedInSkolaID).all()
     sviprofesori = []
     predmetistrings = []       
     sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(desc(Zamjene.date_added), Zamjene.classroom_id).all()
     for predmet in svipredmeti:
-        if predmet.profesor not in sviprofesori:
-            sviprofesori += [predmet.profesor]
-        predmetistrings += [predmet.predmet + " | " + predmet.profesor]
+        prof = Profesor.query.filter_by(id=predmet.profesor).first().name
+        if prof not in sviprofesori:
+            sviprofesori += [prof]
+        predmetistrings += [(predmet.predmet + " | " + prof, predmet.profesor)]
 
     sviprofesori = sorted(sviprofesori)
     svirazredi = sorted(svirazredi, key=lambda x: x.name)
@@ -665,6 +667,21 @@ def dodajzamjenu():
             threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova zamjena', "Imaš novu zamjenu. Pogledaj ju na zamjene.hr")).start()
         broj_novih_predmeta = int(request.form['broj-novih-predmeta'])
         novi_predmet_values = [request.form[f'novipredmet{i}'] for i in range(1, broj_novih_predmeta + 1)]
+        novi_predmet_values1 = []
+        for i in novi_predmet_values:
+            novi_predmet_values1+=[i]
+        profesori_za_obavijest=[]
+        for i in novi_predmet_values1:
+            i=i[i.find(",")+3:-2]
+            print(i)
+            profesori_za_obavijest+=[int(i)]
+        for i in range(len(novi_predmet_values)):
+            novi_predmet_values[i]=novi_predmet_values[i][2:novi_predmet_values[i].find(",")-1]
+        allProfesorsInSchool = Profesor.query.filter_by(school_id=loggedInSkolaID).all()
+        for user in allProfesorsInSchool:
+            if user.email!="noemail" and user.id in profesori_za_obavijest:
+                threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova zamjena', "Imaš novu zamjenu. Pogledaj ju na zamjene.hr")).start()
+
 
         novi_predmet_string = ' - '.join(novi_predmet_values)
 
@@ -708,7 +725,6 @@ def obriširazred():
     db.session.commit()
 
     return redirect("/skolamenu")
-
 @views.route('/addad', methods=['POST','GET'])
 def addad():
     schoolID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
@@ -724,6 +740,11 @@ def addad():
         print(user.email)
         threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova obavijest', "Imaš novu obavijest. Pogledaj ju na zamjene.hr")).start()
 
+    allProfesors = Profesor.query.filter_by(school_id=schoolID).all()
+    for profesor in allProfesors:
+        if profesor.email!="noemail":
+            threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova obavijest', "Imaš novu obavijest. Pogledaj ju na zamjene.hr")).start()
+    
 
     db.session.add(obavijest)
     db.session.commit()
@@ -1281,8 +1302,25 @@ def editzamjena():
             threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Došlo je do promjene u zamjenama', "Imaš novu promjenu za zamjenu. Pogledaj ju na zamjene.hr")).start()
 
 
+
+
         broj_novih_predmeta = int(request.form['broj-novih-predmeta-2'])
         novi_predmet_values = [request.form[f'novipredmet{i}'] for i in range(1, broj_novih_predmeta + 1)]
+        novi_predmet_values1 = []
+        for i in novi_predmet_values:
+            novi_predmet_values1+=[i]
+        profesori_za_obavijest=[]
+        for i in novi_predmet_values1:
+            i=i[i.find(",")+3:-2]
+            print(i)
+            profesori_za_obavijest+=[int(i)]
+        for i in range(len(novi_predmet_values)):
+            novi_predmet_values[i]=novi_predmet_values[i][2:novi_predmet_values[i].find(",")-1]
+        allProfesorsInSchool = Profesor.query.filter_by(school_id=loggedInSkolaID).all()
+        for user in allProfesorsInSchool:
+            if user.email!="noemail" and user.id in profesori_za_obavijest:
+                threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Došlo je do promjene u zamjenama', "Imaš novu promjenu za zamjenu. Pogledaj ju na zamjene.hr")).start()
+
 
         novi_predmet_string = ' - '.join(novi_predmet_values)
 
@@ -1341,8 +1379,10 @@ def dodajemailprofesor():
         else:
             error="Nevaljani email."
             return redirect(url_for("views.dodajemailprofesor", error=error))
+        
         profesor.email = email
         db.session.commit()
+        
         return redirect(url_for("views.home"))
 
     
