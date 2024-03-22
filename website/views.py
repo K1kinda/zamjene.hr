@@ -26,8 +26,8 @@ def send_email_in_context(app, user_email, subject, body):
                         body=body)
         mail.send(message)
 
-#key = Fernet.generate_key()
-key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
+key = Fernet.generate_key()
+#key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
 cipher_suite = Fernet(key)
 def decrypt_cookie(cookie):
     try:
