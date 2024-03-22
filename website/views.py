@@ -1119,12 +1119,16 @@ def dodajpredmet():
     if request.method=="GET":
         predmeti = Predmeti.query.filter_by(school_id=schoolID).all()
         predmeti = sorted(predmeti, key=lambda x: x.predmet)
+        profesori2 = []
+        for i in predmeti:
+            profesori2 += [Profesor.query.filter_by(id=i.profesor).first().name]
+        
         if 'Mobile' in userDevice:
-            return render_template("templates-mobile/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
+            return render_template("templates-mobile/dodajpredmet.html", profesori2=profesori2, skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
         elif 'Windows' in userDevice:
-            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
+            return render_template("templates-pc/dodajpredmet.html", profesori2=profesori2, skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
         else:
-            return render_template("templates-pc/dodajpredmet.html", skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
+            return render_template("templates-pc/dodajpredmet.html", profesori2=profesori2, skola=isSkolaLoggedIn, isLoggedIn=isLoggedIn, school_id=schoolID, predmeti=predmeti, profesor=profesor, profesori=profesori)
 
     elif request.method=="POST":
         predmet = request.form['predmet']

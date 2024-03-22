@@ -81,13 +81,13 @@
             </form> 
             <section class="zamjene-cont">
               <section>
-                  {% for predmet in predmeti %}
+                  {% for i in range(predmeti|length) %}
                   <div class="zamjene-cont-skola">
-                    Predmet: {{ predmet.predmet }} <br>
-                    Profesor: {{ predmet.profesor }}
+                    Predmet: {{ predmeti[i].predmet }} <br>
+                    Profesor: {{ profesori2[i] }}
                     <form action="/obrisipredmet" method="post">
                       <input class="dodaj-zamjenu-button" type="submit" value="Obriši predmet">
-                      <input type="hidden" name="predmet_id" value="{{ predmet.id }}">
+                      <input type="hidden" name="predmet_id" value="{{ predmeti[i].id }}">
                     </form>
                   </div>
                   {% endfor %}
