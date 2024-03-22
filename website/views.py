@@ -454,12 +454,18 @@ def loginskolasend():
                     return response
                 else:
                     if pin_as_int==pravipin:
-                        response = make_response(redirect("/"))
-                        response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
-                        response.set_cookie('isSkolaLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
-                        response.set_cookie('loggedInSchoolID', value=cipher_suite.encrypt(str(idskola).encode()).decode(), samesite='Strict', httponly=True)
-                        response.set_cookie('loggedInProfesorID', value=cipher_suite.encrypt(str(id).encode()).decode(), samesite='Strict', httponly=True)
-                        return response
+                        if school.id==prof.school_id:
+                            response = make_response(redirect("/"))
+                            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                            response.set_cookie('isSkolaLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                            response.set_cookie('loggedInSchoolID', value=cipher_suite.encrypt(str(idskola).encode()).decode(), samesite='Strict', httponly=True)
+                            response.set_cookie('loggedInProfesorID', value=cipher_suite.encrypt(str(id).encode()).decode(), samesite='Strict', httponly=True)
+                            return response
+                        else:
+                            error="Profesor i škola se ne podudaraju!"
+                            response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
+                            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
+                            return response
                     else:
                         error="Krivi PIN."
                         response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
