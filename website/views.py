@@ -30,11 +30,9 @@ key = Fernet.generate_key()
 #key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
 cipher_suite = Fernet(key)
 def decrypt_cookie(cookie):
-    try:
-        decrypted_value = cipher_suite.decrypt(cookie)
-        return decrypted_value.decode()
-    except:
-        return None
+    decrypted_value = cipher_suite.decrypt(cookie)
+    return decrypted_value.decode()
+
 
 #prikazi stranica
 
