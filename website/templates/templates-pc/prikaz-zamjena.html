@@ -131,7 +131,7 @@
                 </p>
               </div>
 
-              <input class="input-obavijesti"  type="text" name="biljeska" placeholder="Bilješka"><br><br>
+              <input class="input-obavijesti"  type="text" name="biljeska" placeholder="Bilješka (nije obavezna)"><br><br>
 
               <input class="dodaj-zamjenu-button" type="submit" value="Dodaj zamjenu">
             </form> 
@@ -139,19 +139,99 @@
               <section>
                 {% for zamjena in sve_zamjene %}
                   {% if school_id == zamjena.school_id %}
-                      <div class="zamjene-cont-skola">
-                        Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
-                        Zamjena za: {{ zamjena.stariprofesor }} <br>
-                        {{ zamjena.od }} <br>
-                        Razred: {{ zamjena.classroom_id | razred }} <br>
-                        Novi predmet/predmeti: <br>
-                        {% for predmet in zamjena.zamjena.split(' - ') %}
-                          {{ predmet }}<br>
-                        {% endfor %}
-                        {% if zamjena.bilješka!="" %}
-                          Bilješka: {{ zamjena.biljeska }}
-                        {% endif %}
-                        <form action="/delete_zamjene/{{ zamjena.id }}" method="post">
+                      <div id="zamjene-cont-skola{{ zamjena.id }}">
+                        <div id="changeBox{{ zamjena.id }}">
+                          Datum zamjene: {{ zamjena.datum.strftime('%d-%m-%Y') }} ({{ zamjena.datum | string | dan }})<br>
+                          Zamjena za: {{ zamjena.stariprofesor }} <br>
+                          {{ zamjena.od }} <br>
+                          Razred: {{ zamjena.classroom_id | razred }} <br>
+                          Novi predmet/predmeti: <br>
+                          {% for predmet in zamjena.zamjena.split(' - ') %}
+                            {{ predmet }}<br>
+                          {% endfor %}
+                          {% if zamjena.bilješka!="" %}
+                            Bilješka: {{ zamjena.biljeska }}
+                          {% endif %}
+                          <button class="dodaj-zamjenu-button" onclick="editZamjena('{{ zamjena.id }}')">Napravi promjene</button>
+                        </div>
+
+                        
+
+
+                        <form action="/editzamjena" method="POST" id="editForm{{ zamjena.id }}" style="display: none;">
+                          <div class="od-do-cont">
+                            <p class="od-do">Zamjena za profesora:
+                              <select class="select-zamjene" id="zamjenaza" name="zamjenaza">
+                                {% for profesor in profesori %}
+                                  <option value="{{ profesor }}">{{ profesor }}</option>
+                                {% endfor %}
+                              </select>
+                            </p>
+                          </div>
+
+                          <input class="nova-zamjna-kalendar" type="date" id="date" name="date"><br><br>
+
+                          <div class="od-do-cont">
+                            <p class="od-do">Sat:
+                              <select class="select-zamjene" id="from" name="from">
+                                <option value="1. sat">1. sat</option>
+                                <option value="2. sat">2. sat</option>
+                                <option value="3. sat">3. sat</option>
+                                <option value="4. sat">4. sat</option>
+                                <option value="5. sat">5. sat</option>
+                                <option value="6. sat">6. sat</option>
+                                <option value="7. sat">7. sat</option>
+                                <option value="8. sat">8. sat</option>
+                                <option value="9. sat">9. sat</option>
+                              </select>
+                            </p>
+
+                            <p>Blok sat:
+                              <input type="checkbox" class="select-zamjene-checkbox" id="to" name="to"></input>   
+                            </p>
+
+                          </div>
+                          <div class="od-do-cont">
+                            <p class="od-do">Razred:
+                              <select class="select-zamjene" id="razred" name="razred">
+                                {% for razred in razredi %}
+                                  <option value="{{ razred.id }}">{{ razred.name }}</option>
+                                {% endfor %}
+                                
+                              </select>
+                            </p>
+                          </div>
+                          <div class="od-do-cont">
+                            <p class="od-do">Broj novih predmeta:
+                              <select class="select-zamjene" id="broj-novih-predmeta-2" name="broj-novih-predmeta-2">
+                                {% for i in range(1, 11) %}
+                                  <option value="{{ i }}" {% if i == 1 %} selected {% endif %}>{{ i }}</option>
+                                {% endfor %}
+                              </select>
+                            </p>
+                          </div>
+                          
+                          <div class="od-do-cont" id="novi-predmet-section-2">
+                            <p class="novipredmet">Novi predmet/predmeti: <br><br>
+                              {% for i in range(1, 11) %}
+                                <select class="select-zamjene" id="novipredmet{{ i }}" name="novipredmet{{ i }}" style="display: {% if i == 1 %}block{% else %}none{% endif %};">
+                                  {% for predmet in predmeti %}
+                                    <option value="{{ predmet }}">{{ predmet }}</option>
+                                  {% endfor %}
+                                </select>
+                              {% endfor %}
+                            </p>
+                          </div>
+
+                          <input class="input-obavijesti"  type="text" name="biljeska" placeholder="Bilješka (nije obavezna)">
+                          <button class="dodaj-zamjenu-button" type="submit">Spremi</button><br><br>
+
+                          <input class="input-obavijesti"  type="text" name="zamjenaID" value="{{ zamjena.id }}" hidden><br><br>
+
+                          
+                        </form>
+
+                        <form class="delete-zamjena-form" action="/delete_zamjene/{{ zamjena.id }}" method="post">
                           <input class="dodaj-zamjenu-button" type="submit" value="Obriši zamjenu">
                           <input type="hidden" name="school_id" value="">
                           <input type="hidden" name="classroom_id" value="{{ classroomid }}">
@@ -186,9 +266,6 @@
     });
   });
 
-  function changeUrl(url){
-    window.location.href=url;
-  }
 </script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
@@ -196,23 +273,128 @@
     var noviPredmetSection = document.getElementById("novi-predmet-section");
 
     brojNovihPredmetaSelect.addEventListener("change", function () {
-      for (var i = 1; i <= 10; i++) {
-        var selectElement = document.getElementById("novipredmet" + i);
-        if (selectElement) {
-          selectElement.style.display = "none";
+        var noviPredmetSelects = noviPredmetSection.querySelectorAll(".select-zamjene");
+
+        for (var i = 0; i < noviPredmetSelects.length; i++) {
+            if (i < brojNovihPredmetaSelect.value) {
+                noviPredmetSelects[i].style.display = "block";
+            } else {
+                noviPredmetSelects[i].style.display = "none";
+            }
+        }
+    });
+});
+document.addEventListener("DOMContentLoaded", function () {
+    var brojNovihPredmetaSelect = document.getElementById("broj-novih-predmeta-2");
+    var noviPredmetSection = document.getElementById("novi-predmet-section-2");
+
+    brojNovihPredmetaSelect.addEventListener("change", function () {
+        var noviPredmetSelects = noviPredmetSection.querySelectorAll(".select-zamjene");
+
+        for (var i = 0; i < noviPredmetSelects.length; i++) {
+            if (i < brojNovihPredmetaSelect.value) {
+                noviPredmetSelects[i].style.display = "block";
+            } else {
+                noviPredmetSelects[i].style.display = "none";
+            }
+        }
+    });
+});
+</script>
+<script>
+  function editZamjena(zamjenaId) {
+    var changeBox = document.getElementById('changeBox' + zamjenaId);
+    changeBox.querySelector('.dodaj-zamjenu-button').style.display = 'none';
+    var editForm = document.getElementById('editForm' + zamjenaId);
+    console.log('zamjene-cont-skola' + zamjenaId);
+    var wholeZamjena = document.getElementById('zamjene-cont-skola' + zamjenaId);
+    
+    var deleteForm = wholeZamjena.querySelector('.delete-zamjena-form');
+    console.log(deleteForm); // Check if deleteForm is correctly assigned
+
+    deleteForm.style.display = 'none';
+
+
+    if (changeBox && editForm) {
+      var oldDate = "", oldProf = "", oldFrom = "", oldTo = "", oldRazred = "", oldBrojPredmeta = 0, oldBiljeska = "", oldPredmeti = [];
+
+      var nodes = changeBox.childNodes;
+      for (var i = 0; i < nodes.length; i++) {
+        var textContent = nodes[i].textContent.trim();
+        if (textContent.startsWith('Datum zamjene')) {
+          var oldDateText = textContent.substring(textContent.indexOf(':') + 1).trim();
+          var oldDate = oldDateText.split(' ')[0];
+          var parts = oldDate.split('-');
+          var oldDateFormatted = parts[2] + '-' + parts[1] + '-' + parts[0];
+        } else if (textContent.startsWith('Zamjena za')) {
+          oldProf = textContent.substring(textContent.indexOf(':') + 1).trim();
+        } else if (textContent.startsWith('1.') || textContent.startsWith('2.') || textContent.startsWith('3.') || textContent.startsWith('4.') || textContent.startsWith('5.') || textContent.startsWith('6.') || textContent.startsWith('7.') || textContent.startsWith('8.') || textContent.startsWith('9.') || textContent.startsWith('10.')) {
+          oldSat = textContent.split("i");
+          if (oldSat.length==1 ){
+            oldSat = oldSat[0];
+            oldTo = false;
+          }else{
+            oldSat = oldSat[0] + "sat";
+            oldTo = true;
+          }
+        } else if (textContent.startsWith('Razred')) {
+          oldRazred = textContent.substring(textContent.indexOf(':') + 1).trim();
+        } else if (textContent.includes("|")) {
+          oldBrojPredmeta = parseInt(oldBrojPredmeta) + 1;
+          oldPredmeti.push(textContent);
+        } else if (textContent.startsWith('Bilješka')) {
+          oldBiljeska = textContent.substring(textContent.indexOf(':') + 1).trim();
         }
       }
 
-      var selectedCount = parseInt(brojNovihPredmetaSelect.value);
-      for (var i = 1; i <= selectedCount; i++) {
-        var selectElement = document.getElementById("novipredmet" + i);
-        if (selectElement) {
-          selectElement.style.display = "block";
+      changeBox.style.display = 'none';
+      editForm.style.display = 'block';
+
+      editForm.querySelector('#date').value = oldDateFormatted;
+      editForm.querySelector('#zamjenaza').value = oldProf;
+      editForm.querySelector('#from').value = oldSat;
+      editForm.querySelector('#to').checked = oldTo; 
+      var razredSelect = editForm.querySelector('#razred');
+      var options = razredSelect.options;
+      for (var i = 0; i < options.length; i++) {
+        if (options[i].text === oldRazred) {
+          options[i].selected = true;
+          break;
         }
       }
-    });
-  });
+      editForm.querySelector('#broj-novih-predmeta-2').value = parseInt(oldBrojPredmeta);
+      console.log(oldPredmeti);
+
+      var brojNovihPredmetaSelect = parseInt(oldBrojPredmeta);
+      var noviPredmetSection = document.getElementById("novi-predmet-section-2");
+
+      var noviPredmetSelects = noviPredmetSection.querySelectorAll(".select-zamjene");
+
+      for (var i = 0; i < brojNovihPredmetaSelect; i++) {
+          noviPredmetSelects[i].style.display = "block";
+      }
+
+    
+      var noviPredmetSelects = document.querySelectorAll('#novi-predmet-section-2 .select-zamjene');
+
+      for (var i = 0; i < oldPredmeti.length; i++) {
+          var options = noviPredmetSelects[i].options;
+          for (var j = 0; j < options.length; j++) {
+              if (options[j].value === oldPredmeti[i]) {
+                  options[j].selected = true;
+                  break;
+              }
+          }
+      }
+      editForm.querySelector('.input-obavijesti').value = oldBiljeska;
+    }
+  }
 </script>
+
+
+
+
+
 </html>
 
 

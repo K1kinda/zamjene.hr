@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify
+from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify, current_app
 from .models import User, School, Classroom, Zamjene, Obavjesti, RasporedSati, RasporedUcionica, Predmeti, Profesor
 from . import db, mail
 import time
@@ -10,12 +10,31 @@ import random
 import string
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_mail import Mail, Message
-from sqlalchemy import func, cast, String, asc
+from sqlalchemy import func, cast, String, asc, desc
 import locale
+from cryptography.fernet import Fernet
+import threading
 
 views = Blueprint('views', __name__)
 
 locale.setlocale(locale.LC_TIME, 'hr_HR.UTF-8')
+
+def send_email_in_context(app, user_email, subject, body):
+    with app.app_context():  # Use the app instance to create the application context
+        message = Message(subject=subject,
+                        recipients=[user_email],
+                        body=body)
+        mail.send(message)
+
+#key = Fernet.generate_key()
+key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
+cipher_suite = Fernet(key)
+def decrypt_cookie(cookie):
+    try:
+        decrypted_value = cipher_suite.decrypt(cookie)
+        return decrypted_value.decode()
+    except:
+        return None
 
 #prikazi stranica
 
@@ -23,9 +42,9 @@ locale.setlocale(locale.LC_TIME, 'hr_HR.UTF-8')
 @views.route('/')
 def home():
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     sveObavijesti=[]
     zamjeneDanas=[]
@@ -34,8 +53,8 @@ def home():
     zamjeneSljedeciTjedan=[]
 
     if isSkolaLoggedIn=="True":
-        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
         profesor = Profesor.query.filter_by(id=loggedInProfID).first()
         loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
 
@@ -67,7 +86,7 @@ def home():
 
 
     elif isUserLoggedIn=="True":
-        loggedInUserID = request.cookies.get('loggedInUser')
+        loggedInUserID = decrypt_cookie(request.cookies.get('loggedInUser'))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
 
         today = date.today()
@@ -104,9 +123,9 @@ def home():
 @views.route('/ucenikloginhome')
 def ucenikloginhome():
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     sveObavijesti=[]
     zamjeneDanas=[]
@@ -124,9 +143,9 @@ def ucenikloginhome():
 @views.route('/skolaloginhome')
 def skolaloginhome():
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     sveObavijesti=[]
     zamjeneDanas=[]
@@ -147,9 +166,9 @@ def skolaloginhome():
 def login():
     error=request.args.get("error")
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/login.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
@@ -163,9 +182,9 @@ def login():
 def loginAdmin():
     error=request.args.get("error")
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-pc/login-admin.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
@@ -179,9 +198,9 @@ def loginAdmin():
 def loginskola():
     error=request.args.get("error")
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/login-skola.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
@@ -195,9 +214,9 @@ def loginskola():
 def loginskolaprof():
     error=request.args.get("error")
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/login-skola-profesor.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
@@ -211,9 +230,9 @@ def loginskolaprof():
 def register():
     error=request.args.get("error")
     userDevice = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/register.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
@@ -226,9 +245,9 @@ def register():
 @views.route('/add-school-menu', methods=['GET', 'POST'])
 def addschoolmenu():
     error=request.args.get("error")
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
     if isAdminLoggedIn:
         return render_template("templates-pc/add-school-menu.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, error=error, isLoggedIn=isUserLoggedIn)
     else:
@@ -237,14 +256,14 @@ def addschoolmenu():
 #prikaz menu za administraciju skole
 @views.route('/skolamenu', methods=['GET', 'POST'])
 def skolamenu():
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     userDevice = request.headers.get('User-Agent')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-    loggedInProfID = request.cookies.get('loggedInProfesorID')
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+    loggedInProfID = decrypt_cookie(request.cookies.get('loggedInProfesorID'))
     if loggedInProfID:
-        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
@@ -266,11 +285,11 @@ def skolamenu():
 #prikaz menu za administraciju skole
 @views.route('/skolaadminmenu', methods=['GET', 'POST'])
 def skolaadminmenu():
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     userDevice = request.headers.get('User-Agent')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
     loggedInSkola = School.query.filter_by(id=loggedInSkolaID).first()
 
     if isUserLoggedIn and isSkolaLoggedIn:
@@ -290,9 +309,9 @@ def skolaadminmenu():
 def viewprofileuser():
     userDevice = request.headers.get('User-Agent')
     isSkolaLoggedIn=request.args.get("skola")
-    loggedInUser = User.query.filter_by(id=int(request.cookies.get('loggedInUser'))).first()
+    loggedInUser = User.query.filter_by(id=int(decrypt_cookie(request.cookies.get('loggedInUser')))).first()
     isUserLoggedIn=request.args.get("isLoggedIn")
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
 
     if 'Mobile' in userDevice:
         return render_template("templates-mobile/profile.html", admin=isAdminLoggedIn, skola=isSkolaLoggedIn, user=loggedInUser, isLoggedIn=isUserLoggedIn)
@@ -369,8 +388,8 @@ def registersend():
             #login novog usera
             user = User.query.filter_by(email=email).first()
             response = make_response(redirect("/"))
-            response.set_cookie('isUserLoggedIn', value="True")
-            response.set_cookie('loggedInUser', value=str(user.id))
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('loggedInUser', value=cipher_suite.encrypt(str(user.id).encode()).decode(), samesite='Strict', httponly=True)
             return response
 
 #logika za ulogiravanje korisnika
@@ -384,18 +403,18 @@ def loginsend():
     if user:
         if check_password_hash(user.password, password):
             response = make_response(redirect("/"))
-            response.set_cookie('isUserLoggedIn', value="True")
-            response.set_cookie('loggedInUser', value=str(user.id))
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('loggedInUser', value=cipher_suite.encrypt(str(user.id).encode()).decode(), samesite='Strict', httponly=True)
             return response
         else:
             error="Kriva lozinka."
             response = make_response(redirect(url_for("views.login", error=error)))
-            response.set_cookie('isUserLoggedIn', value="False")
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
             return response
     else:
         error="Krivi email."
         response = make_response(redirect(url_for("views.login", error=error)))
-        response.set_cookie('isUserLoggedIn', value="False")
+        response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
         return response
 
 #logika za ulogiravanje admina
@@ -405,7 +424,7 @@ def loginadminsend():
     password = request.form['password']
     if password=="lozinka":   ##promjenit!!
         response = make_response(redirect("/add-school-menu"))
-        response.set_cookie('isAdminLoggedIn', value="True")
+        response.set_cookie('isAdminLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
         return response
     else:
         error="Kriva lozinka."
@@ -425,27 +444,35 @@ def loginskolasend():
             if prof:
                 pin = request.form['pin']
                 pravipin = prof.pin
-                if int(pin)==pravipin:
-                    response = make_response(redirect("/"))
-                    response.set_cookie('isUserLoggedIn', value="True")
-                    response.set_cookie('isSkolaLoggedIn', value="True")
-                    response.set_cookie('loggedInSchoolID', value=str(idskola))
-                    response.set_cookie('loggedInProfesorID', value=str(id))
+                try:
+                    pin_as_int = int(pin)
+                except ValueError:
+                    error = "PIN mora biti broj!"
+                    response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
+                    response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
                     return response
                 else:
-                    error="Krivi PIN."
-                    response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
-                    response.set_cookie('isUserLoggedIn', value="False")
-                    return response
+                    if pin_as_int==pravipin:
+                        response = make_response(redirect("/"))
+                        response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                        response.set_cookie('isSkolaLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                        response.set_cookie('loggedInSchoolID', value=cipher_suite.encrypt(str(idskola).encode()).decode(), samesite='Strict', httponly=True)
+                        response.set_cookie('loggedInProfesorID', value=cipher_suite.encrypt(str(id).encode()).decode(), samesite='Strict', httponly=True)
+                        return response
+                    else:
+                        error="Krivi PIN."
+                        response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
+                        response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
+                        return response
             else:
-                error = "Profesor s tin ID-om ne postoji!"
+                error = "Profesor s tim ID-om ne postoji!"
                 response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
-                response.set_cookie('isUserLoggedIn', value="False")
+                response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
                 return response
         else:
             error="Krivi ID škole."
             response = make_response(redirect(url_for("views.loginskolaprof", error=error)))
-            response.set_cookie('isUserLoggedIn', value="False")
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
             return response
     elif prof=="ne":
         id = request.form['id']
@@ -455,19 +482,19 @@ def loginskolasend():
             password=school.login_password
             if check_password_hash(password, instertedpassword):
                 response = make_response(redirect("/skolaadminmenu"))
-                response.set_cookie('isUserLoggedIn', value="True")
-                response.set_cookie('isSkolaLoggedIn', value="True")
-                response.set_cookie('loggedInSchoolID', value=str(id))
+                response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                response.set_cookie('isSkolaLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+                response.set_cookie('loggedInSchoolID', value=cipher_suite.encrypt(str(id).encode()).decode(), samesite='Strict', httponly=True)
                 return response
             else:
                 error="Kriva lozinka."
                 response = make_response(redirect(url_for("views.loginskola", error=error)))
-                response.set_cookie('isUserLoggedIn', value="False")
+                response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
                 return response
         else:
             error="Krivi ID škole."
             response = make_response(redirect(url_for("views.loginskola", error=error)))
-            response.set_cookie('isUserLoggedIn', value="False")
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
             return response
 
 #logika za izlogiravanje
@@ -484,7 +511,7 @@ def logout():
 def dodajrazred():
         classroom_name = request.form.get('classroom_name')
         razrednik = request.form.get('razrednik')
-        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
         characters = string.digits
         id = int(''.join(random.choice(characters) for _ in range(8)))
         while Classroom.query.filter_by(id=id).first():
@@ -496,8 +523,8 @@ def dodajrazred():
 #logika za prikaz profila
 @views.route('/viewprofile')
 def viewprofile():
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     if isSkolaLoggedIn=="True":
         return redirect("/skolamenu")
     else: 
@@ -505,15 +532,15 @@ def viewprofile():
 
 @views.route('/addschool', methods=['GET', 'POST'])
 def addschool():
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     if request.method=="GET":
-        isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+        isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
         if isAdminLoggedIn:
             return redirect("/add-school-menu")
         else:
             error=request.args.get("error")
             user_agent = request.headers.get('User-Agent')
-            skola = request.cookies.get('isSkolaLoggedIn')
+            skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
             if 'Mobile' in user_agent:
                 return render_template("templates-mobile/add-school-login.html", admin=isAdminLoggedIn, skola=skola, error=error, isLoggedIn=isLoggedIn)
             elif 'Windows' in user_agent:
@@ -525,14 +552,14 @@ def addschool():
 
         if password=="lozinka":
             response = make_response(redirect("/add-school-menu"))
-            response.set_cookie('isUserLoggedIn', value="True")
-            response.set_cookie('isAdminLoggedIn', value="True")
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('isAdminLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
             return response
         else:
             error="Kriva lozinka."
             response = make_response(redirect(url_for("views.addschool", error=error)))
-            response.set_cookie('isUserLoggedIn', value="False")
-            response.set_cookie('isAdminLoggedIn', value="False")
+            response.set_cookie('isUserLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('isAdminLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
             return response
 
 @views.route('/addschoolfunction', methods=['GET', 'POST'])
@@ -571,23 +598,23 @@ def addschoolfunction():
             #login novog usera
             school = School.query.filter_by(id=id).first()
             response = make_response(redirect("/"))
-            response.set_cookie('isSkolaLoggedIn', value="True")
-            response.set_cookie('isAdminLoggedIn', value="False")
-            response.set_cookie('loggedInSchoolID', value=str(school.id))
+            response.set_cookie('isSkolaLoggedIn', value=cipher_suite.encrypt(b"True").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('isAdminLoggedIn', value=cipher_suite.encrypt(b"False").decode(), samesite='Strict', httponly=True)
+            response.set_cookie('loggedInSchoolID', value=cipher_suite.encrypt(str(school.id).encode()).decode(), samesite='Strict', httponly=True)
             return response
 
 @views.route('/prikazizamjene', methods=['GET', 'POST'])
 def prikazizamjene():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
     svirazredi = Classroom.query.filter_by(school_id=loggedInSkolaID).all()
     svipredmeti = Predmeti.query.filter_by(school_id=loggedInSkolaID).all()
     sviprofesori = []
     predmetistrings = []       
-    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Zamjene.datum, Zamjene.classroom_id).all()
+    sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID, Zamjene.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(desc(Zamjene.date_added), Zamjene.classroom_id).all()
     for predmet in svipredmeti:
         if predmet.profesor not in sviprofesori:
             sviprofesori += [predmet.profesor]
@@ -596,7 +623,7 @@ def prikazizamjene():
     sviprofesori = sorted(sviprofesori)
     svirazredi = sorted(svirazredi, key=lambda x: x.name)
     predmetistrings = sorted(predmetistrings)
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if 'Mobile' in user_agent:
@@ -612,8 +639,8 @@ def prikazizamjene():
 @views.route('/dodajzamjenu', methods=['GET', 'POST'])
 def dodajzamjenu():
     if request.method=="POST":
-        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
-        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
         zamjenaza = request.form['zamjenaza']
 
         datum = request.form['date']
@@ -630,7 +657,11 @@ def dodajzamjenu():
 
         classroomID = request.form['razred']
         classroom_name = Classroom.query.filter_by(id=classroomID).first().name
-       
+
+        allUsersOfClassroom = User.query.filter_by(classroom_id=classroomID).all()
+        for user in allUsersOfClassroom:
+            print(user.email)
+            threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova zamjena', "Imaš novu zamjenu. Pogledaj ju na zamjene.hr")).start()
         broj_novih_predmeta = int(request.form['broj-novih-predmeta'])
         novi_predmet_values = [request.form[f'novipredmet{i}'] for i in range(1, broj_novih_predmeta + 1)]
 
@@ -650,7 +681,7 @@ def dodajzamjenu():
 @views.route('/delete_zamjene/<int:zamjene_id>', methods=['POST'])
 def delete_zamjene(zamjene_id):
     error=request.args.get("error")
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
 
     zamjene = Zamjene.query.get(zamjene_id)
 
@@ -679,13 +710,19 @@ def obriširazred():
 
 @views.route('/addad', methods=['POST','GET'])
 def addad():
-    schoolID = int(request.cookies.get('loggedInSchoolID'))
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    schoolID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     msg = request.form['content']
     name = request.form['name']
     dodao_profesor = loggedInProfID
 
     obavijest = Obavjesti(school_id=schoolID, name=name, content=msg, dodao_profesor=dodao_profesor)
+
+    allUsers = User.query.filter_by(school_id=schoolID).all()
+    for user in allUsers:
+        print(user.email)
+        threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova obavijest', "Imaš novu obavijest. Pogledaj ju na zamjene.hr")).start()
+
 
     db.session.add(obavijest)
     db.session.commit()
@@ -708,9 +745,9 @@ def obrisiobavijest():
 def dodajraspored():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     if request.method=='GET':
         classroom_id = request.args.get('classroom_id')
@@ -777,10 +814,10 @@ def dodajraspored():
 @views.route('/update_table/', methods=['GET', 'POST'])
 def update_table():
     error=request.args.get("error")
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     user_agent = request.headers.get('User-Agent')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     if request.method=='GET':
         school_id = request.args.get('school_id')
@@ -850,19 +887,19 @@ def update_table():
 def oglasnaploca():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
     profesor=""
     if skola!="True":
-        loggedInUserID = int(request.cookies.get('loggedInUser'))
+        loggedInUserID = int(decrypt_cookie(request.cookies.get('loggedInUser')))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
         school_id=loggedInUser.school_id
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == school_id,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
     elif skola:
-        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
         profesor = Profesor.query.filter_by(id=loggedInProfID).first()
-        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
         sveObavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID,Obavjesti.date_added >= (datetime.utcnow() - timedelta(days=14))).order_by(Obavjesti.date_added.desc()).all()
 
     if 'Mobile' in user_agent:
@@ -878,19 +915,19 @@ def oglasnaploca():
 def rasporeducionica():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
     profesor=""
 
     if isSkolaLoggedIn!="True":
-        loggedInUserID = int(request.cookies.get('loggedInUser'))
+        loggedInUserID = int(decrypt_cookie(request.cookies.get('loggedInUser')))
         loggedInUser = User.query.filter_by(id=loggedInUserID).first()
         raspored = RasporedUcionica.query.filter_by(school_id=loggedInUser.school_id).first()
     elif isSkolaLoggedIn:
-        loggedInSkolaID = int(request.cookies.get('loggedInSchoolID'))
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
         raspored = RasporedUcionica.query.filter_by(school_id=loggedInSkolaID).first()
-        loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
         profesor = Profesor.query.filter_by(id=loggedInProfID).first()
 
     if raspored:
@@ -912,11 +949,11 @@ def rasporeducionica():
 def prikazzamjenaucenik():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
 
-    loggedInUserID = request.cookies.get('loggedInUser')
+    loggedInUserID = decrypt_cookie(request.cookies.get('loggedInUser'))
     loggedInUser = User.query.filter_by(id=loggedInUserID).first()
 
     today = date.today()
@@ -946,9 +983,9 @@ def prikazzamjenaucenik():
 def prikaziraspored():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInUserID = request.cookies.get('loggedInUser')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInUserID = decrypt_cookie(request.cookies.get('loggedInUser'))
     loggedInUser = User.query.filter_by(id=loggedInUserID).first()
     classroom_id = loggedInUser.classroom_id
     raspored_sati = RasporedSati.query.filter_by(classroom_id=classroom_id).first()
@@ -1049,11 +1086,11 @@ def notify():
 @views.route('/dodajpredmet', methods=['GET', 'POST'])
 def dodajpredmet():
     error=request.args.get("error")
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
     userDevice = request.headers.get('User-Agent')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn') 
-    schoolID = int(request.cookies.get('loggedInSchoolID'))
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    schoolID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     profesori = Profesor.query.filter_by(school_id=schoolID).order_by(asc(Profesor.name)).all()
 
@@ -1100,7 +1137,7 @@ def dodajprofesora():
             is_admin=0
         while Profesor.query.filter_by(id=id).first():
             id = random.randrange(1000, 999999)
-        school_id = request.cookies.get('loggedInSchoolID') 
+        school_id = decrypt_cookie(request.cookies.get('loggedInSchoolID')) 
         db.session.add(Profesor(id=id, school_id=school_id, name=name, pin=pin, is_admin=is_admin))
         db.session.commit()
         return redirect(url_for("views.skolaadminmenu"))
@@ -1117,11 +1154,11 @@ def obrisiprofesora():
 def prikazzamjenaprofesor():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isUserLoggedIn = request.cookies.get('isUserLoggedIn')
-    isSkolaLoggedIn = request.cookies.get('isSkolaLoggedIn')
-    isAdminLoggedIn = request.cookies.get('isAdminLoggedIn')
+    isUserLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    isSkolaLoggedIn = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    isAdminLoggedIn = decrypt_cookie(request.cookies.get('isAdminLoggedIn'))
 
-    loggedInProfID = int(request.cookies.get('loggedInProfesorID'))
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
     profesor = Profesor.query.filter_by(id=loggedInProfID).first()
     loggedInProf = Profesor.query.filter_by(id=loggedInProfID).first()
     
@@ -1161,9 +1198,9 @@ def prikazzamjenaprofesor():
 def arhivazamjene():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID')) 
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID'))) 
     sve_zamjene = Zamjene.query.filter(Zamjene.school_id == loggedInSkolaID).order_by(Zamjene.datum).all()
 
     if 'Mobile' in user_agent:
@@ -1179,9 +1216,9 @@ def arhivazamjene():
 def arhivaobavijesti():
     error=request.args.get("error")
     user_agent = request.headers.get('User-Agent')
-    isLoggedIn = request.cookies.get('isUserLoggedIn')
-    skola = request.cookies.get('isSkolaLoggedIn')
-    loggedInSkolaID = int(request.cookies.get('loggedInSchoolID')) 
+    isLoggedIn = decrypt_cookie(request.cookies.get('isUserLoggedIn'))
+    skola = decrypt_cookie(request.cookies.get('isSkolaLoggedIn'))
+    loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID'))) 
     sve_obavijesti = Obavjesti.query.filter(Obavjesti.school_id == loggedInSkolaID).order_by(Obavjesti.date_added).all()
 
     if 'Mobile' in user_agent:
@@ -1193,3 +1230,75 @@ def arhivaobavijesti():
     else:
         return render_template("templates-pc/arhivaobavijesti.html", skola=skola, error=error, isLoggedIn=isLoggedIn, sve_obavijesti=sve_obavijesti, school_id=loggedInSkolaID)
 
+@views.route('/editclassroomname', methods=['POST'])
+def editclassroomname():
+    idRazreda = request.json.get('idRazreda')
+    razred = Classroom.query.get(idRazreda)
+    if request.json.get('imeRazreda'):
+        namee = request.json.get('imeRazreda')
+    else:
+        namee = razred.name
+
+
+    if razred:
+        razred.name = namee
+        db.session.commit()
+    
+    return "a"
+
+@views.route('/editzamjena', methods=['GET', 'POST'])
+def editzamjena():
+    if request.method=="POST":
+        loggedInSkolaID = int(decrypt_cookie(request.cookies.get('loggedInSchoolID')))
+        loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
+        zamjenaID = request.form['zamjenaID']
+        zamjena = Zamjene.query.get(zamjenaID)
+        if zamjena:
+            print("da")
+        else:
+            print("ne")
+
+        zamjenaza = request.form['zamjenaza']
+
+        datum = request.form['date']
+        date_components = datum.split('-')
+        datum = '-'.join(date_components[::-1])
+        datum = datetime.strptime(datum, '%d-%m-%Y').date()
+
+        od = request.form['from']
+        do = ""
+
+        if 'to' in request.form:
+            od = od[:2] + ' i ' + str(int(od[0])+1)+ '. sat'
+
+        classroomID = request.form['razred']
+        classroom_name = Classroom.query.filter_by(id=classroomID).first().name
+        
+        allUsersOfClassroom = User.query.filter_by(classroom_id=classroomID).all()
+        for user in allUsersOfClassroom:
+            print(user.email)
+            threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova zamjena', "Imaš novu zamjenu. Pogledaj ju na zamjene.hr")).start()
+
+
+        broj_novih_predmeta = int(request.form['broj-novih-predmeta-2'])
+        novi_predmet_values = [request.form[f'novipredmet{i}'] for i in range(1, broj_novih_predmeta + 1)]
+
+        novi_predmet_string = ' - '.join(novi_predmet_values)
+
+        biljeska = request.form['biljeska']
+
+        zamjena.od = od
+        zamjena.do = do
+        zamjena.datum = datum
+        zamjena.zamjena = novi_predmet_string
+        zamjena.classroom_id = classroomID
+        zamjena.stariprofesor = zamjenaza
+        zamjena.school_id = loggedInSkolaID
+        zamjena.classroom_name = classroom_name
+        zamjena.biljeska = biljeska
+        zamjena.dodao_profesor = loggedInProfID
+
+        db.session.commit()
+
+
+    return redirect(url_for("views.prikazizamjene"))

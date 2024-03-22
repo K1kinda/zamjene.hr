@@ -130,7 +130,13 @@
             {% for classroom in classrooms %}
             <p>
               <div class="razred-info">
-                <p class="obavijest-title">Razred: {{ classroom.name }} </p>
+                <form onsubmit="submitForm(this, '/editclassroomname', '{{ classroom.id }}'); return false;" class="change-name-class">
+                  <p class="obavijest-title">Razred: 
+                                            <span id="imeRazreda" contenteditable="true">{{ classroom.name }}</span> 
+                                            <span id="idRazreda" hidden>{{ classroom.id }}</span>
+                                            <span><button class="spremi-razred-button" type="submit" >✓</button></span> 
+                  </p>
+                </form>
                 <p class="obavijest-content">Razrednik: {{ classroom.razrednik }}</p>
                 <p class="obavijest-content">ID: {{ classroom.id }}</p>
               </div>
@@ -179,6 +185,34 @@
     window.location.href=url;
   }
 </script>
+<script>
+  function submitForm(form, url, idRazreda) {
+    var formData = new FormData(form);
+  
+    var jsonData = {};
+    formData.forEach(function (value, key) {
+      jsonData[key] = value;
+    });
+
+    var spanElement = form.querySelector('.razred-info #imeRazreda');
+    var imeRazreda = spanElement.textContent.trim(); 
+  
+    jsonData['imeRazreda'] = imeRazreda;
+    jsonData['idRazreda'] = idRazreda;
+  
+    var jsonBody = JSON.stringify(jsonData);
+  
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonBody,
+    })
+  changeUrl("/skolamenu")
+  }
+  
+  </script>
 </html>
 
 

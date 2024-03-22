@@ -198,3 +198,7 @@ input[type="checkbox"]:focus {
 .povuceni-tekst{
   margin-left: 25px;
 }
+
+.nova-zamjna-kalendar{
+  width: 20%;
+}
