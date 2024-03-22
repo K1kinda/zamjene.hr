@@ -34,6 +34,16 @@
   
     <div class="dropdown-menu" id="subMenu">
           {% if isLoggedIn=="True" %}
+          <div class="dropdown-box dark">
+            <form action="/downloadandroid" method="post">
+              <button class="dropdown-text dark" type="submit" style="border: none; margin-top: 10px; margin-bottom: 10px; font-size: 18px; font-family: Montserrat;">Android</button>
+            </form>
+          </div>
+          <div class="dropdown-box dark">
+            <form action="/downloadios" method="post">
+              <button class="dropdown-text dark" type="submit" style="border: none; margin-top: 10px; margin-bottom: 10px; font-size: 18px; font-family: Montserrat;" disabled>IOS</button>
+            </form>
+          </div>
               {% if Skola=="True" %}
               <div class="dropdown-box dark">
                 <p class="dropdown-text dark" onclick="changeUrl('/skolaadminmenu')">Upravni centar</p>
