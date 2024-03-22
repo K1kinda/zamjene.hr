@@ -91,6 +91,7 @@ class Profesor(db.Model):
     name = db.Column(db.String(100), nullable=False)
     pin = db.Column(db.Integer)
     is_admin = db.Column(db.Integer, default=0)
+    email = db.Column(db.String(100), nullable=False, default="noemail")
 
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
 

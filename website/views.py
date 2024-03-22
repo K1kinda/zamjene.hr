@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify, current_app
+from flask import Blueprint, render_template, Flask, request, redirect, make_response, url_for, jsonify, current_app, send_file
 from .models import User, School, Classroom, Zamjene, Obavjesti, RasporedSati, RasporedUcionica, Predmeti, Profesor
 from . import db, mail
 import time
@@ -14,6 +14,7 @@ from sqlalchemy import func, cast, String, asc, desc
 import locale
 from cryptography.fernet import Fernet
 import threading
+import io
 
 views = Blueprint('views', __name__)
 
@@ -26,8 +27,8 @@ def send_email_in_context(app, user_email, subject, body):
                         body=body)
         mail.send(message)
 
-key = Fernet.generate_key()
-#key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
+#key = Fernet.generate_key()
+key = "ukg5f4ShyZgTCmIzWSRZjWL2dn2BtJ2nG1DWF55-cgE=".encode()
 cipher_suite = Fernet(key)
 def decrypt_cookie(cookie):
     try:
@@ -1277,7 +1278,7 @@ def editzamjena():
         allUsersOfClassroom = User.query.filter_by(classroom_id=classroomID).all()
         for user in allUsersOfClassroom:
             print(user.email)
-            threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Dodana je nova zamjena', "Imaš novu zamjenu. Pogledaj ju na zamjene.hr")).start()
+            threading.Thread(target=send_email_in_context, args=(current_app._get_current_object(), user.email, 'Došlo je do promjene u zamjenama', "Imaš novu promjenu za zamjenu. Pogledaj ju na zamjene.hr")).start()
 
 
         broj_novih_predmeta = int(request.form['broj-novih-predmeta-2'])
@@ -1300,5 +1301,48 @@ def editzamjena():
 
         db.session.commit()
 
-
     return redirect(url_for("views.prikazizamjene"))
+
+@views.route('/downloadandroid', methods=['POST'])
+def download_file():
+    return send_file(
+        'downloads/zamjene.hr.apk',
+        mimetype='application/vnd.android.package-archive',
+        download_name='zamjene.hr.apk',
+        as_attachment=True
+    )
+
+@views.route('/downloadios', methods=['POST'])
+def download_ios_file():
+    return send_file(
+        'downloads/zamjene.hr.ipa',  
+        mimetype='application/octet-stream',  
+        download_name='zamjene.hr.ipa',  
+        as_attachment=True
+    )
+
+@views.route('/dodajemailprofesor', methods=['GET','POST'])
+def dodajemailprofesor():
+    userDevice = request.headers.get('User-Agent')
+    loggedInProfID = int(decrypt_cookie(request.cookies.get('loggedInProfesorID')))
+    profesor = Profesor.query.filter_by(id=loggedInProfID).first()
+    if request.method=="GET":
+        error=request.args.get("error")
+        if 'Mobile' in userDevice:
+            return render_template("templates-mobile/dodajemailprofesor.html", error=error)
+        elif 'Windows' in userDevice:
+            return render_template("templates-pc/dodajemailprofesor.html", error=error)
+        else:
+            return render_template("templates-pc/dodajemailprofesor.html", error=error)
+    elif request.method=="POST":
+        email = request.form['email']
+        if len(email)>5 and "@" in email and "." in email:
+            pass
+        else:
+            error="Nevaljani email."
+            return redirect(url_for("views.dodajemailprofesor", error=error))
+        profesor.email = email
+        db.session.commit()
+        return redirect(url_for("views.home"))
+
+    

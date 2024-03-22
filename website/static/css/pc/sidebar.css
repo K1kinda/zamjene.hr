@@ -57,6 +57,32 @@
     background-color: rgb(34, 46, 80);
 }
 
+.halfbuttonleftform{
+    width: 35%;
+    margin-left: 10%;
+    margin-right: 7.5%;
+}
+
+.halfbuttonrightform{
+    width: 35%;
+}
+
+.halfbuttonleft{
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.halfbuttonright{
+    margin-left: 0;
+    margin-right: 0;
+    width: 100%;
+}
+
+.android_ios form {
+    display: inline-block;
+}
+
 .spremi-raspored-ucionica-button{
     margin-left: 10%;
     margin-right: 10%;

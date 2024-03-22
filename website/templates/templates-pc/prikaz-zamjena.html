@@ -28,7 +28,7 @@
             </div>
             <div class="sidebar-buttons-cont">
                 <button class="sidebarbutton" onclick="changeUrl('/')">Početna</button>
-                                {% if isLoggedIn=="True" %}
+                  {% if isLoggedIn=="True" %}
                     {% if skola!="True" %}
                     <button class="sidebarbutton" onclick="changeUrl('/prikaziraspored')">Raspored predmeta</button>
                     <button class="sidebarbutton" onclick="changeUrl('/prikazzamjenaucenik')">Moje zamjene</button>
@@ -38,11 +38,14 @@
                     <button class="sidebarbutton" onclick="changeUrl('/oglasnaploca')">Oglasna ploča</button>
                     <button class="sidebarbutton"onclick="changeUrl('/rasporeducionica')">Raspored učionica</button>
                     {% endif %}
-                {% endif %}
+                  {% endif %}
             </div>
             <div class="sidebar-profile-cont">
                 {% if isLoggedIn=="True" %}
                     {% if skola=="True" %}
+                      {% if profesor.email=="noemail" %}
+                        <button class="sidebarbutton darkbutton" onclick="changeUrl('/dodajemailprofesor')">Dodaj e-mail za obavijesti</button>
+                      {% endif %}
                       {% if profesor.is_admin==1 %}
                       <button class="sidebarbutton" onclick="changeUrl('/viewprofile')">Upravni centar</button>
                       {% endif %}
